@@ -530,10 +530,7 @@ route::get('/DocumentDelete/{id}/{file}',[Documents::class,'DocumentDelete']);
 Route::get('/DBDump/',[Accounts::class,'DBDump']);
 
 
-
-//POS Routes
-//heelo
-
+Route::get('/test/',[Accounts::class,'test']);
 
 
 
