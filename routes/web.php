@@ -531,7 +531,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
 
 
 
-
+//POS Routes
 
 
 
