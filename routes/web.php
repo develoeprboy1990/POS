@@ -18,6 +18,8 @@ use App\Http\Controllers\KM;
 use App\Http\Controllers\Accounts;
 use App\Http\Controllers\EstimateController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TeqPosController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Documents;
@@ -37,7 +39,7 @@ Route::post('/UserVerify',[Accounts::class,'UserVerify']);
  
  Route::group(['middleware' => ['CheckAdmin']], function () {
 
-Route::get('/Dashboard',[Accounts::class,'Dashboard']);
+Route::get('/Dashboard',[Accounts::class,'Dashboard'])->name('kashif');
 
 
 Route::get('/Prayer/',[KM::class,'Prayer']);
