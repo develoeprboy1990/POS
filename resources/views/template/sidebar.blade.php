@@ -22,39 +22,6 @@
                     </a>
                     
                 </li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="bx bxs-user-plus"></i>
-                        <span key="t-ecommerce">POS</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                    <li  id="exp-cat-menu"><a href="{{route('invoice.create')}}" key="t-products">Create Invoice</a></li>
-                    <li  id="exp-list-menu"><a href="{{route('invoice.listing')}}" key="t-products">Invoice Listing</a></li>
-
-                        
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-hammer-wrench"></i>
-                        <span key="t-ecommerce">POS Setting</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{URL('/item-category-list')}}" key="t-products">Item Categories</a></li>
-                        <li><a href="{{URL('/biller-list')}}" key="t-products">Biller</a></li>
-                        <li><a href="{{URL('/ware-house-list')}}" key="t-products">WareHouses</a></li>
-                        <li><a href="{{URL('/brand-list')}}" key="t-products">Brand</a></li>
-                        <li><a href="{{URL('/unit-list')}}" key="t-products">Unit</a></li>
-                        <li><a href="{{URL('/tax-list')}}" key="t-products">Tax</a></li>
-                        <li><a href="{{URL('/currency-list')}}" key="t-products">Currency</a></li>
-                        <li><a href="{{URL('/print-barcode')}}" key="t-products">Print Barcode</a></li>
-                        <li><a href="{{URL('/pos-setting')}}" key="t-products">POS Setting</a></li>
-
-                     
-                    </ul>
-                </li>
                 
                 
                 <li>
@@ -101,6 +68,39 @@
                          
                         
                         
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="bx bxs-user-plus"></i>
+                        <span key="t-ecommerce">POS</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                    <li  id="exp-cat-menu"><a href="{{route('invoice.create')}}" key="t-products">Create Invoice</a></li>
+                    <li  id="exp-list-menu"><a href="{{route('invoice.listing')}}" key="t-products">Invoice Listing</a></li>
+
+                        
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-hammer-wrench"></i>
+                        <span key="t-ecommerce">POS Setting</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{URL('/item-category-list')}}" key="t-products">Item Categories</a></li>
+                        <li><a href="{{URL('/biller-list')}}" key="t-products">Biller</a></li>
+                        <li><a href="{{URL('/ware-house-list')}}" key="t-products">WareHouses</a></li>
+                        <li><a href="{{URL('/brand-list')}}" key="t-products">Brand</a></li>
+                        <li><a href="{{URL('/unit-list')}}" key="t-products">Unit</a></li>
+                        <li><a href="{{URL('/tax-list')}}" key="t-products">Tax</a></li>
+                        <li><a href="{{URL('/currency-list')}}" key="t-products">Currency</a></li>
+                        <li><a href="{{URL('/print-barcode')}}" key="t-products">Print Barcode</a></li>
+                        <li><a href="{{URL('/pos-setting')}}" key="t-products">POS Setting</a></li>
+
+                     
                     </ul>
                 </li>
             
