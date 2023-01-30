@@ -531,7 +531,98 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
 
 
 //POS routs..
+  // TEQ POS Section
+    Route::get('/create-invoice', [TeqPosController::class, 'createTeqInvoice'])->name('invoice.create');
+    Route::post('/save-teq-invoice', [TeqPosController::class, 'storeInvoice']);
+    Route::get('/edit-teq-invoice/{id}', [TeqPosController::class, 'editTeqInvoice']);
+    Route::post('/update-teq-invoice/{id}', [TeqPosController::class, 'update'])->name('teqInvoice.update');
 
+
+    Route::get('sales/lims_product_search', [TeqPosController::class, 'limsProductSearch'])->name('product_sale.search');
+    Route::get('sales/getproduct/{id}', [TeqPosController::class, 'getProduct'])->name('sale.getproduct');
+    Route::get('sales/getproduct/{category_id}/{brand_id}', [TeqPosController::class,'getProductByFilter']);
+
+    Route::get('sales/getcustomergroup/{id}', [TeqPosController::class, 'getCustomerGroup'])->name('sale.getcustomergroup');
+
+    Route::get('cash-register/check-availability/{warehouse_id}', [TeqPosController::class, 'checkAvailability'])->name('cashRegister.checkAvailability');
+    Route::get('sales/getfeatured', [TeqPosController::class,'getFeatured'])->name('product_sale.getfeatured');
+
+    Route::post('sales/add_payment', [TeqPosController::class,'addPayment'])->name('sale.add-payment');
+
+    Route::get('products/gencode', [TeqPosController::class,'generateCode'])->name('sale.gencode');
+
+    Route::resource('sales', TeqPosController::class);
+    //end TEQ POS
+
+    Route::get('/edit-invoice/{id}', [PosController::class, 'editInvoice'])->name('invoice.edit');
+    Route::post('/update-pos-invoice', [PosController::class, 'updateInvoice']);
+
+    Route::get('/show-invoice/{id}', [PosController::class, 'showInvoice'])->name('invoice.show');
+    Route::get('/print-invoice/{id}', [PosController::class, 'printInvoice'])->name('invoice.print');
+
+    Route::get('/invoice-listing', [PosController::class, 'invoiceListing'])->name('invoice.listing');
+    // ware house
+    Route::get('/ware-house-list', [PosController::class, 'wareHouseList']);
+    Route::post('/store-ware-house', [PosController::class, 'storeWareHouse']);
+    Route::post('/get-warehouse-detail', [PosController::class, 'getWarehouseDetail']);
+    Route::post('/update-ware-house', [PosController::class, 'updateWareHouse']);
+    Route::get('/wareHouseDelete/{id}', [PosController::class, 'deleteWareHouse']);
+
+    // brand
+    Route::get('/brand-list', [PosController::class, 'brandList']);
+    Route::post('/store-brand', [PosController::class, 'storeBrand']);
+    Route::post('/get-brand-detail', [PosController::class, 'getBrandDetail']);
+    Route::post('/update-brand', [PosController::class, 'updateBrand']);
+    Route::get('/brandDelete/{id}', [PosController::class, 'deleteBrand']);
+
+    // Party
+    Route::post('/store-party', [PosController::class, 'storeParty'])->name('party.store');
+
+    // Unit
+    Route::get('/unit-list', [PosController::class, 'unitList']);
+    Route::post('/store-unit', [PosController::class, 'storeUnit']);
+    Route::post('/get-unit-detail', [PosController::class, 'getUnitDetail']);
+    Route::post('/update-unit', [PosController::class, 'updateUnit']);
+    Route::get('/unitDelete/{id}', [PosController::class, 'deleteUnit']);
+
+    // POS Setting
+    Route::get('/pos-setting', [PosController::class, 'posSetting']);
+    Route::post('/store-pos-setting', [PosController::class, 'storePosSetting'])->name('setting.posStore');
+
+    // Tax
+    Route::get('/tax-list', [PosController::class, 'taxList']);
+    Route::post('/store-tax', [PosController::class, 'storeTax']);
+    Route::post('/get-tax-detail', [PosController::class, 'getTaxDetail']);
+    Route::post('/update-tax', [PosController::class, 'updateTax']);
+    Route::get('/taxDelete/{id}', [PosController::class, 'deleteTax']);
+
+
+    // Item Category
+    Route::get('/item-category-list', [PosController::class, 'itemCategoryList']);
+    Route::post('/get-item-category-detail', [PosController::class, 'getItemCategoryDetail']);
+    Route::post('/store-item-category', [PosController::class, 'storeItemCategory']);
+    Route::post('/update-item-category', [PosController::class, 'updateItemCategory']);
+    Route::get('/itemCategoryDelete/{id}', [PosController::class, 'deleteItemCategory']);
+
+    // Currency
+    Route::get('/currency-list', [PosController::class, 'currencyList']);
+    Route::get('/get-currency-data', [PosController::class, 'getCurrencyDetail']);
+    Route::post('/store-currency', [PosController::class, 'storeCurrency']);
+    Route::post('/update-currency', [PosController::class, 'updateCurrency']);
+    Route::get('/currencyDelete/{id}', [PosController::class, 'deleteCurrency']);
+
+
+    // Salesman
+    Route::get('/biller-list', [PosController::class, 'billerList']);
+    Route::post('/store-biller', [PosController::class, 'storeBiller']);
+    Route::get('/get-biller-data', [PosController::class, 'getBillerData']);
+    Route::post('/update-biller', [PosController::class, 'updateBiller']);
+    Route::get('/billerDelete/{id}', [PosController::class, 'deleteBiller']);
+
+    // Barcode
+    Route::get('/print-barcode', [PosController::class, 'printBarcode']);
+    Route::get('products/lims_product_search', [PosController::class, 'limsProductSearch'])->name('product.search');
+    
 
 
 
