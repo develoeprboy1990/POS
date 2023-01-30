@@ -18,7 +18,7 @@
                             <a href="{{route('kashif')}}" class="logo logo-light">
                                  
                                 <span class="logo-lg">
-                                    <img src="http://localhost:8084/falak_hrm/public/assets/images/logo-light.png" alt="" height="45">
+                                    <img src="{{asset('assets/images/logo-light.png')}}" alt="" height="45">
                                 </span>
                             </a>
                         </div>
@@ -669,7 +669,7 @@
                         <div class="row ml-2 mt-3">
                             @foreach($lims_category_list as $category)
                             <div class="col-md-3 category-img text-center" data-category="{{$category->ItemCategoryID}}">
-                                <img  src="{{asset('images/product/zummXD2dvAtI.png')}}" />
+                                <img  src="{{asset('assets/images/zummXD2dvAtI.png')}}" />
                                 <p class="text-center">{{$category->title}}</p>
                             </div>
                             @endforeach
@@ -688,12 +688,12 @@
                             @foreach($lims_brand_list as $brand)
                             @if($brand->image)
                                 <div class="col-md-3 brand-img text-center" data-brand="{{$brand->id}}">
-                                    <img  src="{{asset('images/brand',$brand->image)}}" />
+                                    <img  src="{{asset('assets/images/brand',$brand->image)}}" />
                                     <p class="text-center">{{$brand->title}}</p>
                                 </div>
                             @else
                                 <div class="col-md-3 brand-img text-center" data-brand="{{$brand->id}}">
-                                    <img  src="{{asset('images/product/zummXD2dvAtI.png')}}" />
+                                    <img  src="{{asset('assets/images/product/zummXD2dvAtI.png')}}" />
                                     <p class="text-center">{{$brand->title}}</p>
                                 </div>
                             @endif
@@ -726,14 +726,14 @@
                             @for ($i=0; $i < ceil($product_number/5); $i++)
                                 <tr>
                                     <td class="product-img sound-btn" title="{{$lims_product_list[0+$i*5]->name}}" data-product ="{{$lims_product_list[0+$i*5]->code . ' (' . $lims_product_list[0+$i*5]->name . ')'}}">
-                                        <img  src="{{asset('images/items/'.$lims_product_list[0+$i*5]->base_image)}}" width="100%" />
+                                        <img  src="{{asset('assets/images/items/'.$lims_product_list[0+$i*5]->base_image)}}" width="100%" />
                                       
                                         <p>{{$lims_product_list[0+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[0+$i*5]->code}}</span>
                                     </td>
                                     @if(!empty($lims_product_list[1+$i*5]))
                                     <td class="product-img sound-btn" title="{{$lims_product_list[1+$i*5]->name}}" data-product ="{{$lims_product_list[1+$i*5]->code . ' (' . $lims_product_list[1+$i*5]->name . ')'}}">
-                                        <img  src="{{asset('images/items/'.$lims_product_list[1+$i*5]->base_image)}}" width="100%" />
+                                        <img  src="{{asset('assets/images/items/'.$lims_product_list[1+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[1+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[1+$i*5]->code}}</span>
                                     </td>
@@ -742,7 +742,7 @@
                                     @endif
                                     @if(!empty($lims_product_list[2+$i*5]))
                                     <td class="product-img sound-btn" title="{{$lims_product_list[2+$i*5]->name}}" data-product ="{{$lims_product_list[2+$i*5]->code . ' (' . $lims_product_list[2+$i*5]->name . ')'}}">
-                                        <img  src="{{asset('images/items/'.$lims_product_list[2+$i*5]->base_image)}}" width="100%" />
+                                        <img  src="{{asset('assets/images/items/'.$lims_product_list[2+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[2+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[2+$i*5]->code}}</span>
                                     </td>
@@ -751,7 +751,7 @@
                                     @endif
                                     @if(!empty($lims_product_list[3+$i*5]))
                                     <td class="product-img sound-btn" title="{{$lims_product_list[3+$i*5]->name}}" data-product ="{{$lims_product_list[3+$i*5]->code . ' (' . $lims_product_list[3+$i*5]->name . ')'}}">
-                                        <img  src="{{asset('images/items/'.$lims_product_list[3+$i*5]->base_image)}}" width="100%" />
+                                        <img  src="{{asset('assets/images/items/'.$lims_product_list[3+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[3+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[3+$i*5]->code}}</span>
                                     </td>
@@ -760,7 +760,7 @@
                                     @endif
                                     @if(!empty($lims_product_list[4+$i*5]))
                                     <td class="product-img sound-btn" title="{{$lims_product_list[4+$i*5]->name}}" data-product ="{{$lims_product_list[4+$i*5]->code . ' (' . $lims_product_list[4+$i*5]->name . ')'}}">
-                                        <img  src="{{asset('images/items/'.$lims_product_list[4+$i*5]->base_image)}}" width="100%" />
+                                        <img  src="{{asset('assets/images/items/'.$lims_product_list[4+$i*5]->base_image)}}" width="100%" />
                                         <p>{{$lims_product_list[4+$i*5]->name}}</p>
                                         <span>{{$lims_product_list[4+$i*5]->code}}</span>
                                     </td>
@@ -1726,7 +1726,7 @@ function populateProduct(data) {
     if (Object.keys(data).length != 0) {
         $.each(data['name'], function(index) {
             var product_info = data['code'][index]+' (' + data['name'][index] + ')';
-            var base_url = "{{asset('images/items')}}/"+data['image'][index];
+            var base_url = "{{asset('assets/images/items')}}/"+data['image'][index];
             if(index % 5 == 0 && index != 0)
                 tableData += '</tr><tr><td class="product-img sound-btn" title="'+data['name'][index]+'" data-product = "'+product_info+'"><img  src="'+base_url+'" width="100%" /><p>'+data['name'][index]+'</p><span>'+data['code'][index]+'</span></td>';
             else

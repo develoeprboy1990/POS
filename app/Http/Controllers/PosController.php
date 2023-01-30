@@ -1094,10 +1094,10 @@ class PosController extends Controller
 
     // public function productWithVariant()
     // {
-    //     return Product::join('product_variants', 'products.id', 'product_variants.product_id')
+    //     return Product::join('product_variants', 'teq_products.id', 'product_variants.product_id')
     //             ->ActiveStandard()
     //             ->whereNotNull('is_variant')
-    //             ->select('products.id', 'products.name', 'product_variants.item_code')
+    //             ->select('teq_products.id', 'teq_products.name', 'product_variants.item_code')
     //             ->orderBy('position')->get();
     // }
 
@@ -1108,8 +1108,8 @@ class PosController extends Controller
 
         $lims_product_data = DB::table('item')->where('ItemCode', $product_code[0])->first();
         // if(!$lims_product_data) {
-        //     $lims_product_data = Product::join('product_variants', 'products.id', 'product_variants.product_id')
-        //         ->select('products.*', 'product_variants.item_code')
+        //     $lims_product_data = Product::join('product_variants', 'teq_products.id', 'product_variants.product_id')
+        //         ->select('teq_products.*', 'product_variants.item_code')
         //         ->where('product_variants.item_code', $product_code[0])
         //         ->first();
         // }
