@@ -570,6 +570,9 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::post('/update-ware-house', [PosController::class, 'updateWareHouse']);
     Route::get('/wareHouseDelete/{id}', [PosController::class, 'deleteWareHouse']);
 
+    //Extra tax for non filer
+    Route::put('extra_tax', [TeqPosController::class, 'extra_tax_charged'])->name('admin.extra_tax');
+
     // brand
     Route::get('/brand-list', [PosController::class, 'brandList']);
     Route::post('/store-brand', [PosController::class, 'storeBrand']);

@@ -7,12 +7,14 @@ use DB;
 use Session;
 use Yajra\DataTables\DataTables;
 use Illuminate\Validation\Rule;
+use NumberToWords\NumberToWords;
 use App\Models\Warehouse;
 use App\Models\Brand;
 use App\Models\Biller;
 use App\Models\Unit;
 use App\Models\PosSetting;
 use App\Models\Tax;
+use App\Models\Payment;
 use App\Models\Currency;
 use App\Models\Product_Warehouse;
 use DNS1D;
@@ -248,10 +250,20 @@ class PosController extends Controller
 
     public function printInvoice($InvoiceMasterID)
     {
-        $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
-        $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
-        $party = DB::table('party')->where('PartyID', $invoice_master->PartyID)->first();
-        return view('invoice.print_invoice', compact('invoice_detail', 'invoice_master', 'party'));
+        $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
+        $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
+        $lims_biller_data = Biller::find($lims_sale_data->SupplierID);
+        $lims_warehouse_data = Warehouse::find($lims_sale_data->WarehouseID);
+        $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
+        $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->get();
+
+        $numberToWords = new NumberToWords();
+        if(\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
+            $numberTransformer = $numberToWords->getNumberTransformer('en');
+        else
+            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
+        $numberInWords = $numberTransformer->toWords($lims_sale_data->GrandTotal);
+        return view('invoice.print_invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords'));
     }
 
     public function invoiceListing(Request $request)
@@ -270,8 +282,8 @@ class PosController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" target="_blank" title="Edit Invoice"><i class="bx bx-pencil align-middle me-1"></i></a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" target="_blank" title="Show Invoice"><i class="fa fa-eye align-middle me-1"></i></a><a href="' . route('invoice.print', ['id' => $row->InvoiceMasterID]) . '" target="_blank" title="Print Invoice"><i class="fa fa-print align-middle me-1"></i></a>';
-                    $btn = '<div class="btn-group">
-                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
+                    // $btn = '<div class="btn-group">
+                    // <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
                     $btn .= '<ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">';
                     $btn .= '<li><a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="btn btn-link"><i class="dripicons-document-edit"></i> Edit Invoice</a></li><li>';
                     $btn .= '<li><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="btn btn-link"><i class="fa fa-eye"></i> View Invoice</a></li><li>';
@@ -279,7 +291,7 @@ class PosController extends Controller
                     $btn .='<li>
                     <button type="button" class="add-payment btn btn-link" data-id = "'.$row->InvoiceMasterID.'" data-toggle="modal" data-target="#add-payment"><i class="fa fa-plus"></i> '.trans('file.Add Payment').'</button>
                 </li>';
-                    $btn .= ' </ul></div>';
+                    $btn .= ' </ul>';
                     return $btn;
                 })
                 ->rawColumns(['payment_status', 'action'])
