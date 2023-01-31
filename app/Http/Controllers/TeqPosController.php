@@ -732,11 +732,11 @@ class TeqPosController extends Controller
             ['ItemCode', $product_code[0]]
         ])->first();
         if (!$lims_product_data) {
-            $lims_product_data = Product::join('product_variants', 'teq_products.id', 'product_variants.product_id')
-                ->select('teq_products.*', 'product_variants.id as product_variant_id', 'product_variants.item_code', 'product_variants.additional_price')
+            $lims_product_data = Product::join('product_variants', 'products.id', 'product_variants.product_id')
+                ->select('products.*', 'product_variants.id as product_variant_id', 'product_variants.item_code', 'product_variants.additional_price')
                 ->where([
                     ['product_variants.item_code', $product_code[0]],
-                    ['teq_products.is_active', true]
+                    ['products.is_active', true]
                 ])->first();
             $product_variant_id = $lims_product_data->product_variant_id;
         }
@@ -819,9 +819,9 @@ class TeqPosController extends Controller
 
         config()->set('database.connections.mysql.strict', false);
         \DB::reconnect(); //important as the existing connection if any would be in strict mode
-        $lims_product_with_batch_warehouse_data = Product::join('product_warehouse', 'teq_products.id', '=', 'product_warehouse.product_id')
+        $lims_product_with_batch_warehouse_data = Product::join('product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
             ->where([
-                ['teq_products.is_active', true],
+                ['products.is_active', true],
                 ['product_warehouse.warehouse_id', $id],
                 ['product_warehouse.qty', '>', 0]
             ])
@@ -835,9 +835,9 @@ class TeqPosController extends Controller
         config()->set('database.connections.mysql.strict', true);
         \DB::reconnect();
 
-        $lims_product_with_variant_warehouse_data = Product::join('product_warehouse', 'teq_products.id', '=', 'product_warehouse.product_id')
+        $lims_product_with_variant_warehouse_data = Product::join('product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
             ->where([
-                ['teq_products.is_active', true],
+                ['products.is_active', true],
                 ['product_warehouse.warehouse_id', $id],
                 ['product_warehouse.qty', '>', 0]
             ])->whereNotNull('product_warehouse.variant_id')->select('product_warehouse.*')->get();
