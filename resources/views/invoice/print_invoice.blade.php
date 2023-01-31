@@ -13,110 +13,70 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-        <style type="text/css">
+        <<style type="text/css">
+        * {
+            font-size: 14px;
+            line-height: 24px;
+            font-family: 'Ubuntu', sans-serif;
+            text-transform: capitalize;
+        }
+        .btn {
+            padding: 7px 10px;
+            text-decoration: none;
+            border: none;
+            display: block;
+            text-align: center;
+            margin: 7px;
+            cursor:pointer;
+        }
+
+        .btn-info {
+            background-color: #999;
+            color: #FFF;
+        }
+
+        .btn-primary {
+            background-color: #6449e7;
+            color: #FFF;
+            width: 100%;
+        }
+        td,
+        th,
+        tr,
+        table {
+            border-collapse: collapse;
+        }
+        tr {border-bottom: 1px dotted #ddd;}
+        td,th {padding: 7px 0;width: 50%;}
+
+        table {width: 100%;}
+        tfoot tr th:first-child {text-align: left;}
+
+        .centered {
+            text-align: center;
+            align-content: center;
+        }
+        small{font-size:11px;}
+
+        @media  print {
             * {
-                font-size: 14px;
-                line-height: 24px;
-                font-family: 'Ubuntu', sans-serif;
-                text-transform: capitalize;
+                font-size:12px;
+                line-height: 20px;
             }
-
-            .btn {
-                padding: 7px 10px;
-                text-decoration: none;
-                border: none;
-                display: block;
-                text-align: center;
-                margin: 7px;
-                cursor: pointer;
+            td,th {padding: 5px 0;}
+            .hidden-print {
+                display: none !important;
             }
-
-            .btn-info {
-                background-color: #999;
-                color: #FFF;
-            }
-
-            .btn-primary {
-                background-color: #6449e7;
-                color: #FFF;
-                width: 100%;
-            }
-
-            td,
-            th,
-            tr,
-            table {
-                border-collapse: collapse;
-            }
-
-            tr {
-                border-bottom: 1px dotted #ddd;
-            }
-
-            td,
-            th {
-                padding: 7px 0;
-                /* width: 50%; */
-                width: auto;
-                text-align: left;
-            }
-
-            table {
-                width: 100%;
-            }
-
-            tfoot tr th:first-child {
-                text-align: left;
-            }
-
-            .centered {
-                text-align: center;
-                align-content: center;
-            }
-            .centered > * {
-                line-height: 20px !important;
-                margin: 5px 0 !important;
-            }
-
-            small {
-                font-size: 11px;
-            }
-
-            @media print {
-                * {
-                    font-size: 12px;
-                    line-height: 20px;
-                }
-
-                td,
-                th {
-                    padding: 5px 0;
-                }
-
-                .hidden-print {
-                    display: none !important;
-                }
-
-                @page {
-                    margin: 10px;
-                    margin-top: -30px;
-                }
-
-                body {
-                    margin: 0.5cm;
-                    margin-bottom: 1.6cm;
-                }
-
-                tbody::after {
-                    content: '';
-                    display: block;
-                    page-break-after: always;
-                    page-break-inside: always;
-                    page-break-before: avoid;
-                }
-            }
-
-        </style>
+            @page  { margin: 1.5cm 0.5cm 0.5cm; }
+            @page:first { margin-top: 0.5cm; }
+            /*tbody::after {
+                content: ''; display: block;
+                page-break-after: always;
+                page-break-inside: avoid;
+                page-break-before: avoid;        
+            }*/
+        }
+    </style>
     </head>
 
     <body>
@@ -134,7 +94,7 @@
             $due_amount= $total_amount - $paid_amount;
             // echo $due_amount;
             ?>
-        <div style="margin:0 auto">
+        <div style="max-width:400px;margin:0 auto">
             @if (preg_match('~[0-9]~', url()->previous()))
                 @php $url = '../../pos'; @endphp
             @else
@@ -189,39 +149,44 @@
                     {{ trans('Address') }}: {{ $lims_customer_data->Address }}
                 </p>
                 <table class="table-data">
-                    <thead>
+                    <!-- <thead>
                         <tr>
                             <th>Name</th>
                             <th>Code</th>
                             <th>RRP</th>
                             <th>Disc. Price</th>
-                            <!--<th>Tax</th>-->
+                            <th>Tax</th>
                             <th>Qty</th>
                             
                             <th style="text-align: right;">Total</th>
                         </tr>
-                    </thead>
+                    </thead> -->
                     <tbody>
                         <?php $total_product_tax = 0; ?>
                         @foreach ($lims_product_sale_data as $key => $product_sale_data)
                             <?php
-                            $lims_product_data = \App\Product::find($product_sale_data->product_id);
-                            if ($product_sale_data->variant_id) {
-                                $variant_data = \App\Variant::find($product_sale_data->variant_id);
-                                $product_name = $lims_product_data->name . ' [' . $variant_data->name . ']';
-                            } elseif ($product_sale_data->product_batch_id) {
-                                $product_batch_data = \App\ProductBatch::select('batch_no')->find($product_sale_data->product_batch_id);
-                                $product_name = $lims_product_data->name . ' [' . trans('file.Batch No') . ':' . $product_batch_data->batch_no . ']';
-                            } else {
-                                $product_name = $lims_product_data->name;
-                                $product_price = $lims_product_data->price;
-                                $product_code = $lims_product_data->code;
-                                $commission_name = $product_sale_data->salesman_name;
-                            }
+                            $lims_product_data = \DB::table('item')->where('ItemID',$product_sale_data->ItemID)->first();
+                            // if ($product_sale_data->variant_id) {
+                            //     $variant_data = \App\Variant::find($product_sale_data->variant_id);
+                            //     $product_name = $lims_product_data->name . ' [' . $variant_data->name . ']';
+                            // } elseif ($product_sale_data->product_batch_id) {
+                            //     $product_batch_data = \App\ProductBatch::select('batch_no')->find($product_sale_data->product_batch_id);
+                            //     $product_name = $lims_product_data->name . ' [' . trans('file.Batch No') . ':' . $product_batch_data->batch_no . ']';
+                            // } else {
+                                $product_name = $lims_product_data->ItemName;
+                                $product_price = $lims_product_data->SellingPrice;
+                                $product_code = $lims_product_data->ItemCode;
+                                // $commission_name = $product_sale_data->salesman_name;
+                            // }
                             ?>
 
                             <tr>
-                                <td>
+                                <td colspan="2">
+                                    {{ $product_name }}
+                                    <br>{{ $product_sale_data->Qty }} x {{ $product_price }}
+
+                                </td>
+                                <!-- <td>
                                     {{ $product_name }}<br>
                                 </td>
                                 <td>
@@ -230,27 +195,27 @@
                                 <td>
                                     {{ $product_price }}
                                 </td>
-                                <td>{{ number_format((float) ($product_sale_data->total / $product_sale_data->qty), 2, '.', '') }}
+                                <td>{{ number_format((float) ($product_sale_data->Total / $product_sale_data->Qty), 2, '.', '') }}
 
                                 
                                 </td>
 
-                                <!--<td>-->
-                                <!--@if ($product_sale_data->tax_rate)-->
-                                <!--        <?php //$total_product_tax += $product_sale_data->tax; ?>-->
-                                <!--        {{ $product_sale_data->tax_rate }}%-->
-                                <!--    @endif-->
-                                <!--</td>-->
                                 <td>
-                                    {{ $product_sale_data->qty }}
+                                @if ($product_sale_data->Tax)
+                                      <?php //$total_product_tax += $product_sale_data->Tax; ?>
+                                        {{ $product_sale_data->Tax }}%
+                                @endif
+                                </td>
+                                <td>
+                                    {{ $product_sale_data->Qty }}
                                 </td>
 
                                 
 
 
                                 <td style="text-align:right;">
-                                    {{ number_format((float) $product_sale_data->total, 2, '.', '') }}
-                                </td>
+                                    {{ number_format((float) $product_sale_data->Total, 2, '.', '') }}
+                                </td> -->
                             </tr>
                             {{-- <tr>
                                 <td colspan="5">{{$commission_name}}</td>
@@ -259,14 +224,14 @@
 
                         <!-- <tfoot> -->
                         <tr>
-                            <th colspan="5" style="text-align:left">{{ trans('file.Total') }}</th>
+                            <th colspan="6" style="text-align:left">{{ trans('file.Total') }}</th>
                             <th style="text-align:right">
                                 {{ number_format((float) $lims_sale_data->SubTotal, 2, '.', '') }}</th>
                         </tr>
                         
                           @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
                            <tr>
-                            <th colspan="5" style="text-align:left">Extra Tax</th>
+                            <th colspan="6" style="text-align:left">Extra Tax</th>
                             <th style="text-align:right">
                                 4%(<?php echo( $percentx)?>)</th>
                         </tr>
@@ -279,57 +244,57 @@
                         
                         @if (@$general_setting->invoice_format == 'gst' && @$general_setting->state == 1)
                             <tr>
-                                <td colspan="5">IGST</td>
+                                <td colspan="6">IGST</td>
                                 <td style="text-align:right">{{ number_format((float) $total_product_tax, 2, '.', '') }}
                                 </td>
                             </tr>
                         @elseif(@$general_setting->invoice_format == 'gst' && @$general_setting->state == 2)
                             <tr>
-                                <td colspan="5">SGST</td>
+                                <td colspan="6">SGST</td>
                                 <td style="text-align:right">
                                     {{ number_format((float) ($total_product_tax / 2), 2, '.', '') }}</td>
                             </tr>
                             <tr>
-                                <td colspan="5">CGST</td>
+                                <td colspan="6">CGST</td>
                                 <td style="text-align:right">
                                     {{ number_format((float) ($total_product_tax / 2), 2, '.', '') }}</td>
                             </tr>
                         @endif
                         @if ($lims_sale_data->Tax)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('file.Order Tax') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('file.Order Tax') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->Tax, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         @if ($lims_sale_data->DiscountAmount)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('file.Order Discount') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('file.Order Discount') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->DiscountAmount, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         @if (@$lims_sale_data->coupon_discount)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('file.Coupon Discount') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('file.Coupon Discount') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->coupon_discount, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         @if ($lims_sale_data->Shipping)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('Shipping Charges') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('Shipping Charges') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->Shipping, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         <tr>
-                            <th colspan="5" style="text-align:left">{{ trans('file.grand total') }}</th>
+                            <th colspan="6" style="text-align:left">{{ trans('file.grand total') }}</th>
                             <th style="text-align:right">
                                 {{ number_format((float) $lims_sale_data->GrandTotal, 2, '.', '') }}</th>
                         </tr>
                         <tr>
-                            <th colspan="5" style="text-align:left">Due Amount</th>
+                            <th colspan="6" style="text-align:left">Due Amount</th>
                             <th style="text-align:right">
                                 <?php echo($due_amount)?></th>
                         </tr>
@@ -352,11 +317,11 @@
                         @foreach ($lims_payment_data as $payment_data)
                             <tr style="background-color:#ddd;">
                                 <td style="padding: 5px;width:30%">{{ trans('file.Paid By') }}:
-                                    {{ $payment_data->paying_method }}</td>
+                                    {{ $payment_data->PayingMethod }}</td>
                                 <td style="padding: 5px;width:40%">Paid amount:
-                                    {{ number_format((float) $payment_data->amount, 2, '.', '') }}</td>
+                                    {{ number_format((float) $payment_data->Amount, 2, '.', '') }}</td>
                                 <td style="padding: 5px;width:30%">{{ trans('file.Change') }}:
-                                    {{ number_format((float) $payment_data->change, 2, '.', '') }}</td>
+                                    {{ number_format((float) $payment_data->Change, 2, '.', '') }}</td>
                             </tr>
                         @endforeach
                         <!--<tr>-->
