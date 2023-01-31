@@ -195,7 +195,7 @@
                             <th>Code</th>
                             <th>RRP</th>
                             <th>Disc. Price</th>
-                            <!--<th>Tax</th>-->
+                            <th>Tax</th>
                             <th>Qty</th>
                             
                             <th style="text-align: right;">Total</th>
@@ -205,19 +205,19 @@
                         <?php $total_product_tax = 0; ?>
                         @foreach ($lims_product_sale_data as $key => $product_sale_data)
                             <?php
-                            $lims_product_data = \App\Product::find($product_sale_data->product_id);
-                            if ($product_sale_data->variant_id) {
-                                $variant_data = \App\Variant::find($product_sale_data->variant_id);
-                                $product_name = $lims_product_data->name . ' [' . $variant_data->name . ']';
-                            } elseif ($product_sale_data->product_batch_id) {
-                                $product_batch_data = \App\ProductBatch::select('batch_no')->find($product_sale_data->product_batch_id);
-                                $product_name = $lims_product_data->name . ' [' . trans('file.Batch No') . ':' . $product_batch_data->batch_no . ']';
-                            } else {
-                                $product_name = $lims_product_data->name;
-                                $product_price = $lims_product_data->price;
-                                $product_code = $lims_product_data->code;
-                                $commission_name = $product_sale_data->salesman_name;
-                            }
+                            $lims_product_data = \DB::table('item')->where('ItemID',$product_sale_data->ItemID)->first();
+                            // if ($product_sale_data->variant_id) {
+                            //     $variant_data = \App\Variant::find($product_sale_data->variant_id);
+                            //     $product_name = $lims_product_data->name . ' [' . $variant_data->name . ']';
+                            // } elseif ($product_sale_data->product_batch_id) {
+                            //     $product_batch_data = \App\ProductBatch::select('batch_no')->find($product_sale_data->product_batch_id);
+                            //     $product_name = $lims_product_data->name . ' [' . trans('file.Batch No') . ':' . $product_batch_data->batch_no . ']';
+                            // } else {
+                                $product_name = $lims_product_data->ItemName;
+                                $product_price = $lims_product_data->SellingPrice;
+                                $product_code = $lims_product_data->ItemCode;
+                                // $commission_name = $product_sale_data->salesman_name;
+                            // }
                             ?>
 
                             <tr>
@@ -230,26 +230,26 @@
                                 <td>
                                     {{ $product_price }}
                                 </td>
-                                <td>{{ number_format((float) ($product_sale_data->total / $product_sale_data->qty), 2, '.', '') }}
+                                <td>{{ number_format((float) ($product_sale_data->Total / $product_sale_data->Qty), 2, '.', '') }}
 
                                 
                                 </td>
 
-                                <!--<td>-->
-                                <!--@if ($product_sale_data->tax_rate)-->
-                                <!--        <?php //$total_product_tax += $product_sale_data->tax; ?>-->
-                                <!--        {{ $product_sale_data->tax_rate }}%-->
-                                <!--    @endif-->
-                                <!--</td>-->
                                 <td>
-                                    {{ $product_sale_data->qty }}
+                                @if ($product_sale_data->Tax)
+                                      <?php $total_product_tax += $product_sale_data->Tax; ?>
+                                        {{ $product_sale_data->Tax }}%
+                                @endif
+                                </td>
+                                <td>
+                                    {{ $product_sale_data->Qty }}
                                 </td>
 
                                 
 
 
                                 <td style="text-align:right;">
-                                    {{ number_format((float) $product_sale_data->total, 2, '.', '') }}
+                                    {{ number_format((float) $product_sale_data->Total, 2, '.', '') }}
                                 </td>
                             </tr>
                             {{-- <tr>
@@ -259,14 +259,14 @@
 
                         <!-- <tfoot> -->
                         <tr>
-                            <th colspan="5" style="text-align:left">{{ trans('file.Total') }}</th>
+                            <th colspan="6" style="text-align:left">{{ trans('file.Total') }}</th>
                             <th style="text-align:right">
                                 {{ number_format((float) $lims_sale_data->SubTotal, 2, '.', '') }}</th>
                         </tr>
                         
                           @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
                            <tr>
-                            <th colspan="5" style="text-align:left">Extra Tax</th>
+                            <th colspan="6" style="text-align:left">Extra Tax</th>
                             <th style="text-align:right">
                                 4%(<?php echo( $percentx)?>)</th>
                         </tr>
@@ -279,57 +279,57 @@
                         
                         @if (@$general_setting->invoice_format == 'gst' && @$general_setting->state == 1)
                             <tr>
-                                <td colspan="5">IGST</td>
+                                <td colspan="6">IGST</td>
                                 <td style="text-align:right">{{ number_format((float) $total_product_tax, 2, '.', '') }}
                                 </td>
                             </tr>
                         @elseif(@$general_setting->invoice_format == 'gst' && @$general_setting->state == 2)
                             <tr>
-                                <td colspan="5">SGST</td>
+                                <td colspan="6">SGST</td>
                                 <td style="text-align:right">
                                     {{ number_format((float) ($total_product_tax / 2), 2, '.', '') }}</td>
                             </tr>
                             <tr>
-                                <td colspan="5">CGST</td>
+                                <td colspan="6">CGST</td>
                                 <td style="text-align:right">
                                     {{ number_format((float) ($total_product_tax / 2), 2, '.', '') }}</td>
                             </tr>
                         @endif
                         @if ($lims_sale_data->Tax)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('file.Order Tax') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('file.Order Tax') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->Tax, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         @if ($lims_sale_data->DiscountAmount)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('file.Order Discount') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('file.Order Discount') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->DiscountAmount, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         @if (@$lims_sale_data->coupon_discount)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('file.Coupon Discount') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('file.Coupon Discount') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->coupon_discount, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         @if ($lims_sale_data->Shipping)
                             <tr>
-                                <th colspan="5" style="text-align:left">{{ trans('Shipping Charges') }}</th>
+                                <th colspan="6" style="text-align:left">{{ trans('Shipping Charges') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->Shipping, 2, '.', '') }}</th>
                             </tr>
                         @endif
                         <tr>
-                            <th colspan="5" style="text-align:left">{{ trans('file.grand total') }}</th>
+                            <th colspan="6" style="text-align:left">{{ trans('file.grand total') }}</th>
                             <th style="text-align:right">
                                 {{ number_format((float) $lims_sale_data->GrandTotal, 2, '.', '') }}</th>
                         </tr>
                         <tr>
-                            <th colspan="5" style="text-align:left">Due Amount</th>
+                            <th colspan="6" style="text-align:left">Due Amount</th>
                             <th style="text-align:right">
                                 <?php echo($due_amount)?></th>
                         </tr>

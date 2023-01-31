@@ -282,8 +282,8 @@ class PosController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" target="_blank" title="Edit Invoice"><i class="bx bx-pencil align-middle me-1"></i></a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" target="_blank" title="Show Invoice"><i class="fa fa-eye align-middle me-1"></i></a><a href="' . route('invoice.print', ['id' => $row->InvoiceMasterID]) . '" target="_blank" title="Print Invoice"><i class="fa fa-print align-middle me-1"></i></a>';
-                    // $btn = '<div class="btn-group">
-                    // <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
+                    $btn = '<div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
                     $btn .= '<ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">';
                     $btn .= '<li><a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="btn btn-link"><i class="dripicons-document-edit"></i> Edit Invoice</a></li><li>';
                     $btn .= '<li><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="btn btn-link"><i class="fa fa-eye"></i> View Invoice</a></li><li>';
@@ -291,7 +291,7 @@ class PosController extends Controller
                     $btn .='<li>
                     <button type="button" class="add-payment btn btn-link" data-id = "'.$row->InvoiceMasterID.'" data-toggle="modal" data-target="#add-payment"><i class="fa fa-plus"></i> '.trans('file.Add Payment').'</button>
                 </li>';
-                    $btn .= ' </ul>';
+                    $btn .= ' </ul></div>';
                     return $btn;
                 })
                 ->rawColumns(['payment_status', 'action'])
