@@ -1017,7 +1017,18 @@ class TeqPosController extends Controller
         return $data;
     }
 
-
+    public function extra_tax_charged(Request $request)
+    { 
+        $input = $request->all();
+        $id=$request->sale_id;
+        // dd($id);
+        
+        $lims_user_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
+        $lims_user_data->update($input);
+        // return response()->json(['success'=>'Product saved successfully.']);
+        return redirect()->back()->with('sale.invoice3', 'Data updated successfullly');
+        // return 'hello';
+    } 
 
    /*  public function generateCode()
     {

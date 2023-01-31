@@ -1,0 +1,241 @@
+date : 03-11-2022
+
+CREATE TABLE `emp_salary` (
+  `EmployeeAllowanceID` int(8) NOT NULL AUTO_INCREMENT,
+  `EmployeeID` int(8) DEFAULT NULL,
+  `AllowanceListID` int(8) DEFAULT NULL,
+  `Amount` int(8) DEFAULT NULL,
+  `Active` varchar(3) DEFAULT 'Y',
+  `eDate` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`EmployeeAllowanceID`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+
+=========================================================================
+date: 10-11-2022
+CREATE or replace VIEW `v_leave` AS select `leave`.`LeaveID` AS `LeaveID`,`branch`.`BranchName` AS `BranchName`,`leave`.`EmployeeID` AS `EmployeeID`,`v_employee`.`FirstName` AS `FirstName`,`v_employee`.`MiddleName` AS `MiddleName`,`v_employee`.`LastName` AS `LastName`,`v_employee`.`JobTitleName` AS `JobTitleName`,`v_employee`.`DepartmentName` AS `DepartmentName`,`leave`.`FromDate` AS `FromDate`,`leave`.`ToDate` AS `ToDate`,to_days(`leave`.`ToDate`) - to_days(`leave`.`FromDate`) AS `NoOfDays`,`leave`.`Reason` AS `Reason`,`leave`.`DaysApproved` AS `DaysApproved`,`leave`.`DaysRemaining` AS `DaysRemaining`,`leave`.`OMStatus` AS `OMStatus`,`leave`.`HRStatus` AS `HRStatus`,`leave`.`GMStatus` AS `GMStatus`,`leave`.`BranchID` AS `BranchID`,`leave`.`LeaveTypeID` AS `LeaveTypeID`,`leave_type`.`LeaveTypeName` AS `LeaveTypeName`,`leave_type`.`DaysAllowed` AS `DaysAllowed` from (((`leave` join `branch` on(`leave`.`BranchID` = `branch`.`BranchID`)) join `v_employee` on(`leave`.`EmployeeID` = `v_employee`.`EmployeeID`)) join `leave_type` on(`leave`.`LeaveTypeID` = `leave_type`.`LeaveTypeID`))
+======================================================================
+date: 10-11-2022
+CREATE TABLE `falak_travel_hr`.`monthly_target` (`MonthlyTargetID` INT NOT NULL AUTO_INCREMENT , `BranchID` INT NULL DEFAULT NULL , `MonthName` VARCHAR(255) NULL DEFAULT NULL , `Target` VARCHAR(255) NULL DEFAULT NULL , `CurrentTarget` VARCHAR(255) NULL DEFAULT NULL , `WorkingDays` VARCHAR(255) NULL DEFAULT NULL , `DisableDays` VARCHAR(255) NULL DEFAULT NULL , `eDate` TIMESTAMP NULL DEFAULT NULL , PRIMARY KEY (`MonthlyTargetID`)) ENGINE = MyISAM;
+=======
+CREATE TABLE `monthly_target` (`MonthlyTargetID` INT NOT NULL AUTO_INCREMENT , `BranchID` INT NULL DEFAULT NULL , `MonthName` VARCHAR(255) NULL DEFAULT NULL , `Target` TEXT NULL DEFAULT NULL , `CurrentTarget` VARCHAR(255) NULL DEFAULT NULL , `DisableDays` TEXT NULL DEFAULT NULL , `eDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`MonthlyTargetID`)) ENGINE = MyISAM;
+
+======================================================================
+date: 16-11-2022
+
+CREATE TABLE `falak_travel_hr`.`live_account` (`LiveAccountID` INT NOT NULL AUTO_INCREMENT , `BranchID` INT NULL DEFAULT NULL , `ID` INT NULL DEFAULT NULL , `EmployeeID` INT NULL DEFAULT NULL , `Date` DATE NULL DEFAULT NULL , `Dialer` INT NULL DEFAULT NULL , `Remarks` TEXT NULL DEFAULT NULL , `eDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`LiveAccountID`)) ENGINE = MyISAM;
+
+=====================================================================
+date: 17-11-2022
+
+Create or replace VIEW `v_live_account` AS SELECT `live_account`.`LiveAccountID` AS `LiveAccountID`, `live_account`.`ID` AS `ID`,  date_format(`live_account`.`Date`,'%d/%m/%Y') AS `Date`, date_format(`live_account`.`Date`,'%b-%Y') AS `MonthName`, `employee`.`FirstName` AS `FirstName`, `employee`.`MiddleName` AS `MiddleName`, `employee`.`LastName` AS `LastName`, `live_account`.`Dialer` AS `Dialer`, `live_account`.`EmployeeID` AS `EmployeeID`, `live_account`.`BranchID` AS `BranchID`, `live_account`.`Remarks` AS `Remarks` FROM (`live_account` join `employee` on(`live_account`.`EmployeeID` = `employee`.`EmployeeID`))
+
+======================================================================
+
+date: 21-11-2022
+ALTER TABLE `monthly_target` ADD `LiveTarget` VARCHAR(255) NULL DEFAULT NULL AFTER `CurrentTarget`;
+
+
+===================================================================
+date: 28-11-2022
+
+ALTER TABLE `users` ADD `isAdmin` BOOLEAN NOT NULL DEFAULT FALSE AFTER `Active`;
+
+==========================================================================
+date: 29-11-2022
+
+CREATE or replace VIEW `v_users`  AS SELECT `extbooks_ext_hrm`.`users`.`UserID` AS `UserID`,`extbooks_ext_hrm`.`users`.`BranchID` AS `BranchID`,`extbooks_ext_hrm`.`users`.`FullName` AS `FullName`,`extbooks_ext_hrm`.`users`.`Email` AS `Email`,`extbooks_ext_hrm`.`users`.`Password` AS `Password`,`extbooks_ext_hrm`.`users`.`UserType` AS `UserType`,`extbooks_ext_hrm`.`users`.`eDate` AS `eDate`,`extbooks_ext_hrm`.`users`.`Active` AS `Active`,`extbooks_ext_hrm`.`users`.`isAdmin` AS `isAdmin`,`extbooks_ext_hrm`.`branch`.`BranchName` AS `BranchName` from (`extbooks_ext_hrm`.`users` join `extbooks_ext_hrm`.`branch` on((`extbooks_ext_hrm`.`users`.`BranchID` = `extbooks_ext_hrm`.`branch`.`BranchID`))) ;
+
+
+
+
+
+=====================================================================
+date: 29-11-2022
+
+ALTER TABLE `documents` ADD `BranchID` INT NULL DEFAULT NULL AFTER `DocumentID`;
+
+
+CREATE or replace VIEW `v_documents` AS 
+SELECT 
+`extbooks_ext_hrm`.`documents`.`DocumentID` AS `DocumentID`,
+`extbooks_ext_hrm`.`documents`.`DocumentCategoryID` AS `DocumentCategoryID`,
+`extbooks_ext_hrm`.`documents`.`BranchID` AS `BranchID`,
+`extbooks_ext_hrm`.`documents`.`EmployeeID` AS `EmployeeID`,
+`extbooks_ext_hrm`.`branch`.`BranchName` AS `BranchName`,
+`extbooks_ext_hrm`.`document_category`.`DocumentCategoryName` AS `DocumentCategoryName`,
+`extbooks_ext_hrm`.`documents`.`FileName` AS `FileName`,
+`extbooks_ext_hrm`.`documents`.`StartDate` AS `StartDate`,
+`extbooks_ext_hrm`.`documents`.`ExpiryDate` AS `ExpiryDate`,
+`extbooks_ext_hrm`.`documents`.`Cost` AS `Cost`,
+`extbooks_ext_hrm`.`documents`.`MimeType` AS `MimeType`,
+`extbooks_ext_hrm`.`documents`.`File` AS `File`,
+`extbooks_ext_hrm`.`documents`.`FileSize` AS `FileSize`,
+date_format(`extbooks_ext_hrm`.`documents`.`eDate`,'%d-%m-%Y,  %H:%i') AS `eDate`
+from ((`extbooks_ext_hrm`.`documents` left join `extbooks_ext_hrm`.`branch` 
+      on((`extbooks_ext_hrm`.`documents`.`BranchID` = `extbooks_ext_hrm`.`branch`.`BranchID`)))
+left join `extbooks_ext_hrm`.`document_category` on((`extbooks_ext_hrm`.`documents`.`DocumentCategoryID` = `extbooks_ext_hrm`.`document_category`.`DocumentCategoryID`)))
+
+
+=================================================================
+
+Date: 1-12-2022
+
+INSERT INTO `role` (`RoleID`, `Table`, `Action`, `Allow`) VALUES (NULL, 'Role', 'Create/List', 'Y');
+INSERT INTO `role` (`RoleID`, `Table`, `Action`, `Allow`) VALUES (NULL, 'Role', 'Update', 'Y');
+INSERT INTO `role` (`RoleID`, `Table`, `Action`, `Allow`) VALUES (NULL, 'Documents', 'Create/List', 'Y');
+INSERT INTO `role` (`RoleID`, `Table`, `Action`, `Allow`) VALUES (NULL, 'Fleet Management', 'Create/List', 'Y');
+INSERT INTO `role` (`RoleID`, `Table`, `Action`, `Allow`) VALUES (NULL, 'Monthly Target', 'Create/List', 'Y');
+INSERT INTO `role` (`RoleID`, `Table`, `Action`, `Allow`) VALUES (NULL, 'Monthly Target', 'Update', 'Y');
+INSERT INTO `role` (`RoleID`, `Table`, `Action`, `Allow`) VALUES (NULL, 'Monthly Target', 'Delete', 'Y');
+
+
+
+====================================================================
+
+
+Date: 9-12-2022
+
+ALTER TABLE `item` ADD `image` VARCHAR(255) NULL DEFAULT NULL AFTER `ItemCode`;
+
+
+================================================================================
+
+Date: 13-12-2022
+
+CREATE TABLE `extbooks_ext_hrm`.`item_category` (`ItemCategoryID` INT NOT NULL AUTO_INCREMENT , `title` VARCHAR(255) NULL DEFAULT NULL , PRIMARY KEY (`ItemCategoryID`)) ENGINE = MyISAM;
+
+ALTER TABLE `item` ADD `ItemCategoryID` INT NULL DEFAULT NULL AFTER `ItemID`;
+
+ALTER TABLE `item` CHANGE `image` `ItemImage` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+INSERT INTO `item_category` (`ItemCategoryID`, `title`) VALUES (NULL, 'Accessories'), (NULL, 'Cars');
+
+
+================================================================================
+
+Date: 16-12-2022
+
+
+CREATE TABLE `extbooks_ext_hrm`.`salesman` (`SalesmanID` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NULL DEFAULT NULL , `contact` VARCHAR(255) NULL DEFAULT NULL , `email` VARCHAR(255) NULL DEFAULT NULL , `CreatedDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `UpdatedDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`SalesmanID`)) ENGINE = MyISAM;
+
+INSERT INTO `salesman` (`SalesmanID`, `name`, `contact`, `email`, `CreatedDate`, `UpdatedDate`) VALUES (NULL, 'Ahmad', '123456', 'ahmad@email.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (NULL, 'Ali', '3232223', 'ali@email.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+
+
+
+===============================================================================
+
+Date: 19-12-2022
+
+CREATE TABLE `extbooks_ext_hrm`.`warehouse` (`WarehouseID` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NULL DEFAULT NULL , PRIMARY KEY (`WarehouseID`)) ENGINE = MyISAM;
+
+ALTER TABLE `item` ADD `WarehouseID` INT NULL DEFAULT NULL AFTER `ItemCategoryID`;
+
+
+
+==============================================================================
+
+Date: 9-1-2023
+
+ALTER TABLE `party` ADD `customer_group_id` INT NULL DEFAULT NULL AFTER `PartyID`;
+ALTER TABLE `party` ADD `company_name` VARCHAR(191) NULL DEFAULT NULL AFTER `PartyName`;
+ALTER TABLE `party` ADD `deposit` DOUBLE NULL DEFAULT NULL AFTER `Website`, ADD `expense` DOUBLE NULL DEFAULT NULL AFTER `deposit`;
+
+=============================================================================
+
+Date: 10-1-2023
+
+ALTER TABLE `party` DROP `company_name`;
+ALTER TABLE `party` CHANGE `deposit` `Deposit` DOUBLE NULL DEFAULT NULL;
+ALTER TABLE `party` CHANGE `expense` `Expense` DOUBLE NULL DEFAULT NULL;
+ALTER TABLE `party` CHANGE `customer_group_id` `CustomerGroupID` INT NULL DEFAULT NULL;
+
+
+============================================================================
+
+Date: 13-1-2023
+
+ALTER TABLE `invoice_master` ADD `WarehouseID` INT NULL DEFAULT NULL AFTER `InvoiceMasterID`;
+ALTER TABLE `item` ADD `TaxMethod` INT NULL DEFAULT NULL AFTER `Taxable`;
+ALTER TABLE `invoice_detail` ADD `Discount` DOUBLE NOT NULL DEFAULT '0.00' AFTER `Rate`;
+UPDATE `item` SET `ItemType` = 'standard'
+ALTER TABLE `invoice_master` ADD `TotalQty` DOUBLE NULL DEFAULT NULL AFTER `Total`;
+
+
+====================================================================
+
+Date: 20-1-2023
+
+ALTER TABLE `item` ADD `IsActive` TINYINT(1) NULL DEFAULT NULL AFTER `test`;
+UPDATE `item` SET `IsActive` = '1';
+ALTER TABLE `item` ADD `BrandID` INT NULL DEFAULT NULL AFTER `ItemCategoryID`;
+UPDATE `item` SET `BrandID` = '5';
+ALTER TABLE `item_category` ADD `ParentID` INT NULL DEFAULT NULL AFTER `ItemCategoryID`;
+ALTER TABLE `item_category` ADD `IsActive` TINYINT(1) NULL DEFAULT NULL AFTER `title`;
+UPDATE `item_category` SET `IsActive` = '1';
+ALTER TABLE `item` ADD `IsFeatured` TINYINT NULL DEFAULT NULL AFTER `test`;
+UPDATE `item` SET `IsFeatured` = '1';
+=====================================================================
+
+23-01-2022
+
+ALTER TABLE `item_category` ADD `image` VARCHAR(191) NULL DEFAULT NULL AFTER `title`;
+
+
+
+================================================================
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `paymentID` bigint UNSIGNED NOT NULL,
+  `PaymentReference` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `InvoiceMasterID` int NOT NULL,
+  `PartyID` int NOT NULL DEFAULT '0',
+  `UserID` int NOT NULL,
+  `Amount` double(8,2) NOT NULL,
+  `Change` double(8,2) NOT NULL,
+  `PayingMethod` enum('Cash','Gift Card','Credit Card','Cheque','Paypal','Deposit') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Cash',
+  `PaymentNote` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`paymentID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `paymentID` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+COMMIT;
+=============================================================================
+
+ALTER TABLE `payments` ADD `UserID` INT NOT NULL AFTER `PartyID`;
+=======
+Date: 24-01-2023
+
+ALTER TABLE `item` ADD `TotalQty` DOUBLE NULL DEFAULT NULL AFTER `TaxMethod`;
+
+==========================================================
+
+Date: 30-01-2023
+
+ALTER TABLE `payments` CHANGE `paymentID` `paymentID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`paymentID`);
+
+===============================================================

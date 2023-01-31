@@ -587,25 +587,26 @@
                     <nav class="navbar">
                       <div class="container-fluid">
                         <div class="navbar-holder d-flex align-items-center justify-content-between">
-                          <a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a>
+                          <!-- <a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a> -->
+                          <a href="{{url('invoice-listing')}}" class="menu-btn"><i class="fa fa-bars"></i></a>
                           <div class="navbar-header">
                           
                           <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                             <li class="nav-item"><a id="btnFullscreen" title="Full Screen"><i class="dripicons-expand"></i></a></li> 
-                            <li class="nav-item"><a class="dropdown-item" href="" title="{{trans('file.POS Setting')}}"><i class="dripicons-gear"></i></a> </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item"><a class="dropdown-item" href="" title="{{trans('file.POS Setting')}}"><i class="dripicons-gear"></i></a> </li> -->
+                            <!-- <li class="nav-item">
                                 <a href="" title="{{trans('file.Print Last Reciept')}}"><i class="dripicons-print"></i></a>
-                            </li>
-                            <li class="nav-item">
+                            </li> -->
+                            <!-- <li class="nav-item">
                                 <a href="" id="register-details-btn" title="{{trans('file.Cash Register Details')}}"><i class="dripicons-briefcase"></i></a>
-                            </li>
+                            </li> -->
 
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="" id="today-sale-btn" title="{{trans('file.Today Sale')}}"><i class="dripicons-shopping-bag"></i></a>
-                            </li>
-                            <li class="nav-item">
+                            </li> -->
+                            <!-- <li class="nav-item">
                                 <a href="" id="today-profit-btn" title="{{trans('file.Today Profit')}}"><i class="dripicons-graph-line"></i></a>
-                            </li>
+                            </li> -->
                             <li class="nav-item" id="notification-icon">
                                   <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-bell"></i><span class="badge badge-danger notification-number"></span>
                                       <span class="caret"></span>
@@ -620,34 +621,27 @@
                                           </li>
                                   </ul>
                             </li>
-                            <li class="nav-item"> 
+                            <!-- <li class="nav-item"> 
                                 <a class="dropdown-item" href="" target="_blank"><i class="dripicons-information"></i> {{trans('file.Help')}}</a>
-                            </li>&nbsp;
+                            </li>&nbsp; -->
                             <li class="nav-item">
                                   <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-user"></i> <span>Admin</span> <i class="fa fa-angle-down"></i>
                                   </a>
                                   <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
                                       <li> 
-                                        <a href=""><i class="dripicons-user"></i> {{trans('file.profile')}}</a>
+                                        <a href="{{url('/UserProfile')}}"><i class="dripicons-user"></i> {{trans('file.profile')}}</a>
                                       </li>
                                       <li> 
-                                        <a href=""><i class="dripicons-gear"></i> {{trans('file.settings')}}</a>
+                                        <a href="{{url('/pos-setting')}}"><i class="dripicons-gear"></i> {{trans('file.settings')}}</a>
                                       </li>
                                       <li> 
-                                        <a href=""><i class="dripicons-swap"></i> {{trans('file.My Transaction')}}</a>
+                                        <a href="{{url('/invoice-listing')}}"><i class="dripicons-swap"></i> {{trans('file.My Transaction')}}</a>
                                       </li>
                                       <li> 
-                                        <a href=""><i class="dripicons-vibrate"></i> {{trans('file.My Holiday')}}</a>
+                                        <a href="{{url('/ChangePassword')}}"><i class="dripicons-vibrate"></i> Change Password</a>
                                       </li>
                                       <li>
-                                        <a href=""
-                                           onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();"><i class="dripicons-power"></i>
-                                            {{trans('file.logout')}}
-                                        </a>
-                                        <form id="logout-form" action="" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
+                                        <a href="{{URL('/Logout')}}"><i class="dripicons-power"></i>Logout</a>
                                       </li>
                                   </ul>
                             </li> 

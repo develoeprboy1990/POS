@@ -1,323 +1,400 @@
 <!DOCTYPE html>
-<html lang="en">
+    <html>
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>OTHER Revinew Invoice</title>
+    <head>
+          <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/png" href="#" />
+    <title>Invoice Print</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-  <style>
-    body {
-      line-height: 1.5em;
-      font-family: Tahoma, Geneva, sans-serif;
-      font-size: 14px;
-      padding-top: 3mm;
-    }
+        <style type="text/css">
+            * {
+                font-size: 14px;
+                line-height: 24px;
+                font-family: 'Ubuntu', sans-serif;
+                text-transform: capitalize;
+            }
 
-    * {
-      margin: 0px;
-      padding: 0px;
-      box-sizing: border-box;
-    }
+            .btn {
+                padding: 7px 10px;
+                text-decoration: none;
+                border: none;
+                display: block;
+                text-align: center;
+                margin: 7px;
+                cursor: pointer;
+            }
 
-    table {
-      border-collapse: collapse;
-      border-spacing: 0;
-    }
+            .btn-info {
+                background-color: #999;
+                color: #FFF;
+            }
 
-    table.main-table {
-      border: 2px solid #000;
-    }
+            .btn-primary {
+                background-color: #6449e7;
+                color: #FFF;
+                width: 100%;
+            }
+
+            td,
+            th,
+            tr,
+            table {
+                border-collapse: collapse;
+            }
+
+            tr {
+                border-bottom: 1px dotted #ddd;
+            }
+
+            td,
+            th {
+                padding: 7px 0;
+                /* width: 50%; */
+                width: auto;
+                text-align: left;
+            }
+
+            table {
+                width: 100%;
+            }
+
+            tfoot tr th:first-child {
+                text-align: left;
+            }
+
+            .centered {
+                text-align: center;
+                align-content: center;
+            }
+            .centered > * {
+                line-height: 20px !important;
+                margin: 5px 0 !important;
+            }
+
+            small {
+                font-size: 11px;
+            }
+
+            @media print {
+                * {
+                    font-size: 12px;
+                    line-height: 20px;
+                }
+
+                td,
+                th {
+                    padding: 5px 0;
+                }
+
+                .hidden-print {
+                    display: none !important;
+                }
+
+                @page {
+                    margin: 10px;
+                    margin-top: -30px;
+                }
+
+                body {
+                    margin: 0.5cm;
+                    margin-bottom: 1.6cm;
+                }
+
+                tbody::after {
+                    content: '';
+                    display: block;
+                    page-break-after: always;
+                    page-break-inside: always;
+                    page-break-before: avoid;
+                }
+            }
+
+        </style>
+    </head>
+
+    <body>
+<?php
+            $myNumber = "$lims_sale_data->GrandTotal";
+            $percentToGet = 4;
+            $percentInDecimal = $percentToGet / 100;
+            $percent = $percentInDecimal * $myNumber;
+            $percent2 = $myNumber + $percent;
+            $percentx = number_format($percent, 2);
+            // echo $percent2;
+            //calculate due amount
+            $paid_amount=$lims_sale_data->Paid;
+            $total_amount=$lims_sale_data->GrandTotal;
+            $due_amount= $total_amount - $paid_amount;
+            // echo $due_amount;
+            ?>
+        <div style="margin:0 auto">
+            @if (preg_match('~[0-9]~', url()->previous()))
+                @php $url = '../../pos'; @endphp
+            @else
+                @php $url = url()->previous(); @endphp
+            @endif
+            <div class="hidden-print">
+                <div class="row">
+                <div class="col-sm-4"><a href="{{ $url }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                                {{ trans('file.Back') }}</a></div>
+                <div class="col-sm-4"><button style="margin-right: 260px !important;" onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>
+                                {{ trans('file.Print') }}</button></div>
+                <div class="col-sm-4">
+                    
+                    @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
+                  
+                  @else
+                      
+                  <form class="form-horizontal" method="Post" action="{{ route('admin.extra_tax')}}">
+                      @csrf
+                      @method('PUT')
+                      <input style="display: none;" type="text" name="grand_total" value=<?php echo $percent2 ?> class="form-control">
+                      <input style="display: none;" class="d-none" type="text" name="sale_id" value="{{$lims_sale_data->InvoiceMasterID}}" class="form-control">
+                      <input style="display: none;" class="d-none" type="text" name="extra_tax" value="{{$lims_sale_data->ReferenceNo}}" class="form-control">
+                      <button class="btn btn-info" style="width: 100%;">Charge Extra</button>
+                      
+                  </form>
+                  @endif
+                    
+                </div>
+            </div>
+               
+             
+            </div>
+
+            <div id="receipt-data"><br>
+                <div class="centered">
+                    @if (@$general_setting->site_logo)
+                        <img src="{{ url('public/logo', $general_setting->site_logo) }}" height="200" width="300"
+                            style="margin:10px 0;">
+                    @endif
+
+                    <h2>{{ $lims_warehouse_data->name }}</h2>
+
+                    <p>{{ trans('file.Address') }}: {{ $lims_warehouse_data->address }}
+                        <br>{{ trans('file.Phone Number') }}: {{ $lims_warehouse_data->phone }}
+                    </p>
+                </div>
+                <p>{{ trans('file.Date') }}: {{ $lims_sale_data->Date }}<br>
+                   Invoice no: {{ $lims_sale_data->ReferenceNo }}<br>
+                    {{ trans('file.customer') }}: {{ $lims_customer_data->PartyName }}<br>
+                    {{ trans('Phone number') }}: {{ $lims_customer_data->Phone }}<br>
+                    {{ trans('Address') }}: {{ $lims_customer_data->Address }}
+                </p>
+                <table class="table-data">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>RRP</th>
+                            <th>Disc. Price</th>
+                            <!--<th>Tax</th>-->
+                            <th>Qty</th>
+                            
+                            <th style="text-align: right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $total_product_tax = 0; ?>
+                        @foreach ($lims_product_sale_data as $key => $product_sale_data)
+                            <?php
+                            $lims_product_data = \App\Product::find($product_sale_data->product_id);
+                            if ($product_sale_data->variant_id) {
+                                $variant_data = \App\Variant::find($product_sale_data->variant_id);
+                                $product_name = $lims_product_data->name . ' [' . $variant_data->name . ']';
+                            } elseif ($product_sale_data->product_batch_id) {
+                                $product_batch_data = \App\ProductBatch::select('batch_no')->find($product_sale_data->product_batch_id);
+                                $product_name = $lims_product_data->name . ' [' . trans('file.Batch No') . ':' . $product_batch_data->batch_no . ']';
+                            } else {
+                                $product_name = $lims_product_data->name;
+                                $product_price = $lims_product_data->price;
+                                $product_code = $lims_product_data->code;
+                                $commission_name = $product_sale_data->salesman_name;
+                            }
+                            ?>
+
+                            <tr>
+                                <td>
+                                    {{ $product_name }}<br>
+                                </td>
+                                <td>
+                                    {{ $product_code }}
+                                </td>
+                                <td>
+                                    {{ $product_price }}
+                                </td>
+                                <td>{{ number_format((float) ($product_sale_data->total / $product_sale_data->qty), 2, '.', '') }}
+
+                                
+                                </td>
+
+                                <!--<td>-->
+                                <!--@if ($product_sale_data->tax_rate)-->
+                                <!--        <?php //$total_product_tax += $product_sale_data->tax; ?>-->
+                                <!--        {{ $product_sale_data->tax_rate }}%-->
+                                <!--    @endif-->
+                                <!--</td>-->
+                                <td>
+                                    {{ $product_sale_data->qty }}
+                                </td>
+
+                                
 
 
-    table.header-table td.logo {
-      width: 27%;
-      border-radius: 100%;
-    }
+                                <td style="text-align:right;">
+                                    {{ number_format((float) $product_sale_data->total, 2, '.', '') }}
+                                </td>
+                            </tr>
+                            {{-- <tr>
+                                <td colspan="5">{{$commission_name}}</td>
+                            </tr> --}}
+                        @endforeach
 
-    table.header-table td.logo figure {
-      border: 3px solid #000;
-      width: 190px;
-      height: 190px;
-      border-radius: 100%;
-      overflow: hidden;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-    }
+                        <!-- <tfoot> -->
+                        <tr>
+                            <th colspan="5" style="text-align:left">{{ trans('file.Total') }}</th>
+                            <th style="text-align:right">
+                                {{ number_format((float) $lims_sale_data->SubTotal, 2, '.', '') }}</th>
+                        </tr>
+                        
+                          @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
+                           <tr>
+                            <th colspan="5" style="text-align:left">Extra Tax</th>
+                            <th style="text-align:right">
+                                4%(<?php echo( $percentx)?>)</th>
+                        </tr>
+                    
+                    @else
 
-    table.header-table td.logo img {
-      width: 90%;
-    }
-
-    table.header-table>tbody>tr>td {
-      padding: 7pt 9pt;
-    }
-
-    table.header-table>tbody>tr>td h2 {
-      font-size: 22pt;
-      line-height: normal;
-      border-bottom: 3px solid #000;
-      display: inline-block;
-      padding-bottom: 2px;
-      margin-bottom: 14px;
-    }
-
-    table.header-table>tbody>tr>td table {
-      font-size: 14pt;
-      font-weight: bold;
-      width: 100%;
-    }
-
-    table.about-patient tr td {
-      padding-right: 9pt;
-      vertical-align: top;
-      padding-bottom: 7pt;
-    }
-
-    table.about-patient tr td:first-child {
-      white-space: nowrap;
-    }
-
-    table.about-patient tr td:last-child {
-      width: 100%;
-    }
-
-    table.about-patient tr td:last-child span {
-      display: block;
-      border-bottom: 2px solid #000;
-      padding-bottom: 2px
-    }
-
-
-
-
-
-    .patientinfo {
-      border: 0.75mm solid #000;
-      padding: 1.5mm 1.5mm;
-    }
-
-    .patientinfo .title {
-      font-weight: bold;
-      white-space: nowrap;
-      font-size: 2.7mm;
-      text-decoration: none;
-      padding-right: 0mm;
-    }
-
-    .patientinfo tr th,
-    .patientinfo tr td {
-      vertical-align: top;
-      background-color: #FFFFFF;
-      padding-right: 1mm;
-      font-size: 3mm;
-      text-decoration: underline;
-      font-weight: bold;
-      line-height: 1.3;
-      padding-bottom: 1mm;
-    }
-
-    .patientinfo tr td {
-      padding-right: 2mm;
-      font-size: 2.6mm;
-    }
-
-    .patientinfo tr:last-child th,
-    .patientinfo tr:last-child td {
-      padding-bottom: 0mm !important;
-    }
-
-    .patientinfo tr td.colon {
-      padding-right: 0.35mm;
-      font-size: 2.7mm;
-    }
-
-    .patientinfo tr td:last-child {
-      padding-right: 0px;
-    }
-
-    .logo-header {
-      width: 100%;
-      border-bottom: none;
-      border-spacing: 0px;
-    }
-
-    .logo-header .logo {
-      width: 20%;
-      padding-bottom: 1.2mm;
-      padding-right: 3mm;
-      text-align: center;
-    }
-
-    .header-title {
-      padding: 0px 0px 0.2rem;
-      vertical-align: top;
-      font-size: 3mm;
-      font-weight: bold;
-      line-height: 1.3;
-      letter-spacing: 1.1px;
-    }
-
-    .hostname {
-      font-size: 5mm;
-    }
-
-    .ptntTotal {
-      font-size: 12pt;
-      line-height: normal;
-    }
-
-    .ptntTotal td {
-      padding: 15px 14px;
-      border-collapse: collapse;
-      
-      border: 2px solid #000;
-    }
-
-    .ptntTotal tr td:first-child {
-      border-left: none;
-      white-space: nowrap;
-    }
-
-    .ptntTotal tr td:last-child {
-      width: 100%;
-      border-right: none;
-      text-align: center;
-    }
-
-    .ptntTotal tr:last-child td {
-      border-bottom: none;
-    }
-    .th {
-      font-weight: bold;
-      font-size: 15px !important;
-    }
-  </style>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-</head>
-
-<body>
-
-  <table class="main-table" style="margin: 0px auto; width: 750px;">
-    <tbody>
-      <!-- Header tr start here  -->
-      <tr>
-        <td>
-          <table class="header-table">
-            <tbody>
-              <tr>
-                <!-- <td class="logo"><figure><img src="https://dhqhospital.aursoft.com/assets/img/opd_print_logo.jpg" alt=""></figure></td> -->
-                <td>
-                  <center>
-                    <h2>HRM Invoice</h2>
-                  </center>
-                  <table class="about-patient">
+                    @endif
+                        
+                        
+                        
+                        @if (@$general_setting->invoice_format == 'gst' && @$general_setting->state == 1)
+                            <tr>
+                                <td colspan="5">IGST</td>
+                                <td style="text-align:right">{{ number_format((float) $total_product_tax, 2, '.', '') }}
+                                </td>
+                            </tr>
+                        @elseif(@$general_setting->invoice_format == 'gst' && @$general_setting->state == 2)
+                            <tr>
+                                <td colspan="5">SGST</td>
+                                <td style="text-align:right">
+                                    {{ number_format((float) ($total_product_tax / 2), 2, '.', '') }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">CGST</td>
+                                <td style="text-align:right">
+                                    {{ number_format((float) ($total_product_tax / 2), 2, '.', '') }}</td>
+                            </tr>
+                        @endif
+                        @if ($lims_sale_data->Tax)
+                            <tr>
+                                <th colspan="5" style="text-align:left">{{ trans('file.Order Tax') }}</th>
+                                <th style="text-align:right">
+                                    {{ number_format((float) $lims_sale_data->Tax, 2, '.', '') }}</th>
+                            </tr>
+                        @endif
+                        @if ($lims_sale_data->DiscountAmount)
+                            <tr>
+                                <th colspan="5" style="text-align:left">{{ trans('file.Order Discount') }}</th>
+                                <th style="text-align:right">
+                                    {{ number_format((float) $lims_sale_data->DiscountAmount, 2, '.', '') }}</th>
+                            </tr>
+                        @endif
+                        @if (@$lims_sale_data->coupon_discount)
+                            <tr>
+                                <th colspan="5" style="text-align:left">{{ trans('file.Coupon Discount') }}</th>
+                                <th style="text-align:right">
+                                    {{ number_format((float) $lims_sale_data->coupon_discount, 2, '.', '') }}</th>
+                            </tr>
+                        @endif
+                        @if ($lims_sale_data->Shipping)
+                            <tr>
+                                <th colspan="5" style="text-align:left">{{ trans('Shipping Charges') }}</th>
+                                <th style="text-align:right">
+                                    {{ number_format((float) $lims_sale_data->Shipping, 2, '.', '') }}</th>
+                            </tr>
+                        @endif
+                        <tr>
+                            <th colspan="5" style="text-align:left">{{ trans('file.grand total') }}</th>
+                            <th style="text-align:right">
+                                {{ number_format((float) $lims_sale_data->GrandTotal, 2, '.', '') }}</th>
+                        </tr>
+                        <tr>
+                            <th colspan="5" style="text-align:left">Due Amount</th>
+                            <th style="text-align:right">
+                                <?php echo($due_amount)?></th>
+                        </tr>
+                        <tr>
+                            @if (@$general_setting->currency_position == 'prefix')
+                                <th class="centered" colspan="6">{{ trans('file.In Words') }}:
+                                    <span>{{ config('currency') }}</span>
+                                    <span>{{ str_replace('-', ' ', $numberInWords) }}</span></th>
+                            @else
+                                <th class="centered" colspan="6">{{ trans('file.In Words') }}:
+                                    <span>{{ str_replace('-', ' ', $numberInWords) }}</span>
+                                    <span>{{ config('currency') }}</span></th>
+                            @endif
+                        </tr>
+                    </tbody>
+                    <!-- </tfoot> -->
+                </table>
+                <table>
+                    <tbody>
+                        @foreach ($lims_payment_data as $payment_data)
+                            <tr style="background-color:#ddd;">
+                                <td style="padding: 5px;width:30%">{{ trans('file.Paid By') }}:
+                                    {{ $payment_data->paying_method }}</td>
+                                <td style="padding: 5px;width:40%">Paid amount:
+                                    {{ number_format((float) $payment_data->amount, 2, '.', '') }}</td>
+                                <td style="padding: 5px;width:30%">{{ trans('file.Change') }}:
+                                    {{ number_format((float) $payment_data->change, 2, '.', '') }}</td>
+                            </tr>
+                        @endforeach
+                        <!--<tr>-->
+                        <!--    <td class="centered" colspan="5">-->
+                        <!--        {{ trans('file.Thank you for shopping with us. Please come again') }}</td>-->
+                        <!--</tr>-->
+                        @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
                     <tr>
-                      <td>Invoice #</td>
-                      <td>:</td>
-                      <td><span>{{@$invoice_master->InvoiceNo}}</span></td>
+                        <td class="centered" colspan="3"><strong>4% extra tax will be chaged for non-filers</strong></td>
                     </tr>
-                    <tr>
-                      <td>Customer</td>
-                      <td>:</td>
-                      <td><span>{{$party->PartyName}}</span></td>
-                    </tr>
-                    <tr>
-                      <td>Address</td>
-                      <td>:</td>
-                      <td><span>{{@$party->Address}}</span></td>
-                    </tr>
-                    <tr>
-                      <td>Email</td>
-                      <td>:</td>
-                      <td><span>{{@$party->Email}}</span></td>
-                    </tr>
-                    <tr>
-                      <td>Contact #</td>
-                      <td>:</td>
-                      <td><span>{{@$party->Mobile}}</span></td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      <!-- header tr end here -->
-      <tr>
-        <td>
-          <table class="ptntTotal" width="100%" border="0" cellpadding="5" cellspacing="0">
+                    @else
 
-            <body>
-              <tr>
-                <td width="10%">#</td>
-                <td width="30%" class="th"> Item Name</td>
-                <td width="10%" class="th">Qty</td>
-                <td width="20%" class="th">Unit Price</td>
-                <td width="10%" class="th">Tax(%)</td>
-                <td width="10%" class="th">Amount</td>
-              </tr>
-              @php
-              $productCounter = 1;
-              $class = '';
-              $subTotal = 0;
-              @endphp
-              @foreach($invoice_detail as $detail)
-              <tr>
-                <td width="10%">{{$productCounter}}</td>
-                <td width="30%">{{$detail->Description}}</td>
-                <td width="10%">{{$detail->Qty}}</td>
-                <td width="20%">{{$detail->Rate}}</td>
-                <td width="10%">{{$detail->Tax}}</td>
-                <td width="10%">{{$detail->Total}}</td>
-              </tr>
-              @php
-              $subTotal = $subTotal+($detail->Qty*$detail->Rate);
-              $productCounter ++;
-              $class = ' bgc-default-l4';
-              @endphp
-              @endforeach
-            </body>
-          </table>
-        </td>
-      </tr>
+                    @endif
+                        <tr>
+                            <td class="centered" colspan="5">
+                                <?php echo '<img style="height: 25px; width: 160px;" src="data:image/png;base64,' . DNS1D::getBarcodePNG($lims_sale_data->ReferenceNo, 'C128') . '" width="300" alt="barcode"   />'; ?>
+                                <br>
+                                <?php echo '<img src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->ReferenceNo, 'QRCODE') . '" alt="barcode"   />'; ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <div class="centered" style="margin:30px 0 50px">
+                <small>{{ trans('file.Invoice Generated By') }} {{ @$general_setting->site_title }}.
+                {{ trans('file.Developed By') }} LionCoders</strong></small>
+            </div> -->
+            </div>
+        </div>
 
-      <tr>
-        <td>
-          <table class="ptntTotal" width="100%" border="0" cellpadding="5" cellspacing="0">
+        <script type="text/javascript">
+            localStorage.clear();
 
-            <body>
-              <tr>
-                <td colspan="1">SubTotal</td>
-                <td colspan="2">Tax(%)</td>
-                <td colspan="2">Total Amount</td>
-                <td colspan="2">Due Amount</td>
-                <td colspan="2">Paid Amount</td>
-              </tr>
-              <tr>
-                <td colspan="1">AED:&nbsp;{{$invoice_master->SubTotal}}/-</td>
-                <td colspan="2">{{$invoice_master->Tax}}</td>
-                <td colspan="2">AED:&nbsp;{{$invoice_master->GrandTotal}}/-</td>
-                <td colspan="2">AED:&nbsp;{{$invoice_master->Balance}}/-</td>
-                <td colspan="2">AED:&nbsp;{{$invoice_master->Paid}}/-</td>
-              </tr>
-            </body>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            function auto_print() {
+                window.print()
+            }
+            setTimeout(auto_print, 1000);
+        </script>
 
+    </body>
 
-
-  <script>
-    localStorage.clear();
-    window.print();
-    // window.close();
-  </script>
-
-</body>
+    </html>
