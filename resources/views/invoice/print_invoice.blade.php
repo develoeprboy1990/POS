@@ -226,7 +226,7 @@
                         <tr>
                             <th colspan="6" style="text-align:left">{{ trans('file.Total') }}</th>
                             <th style="text-align:right">
-                                {{ number_format((float) $lims_sale_data->SubTotal, 2, '.', '') }}</th>
+                                {{ number_format((float) $lims_sale_data->GrandTotal, 2, '.', '') - $lims_sale_data->Tax }}</th>
                         </tr>
                         
                           @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
