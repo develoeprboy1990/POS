@@ -339,6 +339,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <input type="hidden" name="grand_total" />
+                                                <input type="hidden" name="total" id="total" />
                                                 <input type="hidden" name="coupon_discount" />
                                                 <input type="hidden" name="sale_status" value="1" />
                                                 <input type="hidden" name="coupon_active">
@@ -510,10 +511,10 @@
                         <div class="modal-body">
 
                             <p>Please select:</p>
-                            <input type="radio" id="disc_number" name="discount_model" value="percentage" autocomplete="off">
+                            <input type="radio" id="disc_number" name="discount_model" value="number" autocomplete="off">
                             <label for="disc_percent">Number</label><br>
 
-                            <input type="radio" id="disc_percent" name="discount_model" value="number" autocomplete="off" checked>
+                            <input type="radio" id="disc_percent" name="discount_model"  value="percentage" autocomplete="off" checked>
                             <label for="disc_number">%</label><br>
 
                             <div class="form-group">
@@ -555,7 +556,7 @@
                                 <input type="hidden" name="order_tax_rate">
                                 <select class="form-control" name="order_tax_rate_select" id="order-tax-rate-select">
                                     @foreach($lims_tax_list as $tax)
-                                    <option value="{{$tax->rate}}" data-value="{{$tax->name}}">{{$tax->name}}</option>
+                                    <option value="{{$tax->rate}}" checked="checked" @if($tax->name == 'Inclusive') @endif data-value="{{$tax->name}}">{{$tax->name}}</option>
                                     @endforeach
                                     <option value="0">No Tax</option>
                                 </select>
@@ -2659,7 +2660,7 @@
 
 
         $('input[name="grand_total"]').val(grand_total.toFixed(2));
-
+        $('input[name="total"]').val(subtotal.toFixed(2));
         couponDiscount();
         var coupon_discount = parseFloat($('input[name="coupon_discount"]').val());
         if (!coupon_discount)

@@ -172,8 +172,8 @@ class TeqPosController extends Controller
             '4' => 'Cheque',
             '5' => 'Paypal',
             default => 'Deposit'
-        };
-
+        }; 
+        
         $invoice_data = array(
             "InvoiceNo"          => $invoice_no,
             "ReferenceNo"        => $data['reference_no'],
@@ -192,9 +192,11 @@ class TeqPosController extends Controller
             "TotalQty"           => $request->total_qty,
             "SubTotal"           => $request->total_price,
             "PaymentMode"        => $paying_method, // focus
-            "DiscountAmount"     => $request->total_discount,
+            "DiscountPer"        => $request->order_discount,
+            "DiscountAmount"     => $request->order_discount,
             "Shipping"           => $request->shipping_cost,
-            "GrandTotal"         => $request->grand_total,
+            "GrandTotal"         => $request->grand_total,            
+            "Total"         => $request->total
         );
 
         $lims_sale_data = DB::table('invoice_master')->insertGetId($invoice_data);
