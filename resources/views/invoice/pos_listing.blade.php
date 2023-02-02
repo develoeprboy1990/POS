@@ -2,23 +2,193 @@
 @section('title', 'Invoice Listing')
 
 
-@push('after-styles')
-<!-- Bootstrap CSS-->
-<link rel="stylesheet" href="<?php echo asset('vendor/bootstrap/css/bootstrap.min.css') ?>" type="text/css">
-<!-- table sorter stylesheet-->
-<link rel="stylesheet" href="<?php echo asset('css/style.default.css') ?>" id="theme-stylesheet" type="text/css">
-<link rel="stylesheet" href="{{URL('/')}}/css/custom-default.css" type="text/css" id="custom-style">
-@endpush
+@section('content')
+<div class="main-content">
+    <div class="page-content">
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0 font-size-18">Invoice Listing</h4>
 
-@push('after-scripts')
-<script type="text/javascript" src="<?php echo asset('vendor/popper.js/umd/popper.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('vendor/bootstrap/js/bootstrap.min.js') ?>"></script>
-<script type="text/javascript" src="<?php echo asset('vendor/datatable/dataTables.bootstrap4.min.js') ?>"></script>
-<!-- Custom stylesheet - for your changes-->
+                        <div class="page-title-right">
+                            <a href="{{url('/create-invoice')}}" target="_blank" class="btn btn-primary">Create Invoice</a>
+                        </div>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        //ADD PAYMENT SCRIPT STARTS HERE.
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+            <div class="row">
+                <div class="col-xl-12">
+                    @if (session('error'))
+                    <div class="alert alert-{{ Session::get('class') }} p-3">
+
+                        <strong>{{ Session::get('error') }} </strong>
+                    </div>
+                    @endif
+
+                    @if (count($errors) > 0)
+                    <div>
+                        <div class="alert alert-danger pt-3 pl-0   border-3 bg-danger text-white">
+                            <p class="font-weight-bold"> There were some problems with your input.</p>
+                            <ul>
+
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    @endif
+
+
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Invoices</h4>
+
+
+                            <table id="sale-table" class="table sale-list datatable table-hover dt-responsive nowrap w-100 table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">S.No</th>
+                                        <th scope="col">Invoice No</th>
+                                        <th scope="col">Customer Name</th>
+                                        <!-- <th scope="col">Invoice Date</th> -->
+                                        <!-- <th scope="col">Total Tax</th> -->
+                                        <th scope="col">Payment Status</th>
+                                        <th scope="col">Grand Total</th>
+                                        <th scope="col">Paid</th>
+                                        <th scope="col">Due</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- end card body -->
+                    </div>
+                    <!-- end card -->
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+
+            <div id="add-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+                <div role="document" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Payment')}}</h5>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{route('sale.add-payment')}}" method="POST" class="payment-form">
+                            @csrf
+                                <div class="row">
+                                    <input type="hidden" name="balance">
+                                    <div class="col-md-6">
+                                        <label>{{trans('file.Recieved Amount')}} *</label>
+                                        <input type="text" name="paying_amount" class="form-control numkey" step="any" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>{{trans('file.Paying Amount')}} *</label>
+                                        <input type="text" id="amount" name="amount" class="form-control" step="any" required>
+                                    </div>
+                                    <div class="col-md-6 mt-1">
+                                        <label>{{trans('file.Change')}} : </label>
+                                        <p class="change ml-2">0.00</p>
+                                    </div>
+                                    <div class="col-md-6 mt-1">
+                                        <label>{{trans('file.Paid By')}}</label>
+                                        <select name="paid_by_id" class="form-control">
+                                            <option value="1">Cash</option>
+                                            <option value="2">Gift Card</option>
+                                            <option value="3">Credit Card</option>
+                                            <option value="4">Cheque</option>
+                                            <option value="5">Paypal</option>
+                                            <option value="6">Deposit</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mt-2">
+                                    <div class="card-element" class="form-control">
+                                    </div>
+                                    <div class="card-errors" role="alert"></div>
+                                </div>
+                                <div id="cheque">
+                                    <div class="form-group">
+                                        <label>{{trans('file.Cheque Number')}} *</label>
+                                        <input type="text" name="cheque_no" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{trans('file.Payment Note')}}</label>
+                                    <textarea rows="3" class="form-control" name="payment_note"></textarea>
+                                </div>
+
+                                <input type="hidden" name="InvoiceMasterID">
+                                <br>
+                                <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ADD PAYMENT MODAL ENDS HERE -->
+        </div> <!-- container-fluid -->
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('.datatable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "pageLength": 50,
+                "ajax": "{{ url('invoice-listing') }}",
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        "data": "InvoiceNo"
+                    },
+                    {
+                        "data": "WalkinCustomerName"
+                    },
+                    // { "data": "Tax" },
+                    {
+                        "data": "payment_status",
+                        name: 'payment_status'
+                    },
+                    {
+                        "data": "GrandTotal"
+                    },
+                    {
+                        "data": "Paid"
+                    },
+                    {
+                        "data": "Balance"
+                    },
+                    {
+                        "data": "action"
+                    }
+                ]
+
+            });
+
+            //ADD PAYMENT SCRIPT STARTS HERE.
         $(document).on("click", "table.sale-list tbody .add-payment", function() {
             $("#cheque").hide();
             $(".gift-card").hide();
@@ -106,195 +276,6 @@
                     alert('Amount exceeds customer deposit! Customer deposit : ' + deposit);
             }
         });
-
-    });
-</script>
-@endpush
-<div id="add-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
-    <div role="document" class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 id="exampleModalLabel" class="modal-title">{{trans('file.Add Payment')}}</h5>
-                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{route('sale.add-payment')}}" method="POST" class="payment-form">
-                @csrf
-                    <div class="row">
-                        <input type="hidden" name="balance">
-                        <div class="col-md-6">
-                            <label>{{trans('file.Recieved Amount')}} *</label>
-                            <input type="text" name="paying_amount" class="form-control numkey" step="any" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label>{{trans('file.Paying Amount')}} *</label>
-                            <input type="text" id="amount" name="amount" class="form-control" step="any" required>
-                        </div>
-                        <div class="col-md-6 mt-1">
-                            <label>{{trans('file.Change')}} : </label>
-                            <p class="change ml-2">0.00</p>
-                        </div>
-                        <div class="col-md-6 mt-1">
-                            <label>{{trans('file.Paid By')}}</label>
-                            <select name="paid_by_id" class="form-control">
-                                <option value="1">Cash</option>
-                                <option value="2">Gift Card</option>
-                                <option value="3">Credit Card</option>
-                                <option value="4">Cheque</option>
-                                <option value="5">Paypal</option>
-                                <option value="6">Deposit</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <div class="card-element" class="form-control">
-                        </div>
-                        <div class="card-errors" role="alert"></div>
-                    </div>
-                    <div id="cheque">
-                        <div class="form-group">
-                            <label>{{trans('file.Cheque Number')}} *</label>
-                            <input type="text" name="cheque_no" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>{{trans('file.Payment Note')}}</label>
-                        <textarea rows="3" class="form-control" name="payment_note"></textarea>
-                    </div>
-
-                    <input type="hidden" name="InvoiceMasterID">
-
-                    <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- ADD PAYMENT MODAL ENDS HERE -->
-
-@section('content')
-<div class="main-content">
-    <div class="page-content">
-        <div class="container-fluid">
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Invoice Listing</h4>
-
-                        <div class="page-title-right">
-                            <a href="{{url('/create-invoice')}}" target="_blank" class="btn btn-primary">Create Invoice</a>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <!-- end page title -->
-            <div class="row">
-                <div class="col-xl-12">
-                    @if (session('error'))
-                    <div class="alert alert-{{ Session::get('class') }} p-3">
-
-                        <strong>{{ Session::get('error') }} </strong>
-                    </div>
-                    @endif
-
-                    @if (count($errors) > 0)
-                    <div>
-                        <div class="alert alert-danger pt-3 pl-0   border-3 bg-danger text-white">
-                            <p class="font-weight-bold"> There were some problems with your input.</p>
-                            <ul>
-
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                    @endif
-
-
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title mb-4">Invoices</h4>
-
-
-                            <table id="sale-table" class="table sale-list datatable table-hover dt-responsive nowrap w-100 table-sm">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">S.No</th>
-                                        <th scope="col">Invoice No</th>
-                                        <th scope="col">Customer Name</th>
-                                        <!-- <th scope="col">Invoice Date</th> -->
-                                        <!-- <th scope="col">Total Tax</th> -->
-                                        <th scope="col">Payment Status</th>
-                                        <th scope="col">Grand Total</th>
-                                        <th scope="col">Paid</th>
-                                        <th scope="col">Due</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-
-
-                                <tbody>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                        <!-- end card body -->
-                    </div>
-                    <!-- end card -->
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
-        </div> <!-- container-fluid -->
-    </div>
-    <script type="text/javascript">
-        $(document).ready(function() {
-
-            $('.datatable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "pageLength": 50,
-                "ajax": "{{ url('invoice-listing') }}",
-                "columns": [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        "data": "InvoiceNo"
-                    },
-                    {
-                        "data": "WalkinCustomerName"
-                    },
-                    // { "data": "Tax" },
-                    {
-                        "data": "payment_status",
-                        name: 'payment_status'
-                    },
-                    {
-                        "data": "GrandTotal"
-                    },
-                    {
-                        "data": "Paid"
-                    },
-                    {
-                        "data": "Balance"
-                    },
-                    {
-                        "data": "action"
-                    }
-                ]
-
-            });
 
 
         });

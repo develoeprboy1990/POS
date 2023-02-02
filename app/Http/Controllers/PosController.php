@@ -281,17 +281,9 @@ class PosController extends Controller
                     return $pay_status;
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" target="_blank" title="Edit Invoice"><i class="bx bx-pencil align-middle me-1"></i></a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" target="_blank" title="Show Invoice"><i class="fa fa-eye align-middle me-1"></i></a><a href="' . route('invoice.print', ['id' => $row->InvoiceMasterID]) . '" target="_blank" title="Print Invoice"><i class="fa fa-print align-middle me-1"></i></a>';
-                    $btn = '<div class="btn-group">
-                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . trans("file.action") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
-                    $btn .= '<ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">';
-                    $btn .= '<li><a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="btn btn-link"><i class="dripicons-document-edit"></i> Edit Invoice</a></li><li>';
-                    $btn .= '<li><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="btn btn-link"><i class="fa fa-eye"></i> View Invoice</a></li><li>';
-                    $btn .= '<li><a href="' . route('invoice.print', ['id' => $row->InvoiceMasterID]) . '" class="btn btn-link"><i class="fa fa-print"></i> Print Invoice</a></li><li>';
-                    $btn .='<li>
-                    <button type="button" class="add-payment btn btn-link" data-id = "'.$row->InvoiceMasterID.'" data-toggle="modal" data-target="#add-payment"><i class="fa fa-plus"></i> '.trans('file.Add Payment').'</button>
-                </li>';
-                    $btn .= ' </ul></div>';
+                    $btn = '<div class="dropdown"><a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal font-size-18"></i></a><div class="dropdown-menu dropdown-menu-end">';
+                    $btn .= '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="dropdown-item" target="_blank">Edit Invoice</a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">View Invoice</a><a href="' . route('invoice.print', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">Print Invoice</a><button type="button" class="add-payment dropdown-item" data-id = "'.$row->InvoiceMasterID.'" data-bs-toggle="modal" data-bs-target="#add-payment">'.trans('file.Add Payment').'</button>';
+                    $btn .= ' </div></div>';
                     return $btn;
                 })
                 ->rawColumns(['payment_status', 'action'])

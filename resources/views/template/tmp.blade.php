@@ -254,55 +254,7 @@
         <!-- form mask init -->
 
 
-        <!-- Required datatable js -->
-        <script src="{{URL('/')}}/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-        <!-- Buttons examples -->
-        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/jszip/jszip.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/pdfmake/build/pdfmake.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/pdfmake/build/vfs_fonts.js"></script>
-        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
-
-        <!-- Responsive examples -->
-        <script src="{{URL('/')}}/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-
-        <!-- Datatable init js -->
-        <script src="{{URL('/')}}/assets/js/pages/datatables.init.js"></script>
-
-        <!-- apexcharts -->
-        <script src="{{URL('/')}}/assets/libs/apexcharts/apexcharts.min.js"></script>
-
-        <script src="{{URL('/')}}/assets/js/pages/profile.init.js"></script>
-        <script src="{{URL('/')}}/assets/libs/select2/js/select2.min.js"></script>
-
-        <!-- init js -->
-        <script src="{{URL('/')}}/assets/js/pages/ecommerce-select2.init.js"></script>
-
-        <!-- Sweet Alerts js -->
-        <script src="{{URL('/')}}/assets/libs/sweetalert2/sweetalert2.min.js"></script>
-
-        <!-- Sweet alert init js-->
-        <script src="{{URL('/')}}/assets/js/pages/sweet-alerts.init.js"></script>
-
-        <!-- form repeater js -->
-        <script src="{{URL('/')}}/assets/libs/jquery.repeater/jquery.repeater.min.js"></script>
-
-        <script src="{{URL('/')}}/assets/js/pages/form-repeater.int.js"></script>
-
-
-        <script src="{{URL('/')}}/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-        <!-- <script src="{{URL('/')}}/assets/libs/%40chenfengyuan/datepicker/datepicker.min.js"></script> -->
-
-        <script src="{{URL('/')}}/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="{{URL('/')}}/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-
-        <!-- Datatable init js -->
-        <script src="{{URL('/')}}/assets/js/pages/datatables.init.js"></script>
+       
 
 
         <!-- Required datatable js -->
@@ -323,6 +275,45 @@
         <script src="{{asset('assets/js/pages/form-repeater.int.js')}}"></script>
 
         <script src="{{asset('assets/js/custom.js')}}"></script>
+
+         <!-- Required datatable js -->
+        <!-- Buttons examples -->
+        <script src="{{URL('/')}}/assets/libs/jszip/jszip.min.js"></script>
+        <script src="{{URL('/')}}/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+        <script src="{{URL('/')}}/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+        <script src="{{URL('/')}}/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+        <!-- Responsive examples -->
+
+        <!-- Datatable init js -->
+
+        <!-- apexcharts -->
+
+        <script src="{{URL('/')}}/assets/js/pages/profile.init.js"></script>
+        <script src="{{URL('/')}}/assets/libs/select2/js/select2.min.js"></script>
+
+        <!-- init js -->
+        <script src="{{URL('/')}}/assets/js/pages/ecommerce-select2.init.js"></script>
+
+        <!-- Sweet Alerts js -->
+        <script src="{{URL('/')}}/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+        <!-- Sweet alert init js-->
+        <script src="{{URL('/')}}/assets/js/pages/sweet-alerts.init.js"></script>
+
+        <!-- form repeater js -->
+
+
+        <script src="{{URL('/')}}/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+        <!-- <script src="{{URL('/')}}/assets/libs/%40chenfengyuan/datepicker/datepicker.min.js"></script> -->
+
+        <script src="{{URL('/')}}/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="{{URL('/')}}/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+        <!-- Datatable init js -->
+        <script src="{{URL('/')}}/assets/js/pages/datatables.init.js"></script>
 
 
 
