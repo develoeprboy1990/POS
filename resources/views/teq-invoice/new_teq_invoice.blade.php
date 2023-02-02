@@ -668,7 +668,11 @@
                         <div class="row ml-2 mt-3">
                             @foreach($lims_category_list as $category)
                             <div class="col-md-3 category-img text-center" data-category="{{$category->ItemCategoryID}}">
-                                <img src="{{asset('assets/images/zummXD2dvAtI.png')}}" />
+                                @if($category->image)
+                                    <img src="{{ asset('assets/images/category/' . $category->image) }}">
+                                @else
+                                    <img  src="{{asset('assets/images/product/zummXD2dvAtI.png')}}" />
+                                @endif
                                 <p class="text-center">{{$category->title}}</p>
                             </div>
                             @endforeach
@@ -687,7 +691,7 @@
                             @foreach($lims_brand_list as $brand)
                             @if($brand->image)
                             <div class="col-md-3 brand-img text-center" data-brand="{{$brand->id}}">
-                                <img src="{{asset('assets/images/brand',$brand->image)}}" />
+                                <img src="{{ asset('assets/images/brand/' . $brand->image) }}">
                                 <p class="text-center">{{$brand->title}}</p>
                             </div>
                             @else

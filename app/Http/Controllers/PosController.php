@@ -606,9 +606,9 @@ class PosController extends Controller
                 ->addIndexColumn()
                 ->addColumn('image', function ($row) {
                     if($row->image)
-                        $image = '<img src="'.url('images/category', $row->image).'" height="70" width="70">';
+                        $image = '<img src="'.url('assets/images/category', $row->image).'" height="70" width="70">';
                     else
-                        $image = '<img src="'.url('images/product/zummXD2dvAtI.png').'" height="80" width="80">';
+                        $image = '<img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="80" width="80">';
 
                     return $image;
                 })
