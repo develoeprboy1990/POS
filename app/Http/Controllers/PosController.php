@@ -257,13 +257,15 @@ class PosController extends Controller
         $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
         $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->get();
 
+        $company = DB::table('company')->first();
+
         $numberToWords = new NumberToWords();
         if(\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
             $numberTransformer = $numberToWords->getNumberTransformer('en');
         else
             $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
         $numberInWords = $numberTransformer->toWords($lims_sale_data->GrandTotal);
-        return view('invoice.print_invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords'));
+        return view('invoice.print_invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','company'));
     }
 
     public function invoiceListing(Request $request)

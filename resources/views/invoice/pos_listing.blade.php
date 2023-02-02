@@ -1,7 +1,5 @@
 @extends('template.tmp')
 @section('title', 'Invoice Listing')
-
-
 @section('content')
 <div class="main-content">
     <div class="page-content">

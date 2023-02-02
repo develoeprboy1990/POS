@@ -13,7 +13,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-        <<style type="text/css">
+        <style type="text/css">
         * {
             font-size: 14px;
             line-height: 24px;
@@ -136,10 +136,10 @@
                             style="margin:10px 0;">
                     @endif
 
-                    <h2>{{ $lims_warehouse_data->name }}</h2>
+                    <h2>{{ $company->Name }}</h2>
 
-                    <p>{{ trans('file.Address') }}: {{ $lims_warehouse_data->address }}
-                        <br>{{ trans('file.Phone Number') }}: {{ $lims_warehouse_data->phone }}
+                    <p>{{ trans('file.Address') }}: {{ $company->Address }}
+                        <br>{{ trans('file.Phone Number') }}: {{ $company->Contact }}
                     </p>
                 </div>
                 <p>{{ trans('file.Date') }}: {{ $lims_sale_data->Date }}<br>

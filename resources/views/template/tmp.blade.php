@@ -44,8 +44,6 @@
 
     <!-- Responsive datatable examples -->
 
-    <!-- Touchspins -->
-    <link href="{{asset('assets/css/pos-css/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
 
     @stack('before-styles')
 
@@ -274,7 +272,6 @@
 
         <script src="{{asset('assets/js/pages/form-repeater.int.js')}}"></script>
 
-        <script src="{{asset('assets/js/custom.js')}}"></script>
 
          <!-- Required datatable js -->
         <!-- Buttons examples -->
