@@ -288,7 +288,7 @@
                                                           <th>{{trans('file.Discount')}}</th>
                                                           <th>{{trans('file.Tax')}}</th>
                                                           <th>{{trans('file.Subtotal')}}</th>
-                                                          <th><i class="dripicons-trash"></i></th>
+                                                          <th>Action</th>
                                                       </tr>
                                                   </thead>
                                                   <tbody>
@@ -375,7 +375,10 @@
                                                           <td class="discount">{{ number_format((float)$product_sale->Discount, 2, '.', '') }}</td>
                                                           <td class="tax">{{ number_format((float)$product_sale->Tax, 2, '.', '') }}</td>
                                                           <td class="sub-total">{{ number_format((float)$product_sale->Total, 2, '.', '') }}</td>
-                                                          <td><button type="button" class="ibtnDel btn btn-md btn-danger">{{trans("file.delete")}}</button></td>
+                                                          <td>
+                                                            <!-- <button type="button" class="ibtnDel btn btn-md btn-danger"><i class="fa fa-trash"></i></button> -->
+                                                            <a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a>
+                                                          </td>
                                                           <input type="hidden" class="product-code" name="product_code[]" value="{{$product_data->ItemCode}}"/>
                                                           <input type="hidden" class="product-id" name="product_id[]" value="{{$product_data->ItemID}}"/>
                                                           <input type="hidden" name="product_variant_id[]" value="{{$product_variant_id}}"/>
@@ -405,7 +408,7 @@
                                                       <th id="total-discount">{{ number_format((float)$lims_sale_data->DiscountAmount, 2, '.', '') }}</th>
                                                       <th id="total-tax">{{ number_format((float)$lims_sale_data->Tax, 2, '.', '')}}</th>
                                                       <th id="total">{{ number_format((float)$lims_sale_data->GrandTotal, 2, '.', '') }}</th>
-                                                      <th><i class="dripicons-trash"></i></th>
+                                                      <!-- <th><i class="dripicons-trash"></i></th> -->
                                                   </tfoot>
                                               </table>
                                           </div>
@@ -1199,7 +1202,7 @@ function productSearch(data){
                 cols += '<td class="discount">0.00</td>';
                 cols += '<td class="tax"></td>';
                 cols += '<td class="sub-total"></td>';
-                cols += '<td><button type="button" class="ibtnDel btn btn-md btn-danger">{{trans("file.delete")}}</button></td>';
+                cols += '<td><a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a></td>';
                 cols += '<input type="hidden" class="product-code" name="product_code[]" value="' + data[1] + '"/>';
                 cols += '<input type="hidden" class="product-id" name="product_id[]" value="' + data[9] + '"/>';
                 cols += '<input type="hidden" name="product_variant_id[]" value="' + data[10] + '"/>';
