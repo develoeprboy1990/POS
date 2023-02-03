@@ -345,6 +345,7 @@
                                                 <input type="hidden" name="coupon_active">
                                                 <input type="hidden" name="coupon_id">
                                                 <input type="hidden" name="coupon_discount" />
+                                                <input type="text" name="DiscountPer" />
 
                                                 <input type="hidden" name="pos" value="1" />
                                                 <input type="hidden" name="draft" value="0" />
@@ -358,7 +359,7 @@
                                             </div>
 
                                             <div class="col-sm-4">
-                                                <span class="totals-title"><span  id="totals-title">{{trans('file.Discount')}}</span> <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-discount-modal"> <i class="dripicons-document-edit"></i></button></span><span id="discount">0.00</span>
+                                                <span class="totals-title"><span id="totals-title">{{trans('file.Discount')}}</span> <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#order-discount-modal"> <i class="dripicons-document-edit"></i></button></span><span id="discount">0.00</span>
                                             </div>
                                             <div class="col-sm-4">
                                                 <span class="totals-title">{{trans('file.Coupon')}} <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#coupon-modal"><i class="dripicons-document-edit"></i></button></span><span id="coupon-text">0.00</span>
@@ -514,7 +515,7 @@
                             <input type="radio" id="disc_number" name="discount_model" value="number" autocomplete="off">
                             <label for="disc_percent">Number</label><br>
 
-                            <input type="radio" id="disc_percent" name="discount_model"  value="percentage" autocomplete="off" checked>
+                            <input type="radio" id="disc_percent" name="discount_model" value="percentage" autocomplete="off" checked>
                             <label for="disc_number">%</label><br>
 
                             <div class="form-group">
@@ -556,7 +557,7 @@
                                 <input type="hidden" name="order_tax_rate">
                                 <select class="form-control" name="order_tax_rate_select" id="order-tax-rate-select">
                                     @foreach($lims_tax_list as $tax)
-                                    <option value="{{$tax->rate}}" checked="checked" @if($tax->name == 'Inclusive') @endif data-value="{{$tax->name}}">{{$tax->name}}</option>
+                                    <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-value="{{$tax->name}}">{{$tax->name}}</option>
                                     @endforeach
                                     <option value="0">No Tax</option>
                                 </select>
@@ -669,9 +670,9 @@
                             @foreach($lims_category_list as $category)
                             <div class="col-md-3 category-img text-center" data-category="{{$category->ItemCategoryID}}">
                                 @if($category->image)
-                                    <img src="{{ asset('assets/images/category/' . $category->image) }}">
+                                <img src="{{ asset('assets/images/category/' . $category->image) }}">
                                 @else
-                                    <img  src="{{asset('assets/images/product/zummXD2dvAtI.png')}}" />
+                                <img src="{{asset('assets/images/product/zummXD2dvAtI.png')}}" />
                                 @endif
                                 <p class="text-center">{{$category->title}}</p>
                             </div>
@@ -2035,6 +2036,7 @@
     });
 
     $('button[name="order_tax_btn"]').on("click", function() {
+
         calculateGrandTotal();
     });
 
@@ -2625,9 +2627,9 @@
         var disc_number = $('#disc_number').prop('checked');
         var disc_percent = $('#disc_percent').prop('checked');
         $("#discount").text(order_discount.toFixed(2));
-     
+        $('input[name="DiscountPer"]').val(order_discount.toFixed(2));
+
         if (disc_number == true) {
-            
             $("#totals-title").text('Discount');
             var order_discount = $('#order-discount').val();
             //var grand_total = (subtotal + order_tax + shipping_cost) - (order_discount);EHSAN OLD
@@ -2643,12 +2645,13 @@
         } else {
             var order_discount = $('#order-discount').val();
             //var grand_total = (subtotal + order_tax + shipping_cost) - (subtotal * (order_discount / 100));//EHSAN OLD
-            if (disc_percent == true && order_discount > 0) { 
-                $("#totals-title").text('Disc('+order_discount+'%)');
+            if (disc_percent == true && order_discount > 0) {
+                $("#totals-title").text('Disc(' + order_discount + '%)');
                 $("#discount").text(subtotal * (order_discount / 100));
+                $('input[name="DiscountPer"]').val(subtotal * (order_discount / 100));
                 subtotal = subtotal - (subtotal * (order_discount / 100)); //EHSAN
-        }
-        
+            }
+
             if (order_tax_rate_select == 'Inclusive') {
                 order_tax = subtotal * (order_tax / 100); //EHSAN
                 subtotal = subtotal - order_tax; //EHSAN
@@ -2677,6 +2680,7 @@
         $('#tax').text(order_tax.toFixed(2));
         $('input[name="order_tax"]').val(order_tax.toFixed(2));
         $('#shipping-cost').text(shipping_cost.toFixed(2));
+
 
         $('#grand-total').text(grand_total.toFixed(2));
         $('input[name="grand_total"]').val(grand_total.toFixed(2));
