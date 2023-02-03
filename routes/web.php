@@ -533,7 +533,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
 
 
 //POS routs..
-  // TEQ POS Section
+  // TEQ POS Routes Section
     Route::get('/create-invoice', [TeqPosController::class, 'createTeqInvoice'])->name('invoice.create');
     Route::post('/save-teq-invoice', [TeqPosController::class, 'storeInvoice']);
     Route::get('/edit-teq-invoice/{id}', [TeqPosController::class, 'editTeqInvoice']);
