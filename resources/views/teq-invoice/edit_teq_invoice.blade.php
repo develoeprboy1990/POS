@@ -1,4 +1,5 @@
 @extends('template.tmp')
+@section('title', 'Edit Invoice') 
 @section('content')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
@@ -407,10 +408,10 @@
                                                                         <input type="text" class="form-control batch-no" name="batch_no[]" value="{{$product_batch_data->batch_no}}" required />
                                                                     </td>
                                                                     @else
-                                                                    <!--  <td>
-                                                              <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="">
-                                                              <input type="text" class="form-control batch-no" name="batch_no[]" value="" disabled />
-                                                          </td> -->
+                                                                     <td>
+                                                                      <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="">
+                                                                      <input type="text" class="form-control batch-no" name="batch_no[]" value="" disabled />
+                                                                  </td>
                                                                     @endif
                                                                     <td class="net_unit_price">{{ number_format((float)$product_sale->Rate, 2, '.', '') }} </td>
                                                                     <td class="discount">{{ number_format((float)$product_sale->Discount, 2, '.', '') }}</td>

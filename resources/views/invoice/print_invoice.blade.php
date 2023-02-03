@@ -118,7 +118,7 @@
                       <input style="display: none;" type="text" name="grand_total" value=<?php echo $percent2 ?> class="form-control">
                       <input style="display: none;" class="d-none" type="text" name="sale_id" value="{{$lims_sale_data->InvoiceMasterID}}" class="form-control">
                       <input style="display: none;" class="d-none" type="text" name="extra_tax" value="{{$lims_sale_data->ReferenceNo}}" class="form-control">
-                      <button class="btn btn-info" style="width: 100%;">Charge Extra</button>
+                      <!-- <button class="btn btn-info" style="width: 100%;">Charge Extra</button> -->
                       
                   </form>
                   @endif
