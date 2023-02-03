@@ -239,3 +239,6 @@ Date: 30-01-2023
 ALTER TABLE `payments` CHANGE `paymentID` `paymentID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`paymentID`);
 
 ===============================================================
+
+
+ALTER TABLE `item` CHANGE `TaxMethod` `TaxMethod` INT NULL DEFAULT '1';
