@@ -88,6 +88,7 @@ class TeqPosController extends Controller
     public function storeInvoice(Request $request)
     {
         $data = $request->all();
+     
         if (isset($request->reference_no)) {
             $this->validate($request, [
                 'ReferenceNo' => [
@@ -187,16 +188,19 @@ class TeqPosController extends Controller
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
             "Tax"                => $request->order_tax,
+            "TaxPer"             => $request->order_tax_rate,
             "Paid"               => $request->paid_amount,
             "Balance"            => $remaining_balance,
             "TotalQty"           => $request->total_qty,
             "SubTotal"           => $request->total_price,
             "PaymentMode"        => $paying_method, // focus
-            "DiscountPer"        => $request->order_discount,
+            "DiscountModel"      => $request->discount_model,
+            "DiscountPer"        => round($request->DiscountPer,2),
             "DiscountAmount"     => $request->order_discount,
             "Shipping"           => $request->shipping_cost,
             "GrandTotal"         => $request->grand_total,            
-            "Total"         => $request->total
+            "Total"         => $request->total,
+            
         );
 
         $lims_sale_data = DB::table('invoice_master')->insertGetId($invoice_data);
