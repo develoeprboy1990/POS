@@ -247,3 +247,4 @@ ALTER TABLE `item` CHANGE `TaxMethod` `TaxMethod` INT NULL DEFAULT '1';
 
 
 ALTER TABLE `invoice_master` ADD `DiscountModel` ENUM('number','percentage') NOT NULL DEFAULT 'percentage' AFTER `SubTotal`;
+
