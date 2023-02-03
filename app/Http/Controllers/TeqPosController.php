@@ -530,8 +530,10 @@ class TeqPosController extends Controller
 
 
         // return redirect('sales/gen_invoice/' . $lims_sale_data->id)->with('message', $message);
-        if ($data['sale_status'] == '1')
+        if ($data['sale_status'] == '1' && $data['print_status'] == '1')
             return redirect(route('invoice.print', ['id' => $lims_sale_data]))->with('message', $message);
+        elseif($data['sale_status'] == '1' && $data['print_status'] == '0')
+            return redirect(route('invoice.create'))->with('message', $message);
         else
             return redirect()->back()->with('message', $message);
     }
