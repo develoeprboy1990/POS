@@ -105,7 +105,7 @@
                 <div class="col-sm-4"><a href="{{ $url }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                                 {{ trans('file.Back') }}</a></div>
                 <div class="col-sm-4"><button style="margin-right: 260px !important;" onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>
-                                {{ trans('file.Print') }}</button></div>
+                                {{ trans('file.Print') }}</button></div> <!-- Print Button -->
                 <div class="col-sm-4">
                     
                     @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
