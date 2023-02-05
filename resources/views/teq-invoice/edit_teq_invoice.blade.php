@@ -506,14 +506,13 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <input type="hidden" name="order_tax_rate_hidden" value="{{@$lims_sale_data->TaxPer}}">
-                                                        <label>{{trans('file.Order Tax')}}</label>
-                                                        <select class="form-control select2" name="order_tax_rate">
-                                                            <option value="0">No Tax</option>
+                                                        <input type="hidden" name="order_tax_rate_hidden" value="{{@$lims_sale_data->TaxPer}}">                                                      
+                                                        <select name="order_tax_rate" id="order_tax_rate" class="form-select  changesNo tax exclusive_cal bg-light">
                                                             @foreach($lims_tax_list as $tax)
                                                             <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-id="{{$tax->id}}" data-value="{{$tax->name}}">{{$tax->name}}</option>
                                                             @endforeach
                                                         </select>
+
                                                     </div>
                                                 </div>
 
@@ -542,9 +541,9 @@
                                                         <label>
                                                             <strong>Discount Type</strong>
                                                         </label>
-                                                        <select id="disc_percent" name="discount_model" class="form-control select2">
+                                                        <select id="disc_percent" name="discount_model" class="form-select">
                                                             <option value="percentage" @if($discount_model=='percentage' ) selected='selected' @endif>Percent (%)</option>
-                                                            <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed Price (Number)</option>
+                                                            <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed (AED)</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -655,7 +654,7 @@
                         <span class="pull-right" id="subtotal">{{$lims_sale_data->Total}}</span>
                     </td>
                     <td><strong>{{trans('file.Order Tax')}}</strong>
-                        <span class="pull-right" id="order_tax">0.00</span>
+                        <span class="pull-right" id="order_tax">{{$lims_sale_data->Tax}}</span>
                     </td>
                     <td><strong>{{trans('file.Order Discount')}}</strong>
                         <span class="pull-right" id="order_discount">{{$lims_sale_data->DiscountAmount}}</span>
@@ -1016,7 +1015,7 @@
 
     $('#item').text($('input[name="item"]').val() + '(' + $('input[name="total_qty"]').val() + ')');
     //$('#subtotal').text(parseFloat($('input[name="total_price"]').val()).toFixed(2));
-    $('#order_tax').text(parseFloat($('input[name="order_tax"]').val()).toFixed(2));
+    //$('#order_tax').text(parseFloat($('input[name="order_tax"]').val()).toFixed(2));
     if (!$('input[name="order_discount"]').val())
         $('input[name="order_discount"]').val('0.00');
     // $('#order_discount').text(parseFloat($('input[name="order_discount"]').val()).toFixed(2));
@@ -1259,14 +1258,10 @@
                     cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
                     cols += '<td>' + data[1] + '</td>';
                     cols += '<td><input type="number" class="form-control qty" name="qty[]" value="1" step="any" required/></td>';
-                    if (data[12]) {
-                        cols += '<td><input type="text" class="form-control batch-no" value="' + batch_no[pos] + '" required/> <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="' + product_batch_id[pos] + '"/> </td>';
-                    } else {
-                        cols += '<td><input type="text" class="form-control batch-no" disabled/> <input type="hidden" class="product-batch-id" name="product_batch_id[]"/> </td>';
-                    }
+                    
                     cols += '<td class="net_unit_price"></td>';
                     cols += '<td class="discount">0.00</td>';
-                    cols += '<td class="tax"></td>';
+                 
                     cols += '<td class="sub-total"></td>';
                     cols += '<td><a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a></td>';
                     cols += '<input type="hidden" class="product-code" name="product_code[]" value="' + data[1] + '"/>';
@@ -1505,7 +1500,7 @@
         var daraz_amount = parseFloat($('input[name="daraz_amount"]').val());
 
         var order_tax_rate_select = $('select[name="order_tax_rate"]').find(':selected').attr('data-value');
-      
+
         if (!order_discount)
             order_discount = 0.00;
         if (!shipping_cost)
@@ -1516,11 +1511,11 @@
         item = ++item + '(' + total_qty + ')';
 
         if (order_tax_rate_select == 'Exclusive') {
-            order_tax = (subtotal - order_discount) * (order_tax / 100); //EHSAN OLD      
+            order_tax = (subtotal - order_discount) * (order_tax / 100); //EHSAN OLD    
         }
 
         var discount_model = $('select[name="discount_model"]').val();
-        var discount       = order_discount.toFixed(2);
+        var discount = order_discount.toFixed(2);
         if (discount_model == 'percentage') {
             discount = subtotal * (order_discount / 100);
             subtotal = subtotal - discount;
@@ -1530,10 +1525,10 @@
         }
         //order_tax = (subtotal - order_discount) * (order_tax / 100);
         if (order_tax_rate_select == 'Inclusive') {
-                order_tax = subtotal * (order_tax / 100); //EHSAN
-                subtotal = subtotal - order_tax; //EHSAN
-            }
-             
+            order_tax = subtotal * (order_tax / 100); //EHSAN
+            subtotal = subtotal - order_tax; //EHSAN
+        }
+
         var grand_total = ((subtotal + order_tax + shipping_cost)) - daraz_amount;
 
         console.log(subtotal);
@@ -1597,6 +1592,10 @@
         calculateGrandTotal();
     });
 
+    $('select[name="discount_model"]').on("change", function() { 
+        calculateGrandTotal();
+    });
+    
     $(window).keydown(function(e) {
         if (e.which == 13) {
             var $targ = $(e.target);
