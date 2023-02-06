@@ -145,6 +145,9 @@
   <script type="text/javascript" src="<?php echo asset('vendor/bootstrap-toggle/js/bootstrap-toggle.min.js') ?>"></script>
   <script type="text/javascript" src="<?php echo asset('vendor/bootstrap/js/bootstrap-select.min.js') ?>"></script>
   <script type="text/javascript" src="<?php echo asset('vendor/keyboard/js/jquery.keyboard.js') ?>"></script>
+  
+  
+  
   <script type="text/javascript" src="<?php echo asset('vendor/keyboard/js/jquery.keyboard.extension-autocomplete.js') ?>"></script>
   <script type="text/javascript" src="<?php echo asset('js/grasp_mobile_progress_circle-1.0.0.min.js') ?>"></script>
   <script type="text/javascript" src="<?php echo asset('vendor/jquery.cookie/jquery.cookie.js') ?>">
@@ -274,7 +277,7 @@
                 barcode_image.push($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').data('imagedata'));
             }
             var htmltext = '<table class="barcodelist" style="width:378px;" cellpadding="5px" cellspacing="10px">';
-            /*$.each(qty, function(index){
+            $.each(qty, function(index){
                 i = 0;
                 while(i < qty[index]){
                     if(i % 2 == 0)
@@ -289,7 +292,7 @@
                         htmltext +='</tr>';
                     i++;
                 }
-            });*/
+            });
             $.each(qty, function(index){
                 i = 0;
                 while(i < qty[index]) {

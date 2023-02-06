@@ -228,7 +228,7 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <input type="date" name="invoice_date" id="invoice_date" class="form-control" />
+                                                <input type="date" name="invoice_date" id="invoice_date" class="form-control" value="{{date('d/m/Y')}}" />
                                             </div>
                                         </div>
                                         <div class="col-md-4" style="display: none;">
@@ -404,14 +404,15 @@
                         <div class="column-5" style="display: none;">
                             <button style="background-color: #5f27cd" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="gift-card-btn"><i class="fa fa-credit-card-alt"></i> GiftCard</button>
                         </div>
-                        <div class="column-5" style="display: none;">
-                            <button style="background-color: #b33771" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="deposit-btn"><i class="fa fa-university"></i> Deposit</button>
-                        </div>
                         <div class="column-5">
                             <button style="background-color: #d63031;" type="button" class="btn btn-custom" id="cancel-btn" onclick="return confirmCancel()"><i class="fa fa-close"></i> Cancel</button>
                         </div>
-                        <div class="column-5" style="display: none;">
-                            <button style="background-color: #ffc107;" type="button" class="btn btn-custom" data-toggle="modal" data-target="#recentTransaction"><i class="dripicons-clock"></i> Recent transaction</button>
+                        <div class="column-5"  >
+                            <a href="{{URL('/invoice-listing')}}" class="btn btn-custom payment-btn text-white"><i class="fa fa-home" ></i> Home</a>
+                           
+                        </div>
+                        <div class="column-5">
+                           <!--  <button style="background-color: #ffc107;" type="button" class="btn btn-custom" data-toggle="modal" data-target="#recentTransaction"><i class="dripicons-clock"></i> Recent transaction</button> -->
                         </div>
                     </div>
                 </div>
