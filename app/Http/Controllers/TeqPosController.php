@@ -565,7 +565,7 @@ class TeqPosController extends Controller
 
         // return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','items', 'categories', 'salemans', 'invoice_detail', 'InvoiceMasterID', 'invoice_master', 'parties', 'discount', 'customer_name'));
 
-        $lims_customer_list = Customer::where('is_active', true)->get();
+        $lims_customer_list = DB::table('party')->where('Active', 'Yes')->get();
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
         $lims_biller_list = Biller::where('is_active', true)->get();
         $lims_tax_list = Tax::where('is_active', true)->get();

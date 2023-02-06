@@ -275,7 +275,7 @@
                                                         <input type="hidden" name="customer_id_hidden" value="{{ $lims_sale_data->PartyID }}" />
                                                         <select required name="customer_id" class="select2 form-control" data-live-search="true" id="customer-id" data-live-search-style="begins" title="Select customer...">
                                                             @foreach($lims_customer_list as $customer)
-                                                            <option value="{{$customer->id}}" {{$lims_sale_data->PartyID == $customer->id ? 'selected' : ''}}>{{$customer->name . ' (' . $customer->phone_number . ')'}}</option>
+                                                            <option value="{{$customer->PartyID}}" {{$lims_sale_data->PartyID == $customer->PartyID ? 'selected' : ''}}>{{$customer->PartyName . ' (' . $customer->Phone . ')'}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -519,14 +519,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>
-                                                            <strong>{{trans('file.Order Discount')}}</strong>
-                                                        </label>
-                                                        <input type="number" name="order_discount" class="form-control" value="{{@$lims_sale_data->DiscountPer}}" step="any" />
-                                                    </div>
-                                                </div>
+                                                
 
                                                 <div class="col-md-4">
                                                     <div class="form-group">
@@ -548,6 +541,15 @@
                                                             <option value="percentage" @if($discount_model=='percentage' ) selected='selected' @endif>Percent (%)</option>
                                                             <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed (AED)</option>
                                                         </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            <strong>{{trans('file.Order Discount')}}</strong>
+                                                        </label>
+                                                        <input type="number" name="order_discount" class="form-control" value="{{@$lims_sale_data->DiscountPer}}" step="any" />
                                                     </div>
                                                 </div>
 
