@@ -84,13 +84,13 @@ class TeqPosController extends Controller
         $flag = 0;
         $invoice_no = DB::table('invoice_master')->latest('InvoiceMasterID')->pluck('InvoiceMasterID')->first();
         $invoice_no = 'POS-0000' . ++$invoice_no;
-        return view('teq-invoice.new_teq_invoice', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag','invoice_no'));
+        return view('teq-invoice.new_teq_invoice', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no'));
     }
 
     public function storeInvoice(Request $request)
     {
         $data = $request->all();
-     
+
         if (isset($request->reference_no)) {
             $this->validate($request, [
                 'ReferenceNo' => [
@@ -175,8 +175,8 @@ class TeqPosController extends Controller
             '4' => 'Cheque',
             '5' => 'Paypal',
             default => 'Deposit'
-        }; 
-        
+        };
+
         $invoice_data = array(
             "InvoiceNo"          => $invoice_no,
             "ReferenceNo"        => $data['reference_no'],
@@ -197,12 +197,12 @@ class TeqPosController extends Controller
             "SubTotal"           => $request->total_price,
             "PaymentMode"        => $paying_method, // focus
             "DiscountModel"      => $request->discount_model,
-            "DiscountPer"        => round($request->DiscountPer,2),
+            "DiscountPer"        => round($request->DiscountPer, 2),
             "DiscountAmount"     => $request->order_discount,
             "Shipping"           => $request->shipping_cost,
-            "GrandTotal"         => $request->grand_total,            
+            "GrandTotal"         => $request->grand_total,
             "Total"         => $request->total,
-            
+
         );
 
         $lims_sale_data = DB::table('invoice_master')->insertGetId($invoice_data);
@@ -534,7 +534,7 @@ class TeqPosController extends Controller
         // return redirect('sales/gen_invoice/' . $lims_sale_data->id)->with('message', $message);
         if ($data['sale_status'] == '1' && $data['print_status'] == '1')
             return redirect(route('invoice.print', ['id' => $lims_sale_data]))->with('message', $message);
-        elseif($data['sale_status'] == '1' && $data['print_status'] == '0')
+        elseif ($data['sale_status'] == '1' && $data['print_status'] == '0')
             return redirect(route('invoice.create'))->with('message', $message);
         else
             return redirect()->back()->with('message', $message);
@@ -582,7 +582,7 @@ class TeqPosController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-
+     
         $remaining_balance = $data['grand_total'] - $data['paid_amount'];
         $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $id)->first();
         $today_date = date('Y-m-d');
@@ -590,7 +590,7 @@ class TeqPosController extends Controller
             $today_date = $request->invoice_date;
 
         $lims_customer_data = DB::table('party')->where('PartyID', $data['customer_id'])->first();
-        $discountAmount = $request->total_discount + $request->order_discount;
+        $discountAmount = $request->total_discount; //+ $request->order_discount;
         $invoice_data = array(
             "Date"               => $today_date,  // focus
             "DueDate"            => $today_date, // focus
@@ -605,7 +605,9 @@ class TeqPosController extends Controller
             "Balance"            => $remaining_balance,
             "TotalQty"           => $request->total_qty,
             "SubTotal"           => $request->total_price,
+            "DiscountPer"        => $request->order_discount,
             "DiscountAmount"     => $discountAmount,
+            "DiscountModel"      => $request->discount_model,
             "Shipping"           => $request->shipping_cost,
             "GrandTotal"         => $request->grand_total,
         );
@@ -1028,19 +1030,19 @@ class TeqPosController extends Controller
     }
 
     public function extra_tax_charged(Request $request)
-    { 
+    {
         $input = $request->all();
-        $id=$request->sale_id;
+        $id = $request->sale_id;
         // dd($id);
-        
+
         $lims_user_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $lims_user_data->update($input);
         // return response()->json(['success'=>'Product saved successfully.']);
         return redirect()->back()->with('sale.invoice3', 'Data updated successfullly');
         // return 'hello';
-    } 
+    }
 
-   /*  public function generateCode()
+    /*  public function generateCode()
     {
          
         $id = Keygen::numeric(8)->generate();

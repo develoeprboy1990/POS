@@ -1586,6 +1586,7 @@
         $('input[name="grand_total"]').val(grand_total.toFixed(2));
         $('#order_discount').text(discount.toFixed(2));
         $("#total-discount").text(discount);
+        $('input[name="total_discount"]').val(discount.toFixed(2));
     }
 
     function couponDiscount() {
