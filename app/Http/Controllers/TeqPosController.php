@@ -82,7 +82,9 @@ class TeqPosController extends Controller
         // }
         $lims_coupon_list = Coupon::where('is_active', true)->get();
         $flag = 0;
-        return view('teq-invoice.new_teq_invoice', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag'));
+        $invoice_no = DB::table('invoice_master')->latest('InvoiceMasterID')->pluck('InvoiceMasterID')->first();
+        $invoice_no = 'POS-0000' . ++$invoice_no;
+        return view('teq-invoice.new_teq_invoice', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag','invoice_no'));
     }
 
     public function storeInvoice(Request $request)

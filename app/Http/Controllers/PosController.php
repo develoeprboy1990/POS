@@ -271,7 +271,7 @@ class PosController extends Controller
     public function invoiceListing(Request $request)
     {
         if ($request->ajax()) {
-            $invoices = DB::table('invoice_master')->get();
+            $invoices = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->get();
             return Datatables::of($invoices)
                 ->addIndexColumn()
                 ->addColumn('payment_status', function ($row) {
