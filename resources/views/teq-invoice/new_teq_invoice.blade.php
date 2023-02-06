@@ -230,6 +230,11 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
+                                                <input type="text" name="invoice_no" value="{{$invoice_no}}" id="invoice_no" readonly class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
                                                 <input type="date" name="invoice_date" value="<?php echo date('Y-m-d'); ?>" id="invoice_date" class="form-control" />
                                             </div>
                                         </div>
