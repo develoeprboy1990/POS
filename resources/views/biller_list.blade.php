@@ -54,7 +54,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{{url('store-biller')}}" method="POST">
+                <form action="{{url('store-biller')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row col-md-12">
                         <div class="col-md-6">
@@ -174,7 +174,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{{url('update-biller')}}" method="POST">
+                <form action="{{url('update-biller')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="biller_id" value="" id="biller_id">
                     <div class="row col-md-12">

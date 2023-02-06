@@ -54,7 +54,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{{url('store-brand')}}" method="POST">
+                <form action="{{url('store-brand')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row col-md-12">
                         <div class="form-group">
@@ -92,7 +92,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form action="{{url('update-brand')}}" method="POST">
+                <form action="{{url('update-brand')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="brand_id" value="" id="brand_id">
                     <div class="row col-md-12">

@@ -1,4 +1,6 @@
-@extends('template.top-head') @section('content')
+@extends('template.top-head')
+@section('title','Create Invoice')
+@section('content')
 @if($errors->has('phone_number'))
 <div class="alert alert-danger alert-dismissible text-center">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ $errors->first('phone_number') }}
@@ -228,7 +230,12 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <input type="date" name="invoice_date" id="invoice_date" class="form-control" value="{{date('d/m/Y')}}" />
+                                                <input type="text" name="invoice_no" value="{{$invoice_no}}" id="invoice_no" readonly class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <input type="date" name="invoice_date" value="<?php echo date('Y-m-d'); ?>" id="invoice_date" class="form-control" />
                                             </div>
                                         </div>
                                         <div class="col-md-4" style="display: none;">
@@ -390,7 +397,10 @@
                             <button style="background: #0984e3" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="credit-card-btn"><i class="fa fa-credit-card"></i> Card</button>
                         </div>
                         <div class="column-5">
-                            <button style="background: #00cec9" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cash-btn"><i class="fa fa-money"></i> Cash</button>
+                            <button style="background: #00cec9" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cash-print-btn"><i class="fa fa-money"></i> Cash & Print</button>
+                        </div>
+                        <div class="column-5">
+                            <button style="background: #e28d02" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="cash-new-btn"><i class="fa fa-money"></i> Cash & New</button>
                         </div>
                         <div class="column-5" style="display: none;">
                             <button style="background-color: #213170" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="paypal-btn"><i class="fa fa-paypal"></i> Paypal</button>
@@ -404,15 +414,14 @@
                         <div class="column-5" style="display: none;">
                             <button style="background-color: #5f27cd" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="gift-card-btn"><i class="fa fa-credit-card-alt"></i> GiftCard</button>
                         </div>
+                        <div class="column-5" style="display: none;">
+                            <button style="background-color: #b33771" type="button" class="btn btn-custom payment-btn" data-toggle="modal" data-target="#add-payment" id="deposit-btn"><i class="fa fa-university"></i> Deposit</button>
+                        </div>
                         <div class="column-5">
                             <button style="background-color: #d63031;" type="button" class="btn btn-custom" id="cancel-btn" onclick="return confirmCancel()"><i class="fa fa-close"></i> Cancel</button>
                         </div>
-                        <div class="column-5"  >
-                            <a href="{{URL('/invoice-listing')}}" class="btn btn-custom payment-btn text-white"><i class="fa fa-home" ></i> Home</a>
-                           
-                        </div>
-                        <div class="column-5">
-                           <!--  <button style="background-color: #ffc107;" type="button" class="btn btn-custom" data-toggle="modal" data-target="#recentTransaction"><i class="dripicons-clock"></i> Recent transaction</button> -->
+                        <div class="column-5" style="display: none;">
+                            <button style="background-color: #ffc107;" type="button" class="btn btn-custom" data-toggle="modal" data-target="#recentTransaction"><i class="dripicons-clock"></i> Recent transaction</button>
                         </div>
                     </div>
                 </div>
@@ -426,6 +435,7 @@
                             <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                         </div>
                         <div class="modal-body">
+                            <input type="hidden" name="print_status" id="print_status" value="">
                             <div class="row">
                                 <div class="col-md-10">
                                     <div class="row">
@@ -556,9 +566,10 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <input type="hidden" name="order_tax_rate">
+                                <input type="hidden" name="order_tax_id">
                                 <select class="form-control" name="order_tax_rate_select" id="order-tax-rate-select">
                                     @foreach($lims_tax_list as $tax)
-                                    <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-value="{{$tax->name}}">{{$tax->name}}</option>
+                                    <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-id="{{$tax->id}}" data-value="{{$tax->name}}">{{$tax->name}}</option>
                                     @endforeach
                                     <option value="0">No Tax</option>
                                 </select>
@@ -2067,6 +2078,7 @@
     });
 
     $("#submit-btn").on("click", function() {
+        localStorage.clear();
         $('.payment-form').submit();
     });
 
@@ -2091,9 +2103,18 @@
         cheque();
     });
 
-    $("#cash-btn").on("click", function() {
+    $("#cash-print-btn").on("click", function() {
         $('select[name="paid_by_id_select"]').val(1);
         $('.selectpicker').selectpicker('refresh');
+        $('#print_status').val(1);
+        $('div.qc').show();
+        hide();
+    });
+
+    $("#cash-new-btn").on("click", function() {
+        $('select[name="paid_by_id_select"]').val(1);
+        $('.selectpicker').selectpicker('refresh');
+        $('#print_status').val(0);
         $('div.qc').show();
         hide();
     });
@@ -2620,6 +2641,7 @@
         if (!shipping_cost)
             shipping_cost = 0.00;
         item = ++item + '(' + total_qty + ')';
+        
         if (order_tax_rate_select == 'Exclusive') {
             order_tax = (subtotal - order_discount) * (order_tax / 100); //EHSAN OLD      
         }
@@ -2803,9 +2825,11 @@
         }
         $('input[name="paid_by_id"]').val($('select[name="paid_by_id_select"]').val());
         $('input[name="order_tax_rate"]').val($('select[name="order_tax_rate_select"]').val());
-
+        $('input[name="order_tax_id"]').val($('#order-tax-rate-select').children('option:selected').data('id')); 
     });
-
+  
+     
+     
     $('#product-table').DataTable({
         "order": [],
         'pageLength': product_row_number,
