@@ -566,9 +566,10 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <input type="hidden" name="order_tax_rate">
+                                <input type="hidden" name="order_tax_id">
                                 <select class="form-control" name="order_tax_rate_select" id="order-tax-rate-select">
                                     @foreach($lims_tax_list as $tax)
-                                    <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-value="{{$tax->name}}">{{$tax->name}}</option>
+                                    <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-id="{{$tax->id}}" data-value="{{$tax->name}}">{{$tax->name}}</option>
                                     @endforeach
                                     <option value="0">No Tax</option>
                                 </select>
@@ -2640,6 +2641,7 @@
         if (!shipping_cost)
             shipping_cost = 0.00;
         item = ++item + '(' + total_qty + ')';
+        
         if (order_tax_rate_select == 'Exclusive') {
             order_tax = (subtotal - order_discount) * (order_tax / 100); //EHSAN OLD      
         }
@@ -2823,9 +2825,11 @@
         }
         $('input[name="paid_by_id"]').val($('select[name="paid_by_id_select"]').val());
         $('input[name="order_tax_rate"]').val($('select[name="order_tax_rate_select"]').val());
-
+        $('input[name="order_tax_id"]').val($('#order-tax-rate-select').children('option:selected').data('id')); 
     });
-
+  
+     
+     
     $('#product-table').DataTable({
         "order": [],
         'pageLength': product_row_number,

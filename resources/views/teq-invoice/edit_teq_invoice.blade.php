@@ -1,5 +1,5 @@
 @extends('template.tmp')
-@section('title', 'Edit Invoice') 
+@section('title', 'Edit Invoice')
 @section('content')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
@@ -403,15 +403,15 @@
                                                                     <td>{{$product_data->ItemCode}}</td>
                                                                     <td><input type="number" class="form-control qty" name="qty[]" value="{{$product_sale->Qty}}" step="any" required /></td>
                                                                     @if($product_batch_data)
-                                                                    <td>
+                                                                    <!-- <td>
                                                                         <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="{{$product_sale->product_batch_id}}">
                                                                         <input type="text" class="form-control batch-no" name="batch_no[]" value="{{$product_batch_data->batch_no}}" required />
-                                                                    </td>
+                                                                    </td> -->
                                                                     @else
-                                                                     <td>
+                                                                    <!--  <td>
                                                                       <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="">
                                                                       <input type="text" class="form-control batch-no" name="batch_no[]" value="" disabled />
-                                                                  </td>
+                                                                  </td> -->
                                                                     @endif
                                                                     <td class="net_unit_price">{{ number_format((float)$product_sale->Rate, 2, '.', '') }} </td>
                                                                     <td class="discount">{{ number_format((float)$product_sale->Discount, 2, '.', '') }}</td>
@@ -449,7 +449,7 @@
                                                                 <th></th>
                                                                 <th id="total-discount">{{ number_format((float)$lims_sale_data->DiscountAmount, 2, '.', '') }}</th>
 
-                                                                <th id="total">{{ number_format((float)$lims_sale_data->GrandTotal, 2, '.', '') }}</th>
+                                                                <th id="total">{{ number_format((float)$lims_sale_data->SubTotal, 2, '.', '') }}</th>
                                                                 <!-- <th><i class="dripicons-trash"></i></th> -->
                                                             </tfoot>
                                                         </table>
@@ -506,16 +506,19 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <input type="hidden" name="order_tax_rate_hidden" value="{{@$lims_sale_data->Taxper}}">
-                                                        <label>{{trans('file.Order Tax')}}</label>
-                                                        <select class="form-control select2" name="order_tax_rate">
-                                                            <option value="0">No Tax</option>
+                                                        <input type="hidden" name="order_tax_rate_hidden" value="{{@$lims_sale_data->TaxPer}}">
+                                                        <label>
+                                                            <strong>{{trans('file.Order Tax')}}</strong>
+                                                        </label>                                                      
+                                                        <select name="order_tax_rate" id="order_tax_rate" class="form-select  changesNo tax exclusive_cal bg-light select2">
                                                             @foreach($lims_tax_list as $tax)
-                                                            <option value="{{$tax->rate}}">{{$tax->name}}</option>
+                                                            <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-id="{{$tax->id}}" data-value="{{$tax->name}}">{{$tax->name}}</option>
                                                             @endforeach
                                                         </select>
+
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>
@@ -524,16 +527,33 @@
                                                         <input type="number" name="order_discount" class="form-control" value="{{@$lims_sale_data->DiscountPer}}" step="any" />
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-4">
                                                     <div class="form-group">
+                                                        @if($lims_sale_data->DiscountModel == 'percentage')
+                                                        @php
+                                                        $discount_model = 1;
+                                                        @endphp
+                                                        <input type="hidden" name="discount_model_hidden" value="percentage" />
+                                                        @else
+                                                        @php
+                                                        $discount_model = 2;
+                                                        @endphp
+                                                        <input type="hidden" name="discount_model_hidden" value="number" />
+                                                        @endif
                                                         <label>
-                                                            <strong>{{trans('file.Shipping Cost')}}</strong>
+                                                            <strong>Discount Type</strong>
                                                         </label>
-                                                        <input type="number" name="shipping_cost" class="form-control" value="{{@$lims_sale_data->Shipping}}" step="any" />
+                                                        <select id="disc_percent" name="discount_model" class="form-select select2">
+                                                            <option value="percentage" @if($discount_model=='percentage' ) selected='selected' @endif>Percent (%)</option>
+                                                            <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed (AED)</option>
+                                                        </select>
                                                     </div>
                                                 </div>
+
+                                                
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-3">
                                                 <!--  <div class="col-md-4">
                                           <div class="form-group">
                                               <label>
@@ -552,6 +572,14 @@
                                                             <strong>{{ $errors->first('extension') }}</strong>
                                                         </span>
                                                         @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            <strong>{{trans('file.Shipping Cost')}}</strong>
+                                                        </label>
+                                                        <input type="number" name="shipping_cost" class="form-control" value="{{@$lims_sale_data->Shipping}}" step="any" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -595,7 +623,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-3">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{trans('file.Sale Note')}}</label>
@@ -609,7 +637,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mt-3">
                                                 <input type="submit" value="Save" class="btn btn-success w-lg" id="submit-button">
                                                 <a href="{{url('/invoice-listing')}}" class="btn btn-secondary w-lg">Cancel</a>
                                             </div>
@@ -627,13 +655,13 @@
                         <span class="pull-right" id="item">0.00</span>
                     </td>
                     <td><strong>{{trans('file.Total')}}</strong>
-                        <span class="pull-right" id="subtotal">0.00</span>
+                        <span class="pull-right" id="subtotal">{{$lims_sale_data->Total}}</span>
                     </td>
                     <td><strong>{{trans('file.Order Tax')}}</strong>
-                <span class="pull-right" id="order_tax">0.00</span>
-            </td>
+                        <span class="pull-right" id="order_tax">{{$lims_sale_data->Tax}}</span>
+                    </td>
                     <td><strong>{{trans('file.Order Discount')}}</strong>
-                        <span class="pull-right" id="order_discount">0.00</span>
+                        <span class="pull-right" id="order_discount">{{$lims_sale_data->DiscountAmount}}</span>
                     </td>
                     <td><strong>{{trans('file.Shipping Cost')}}</strong>
                         <span class="pull-right" id="shipping_cost">0.00</span>
@@ -663,10 +691,10 @@
                             <label>{{trans('file.Unit Discount')}}</label>
                             <input type="number" name="edit_discount" class="form-control" step="any">
                         </div> -->
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label>{{trans('file.Unit Discount')}}</label>
                                     <input type="text" name="edit_discount" class="form-control numkey">
-                                    <div class="form-check">
+                                    <div class="form-check mt-3">
                                         <input class="form-check-input" type="radio" name="flexRadioDefault" value="amount" id="radioAmount">
                                         <label class="form-check-label" for="radioAmount">
                                             Amount
@@ -679,7 +707,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label>{{trans('file.Unit Price')}}</label>
                                     <input type="number" name="edit_unit_price" class="form-control" step="any">
                                 </div>
@@ -691,7 +719,7 @@
                                     $tax_rate_all[] = $tax->rate;
                                 }
                                 ?>
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label>{{trans('file.Tax Rate')}}</label>
                                     <select name="edit_tax_rate" class="form-control select2">
                                         @foreach($tax_name_all as $key => $name)
@@ -699,7 +727,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div id="edit_unit" class="form-group">
+                                <div id="edit_unit" class="form-group mt-3">
                                     <label>{{trans('file.Product Unit')}}</label>
                                     <select name="edit_unit" class="form-control select2">
                                     </select>
@@ -983,15 +1011,18 @@
     $('select[name="warehouse_id"]').val($('input[name="warehouse_id_hidden"]').val());
     $('select[name="biller_id"]').val($('input[name="biller_id_hidden"]').val());
     $('select[name="sale_status"]').val($('input[name="sale_status_hidden"]').val());
+    $('select[name="discount_model"]').val($('input[name="discount_model_hidden"]').val());
+
     $('select[name="order_tax_rate"]').val($('input[name="order_tax_rate_hidden"]').val());
-    $('.selectpicker').selectpicker('refresh');
+
+    //$('.selectpicker').selectpicker('refresh');
 
     $('#item').text($('input[name="item"]').val() + '(' + $('input[name="total_qty"]').val() + ')');
-    $('#subtotal').text(parseFloat($('input[name="total_price"]').val()).toFixed(2));
-    $('#order_tax').text(parseFloat($('input[name="order_tax"]').val()).toFixed(2));
+    //$('#subtotal').text(parseFloat($('input[name="total_price"]').val()).toFixed(2));
+    //$('#order_tax').text(parseFloat($('input[name="order_tax"]').val()).toFixed(2));
     if (!$('input[name="order_discount"]').val())
         $('input[name="order_discount"]').val('0.00');
-    $('#order_discount').text(parseFloat($('input[name="order_discount"]').val()).toFixed(2));
+    // $('#order_discount').text(parseFloat($('input[name="order_discount"]').val()).toFixed(2));
     if (!$('input[name="shipping_cost"]').val())
         $('input[name="shipping_cost"]').val('0.00');
     $('#shipping_cost').text(parseFloat($('input[name="shipping_cost"]').val()).toFixed(2));
@@ -1231,14 +1262,10 @@
                     cols += '<td>' + data[0] + '<button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
                     cols += '<td>' + data[1] + '</td>';
                     cols += '<td><input type="number" class="form-control qty" name="qty[]" value="1" step="any" required/></td>';
-                    if (data[12]) {
-                        cols += '<td><input type="text" class="form-control batch-no" value="' + batch_no[pos] + '" required/> <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="' + product_batch_id[pos] + '"/> </td>';
-                    } else {
-                        cols += '<td><input type="text" class="form-control batch-no" disabled/> <input type="hidden" class="product-batch-id" name="product_batch_id[]"/> </td>';
-                    }
+                    
                     cols += '<td class="net_unit_price"></td>';
                     cols += '<td class="discount">0.00</td>';
-                    cols += '<td class="tax"></td>';
+                 
                     cols += '<td class="sub-total"></td>';
                     cols += '<td><a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a></td>';
                     cols += '<input type="hidden" class="product-code" name="product_code[]" value="' + data[1] + '"/>';
@@ -1464,9 +1491,7 @@
     }
 
     function calculateGrandTotal() {
-
         var item = $('table.order-list tbody tr:last').index();
-
         var total_qty = parseFloat($('#total-qty').text());
         var subtotal = parseFloat($('#total').text());
         var order_tax = parseFloat($('select[name="order_tax_rate"]').val());
@@ -1478,6 +1503,8 @@
         var shipping_cost = parseFloat($('input[name="shipping_cost"]').val());
         var daraz_amount = parseFloat($('input[name="daraz_amount"]').val());
 
+        var order_tax_rate_select = $('select[name="order_tax_rate"]').find(':selected').attr('data-value');
+
         if (!order_discount)
             order_discount = 0.00;
         if (!shipping_cost)
@@ -1486,8 +1513,29 @@
             daraz_amount = 0.00;
 
         item = ++item + '(' + total_qty + ')';
-        order_tax = (subtotal - order_discount) * (order_tax / 100);
-        var grand_total = ((subtotal + order_tax + shipping_cost) - order_discount) - daraz_amount;
+
+        if (order_tax_rate_select == 'Exclusive') {
+            order_tax = (subtotal - order_discount) * (order_tax / 100); //EHSAN OLD    
+        }
+
+        var discount_model = $('select[name="discount_model"]').val();
+        var discount = order_discount.toFixed(2);
+        if (discount_model == 'percentage') {
+            discount = subtotal * (order_discount / 100);
+            subtotal = subtotal - discount;
+
+        } else {
+            subtotal = subtotal - order_discount;
+        }
+        //order_tax = (subtotal - order_discount) * (order_tax / 100);
+        if (order_tax_rate_select == 'Inclusive') {
+            order_tax = subtotal * (order_tax / 100); //EHSAN
+            subtotal = subtotal - order_tax; //EHSAN
+        }
+
+        var grand_total = ((subtotal + order_tax + shipping_cost)) - daraz_amount;
+
+        console.log(subtotal);
         $('input[name="grand_total"]').val(grand_total.toFixed(2));
         $('input[name="paid_amount"]').val(grand_total.toFixed(2)); // added by usman
         if ($('input[name="coupon_active"]').val()) {
@@ -1503,12 +1551,12 @@
         $('#subtotal').text(subtotal.toFixed(2));
         $('#order_tax').text(order_tax.toFixed(2));
         $('input[name="order_tax"]').val(order_tax.toFixed(2));
-        $('#order_discount').text(order_discount.toFixed(2));
         $('#shipping_cost').text(shipping_cost.toFixed(2));
         $('#daraz_amount').text(daraz_amount.toFixed(2));
         $('#grand_total').text(grand_total.toFixed(2));
-        $('input[name="grand_total"]').val(grand_total.toFixed(2)); 
-        $("#total-discount").text(order_discount.toFixed(2));
+        $('input[name="grand_total"]').val(grand_total.toFixed(2));
+        $('#order_discount').text(discount.toFixed(2));
+        $("#total-discount").text(discount);
     }
 
     function couponDiscount() {
@@ -1548,6 +1596,10 @@
         calculateGrandTotal();
     });
 
+    $('select[name="discount_model"]').on("change", function() { 
+        calculateGrandTotal();
+    });
+    
     $(window).keydown(function(e) {
         if (e.which == 13) {
             var $targ = $(e.target);
