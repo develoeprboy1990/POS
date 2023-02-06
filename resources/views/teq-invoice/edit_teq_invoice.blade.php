@@ -511,7 +511,7 @@
                                                         <label>
                                                             <strong>{{trans('file.Order Tax')}}</strong>
                                                         </label>                                                      
-                                                        <select name="order_tax_rate" id="order_tax_rate" class="form-select  changesNo tax exclusive_cal bg-light select2">
+                                                        <select name="order_tax_rate" id="order_tax_rate" class="form-select changesNo tax exclusive_cal bg-light select2"onchange="calculateGrandTotal()">
                                                             @foreach($lims_tax_list as $tax)
                                                             <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-id="{{$tax->id}}" data-value="{{$tax->name}}">{{$tax->name}}</option>
                                                             @endforeach
@@ -538,7 +538,7 @@
                                                         <label>
                                                             <strong>Discount Type</strong>
                                                         </label>
-                                                        <select id="disc_percent" name="discount_model" class="form-select select2">
+                                                        <select id="disc_percent" name="discount_model" class="form-select select2" onchange="calculateGrandTotal()">
                                                             <option value="percentage" @if($discount_model=='percentage' ) selected='selected' @endif>Percent (%)</option>
                                                             <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed (AED)</option>
                                                         </select>
@@ -1621,13 +1621,13 @@
         calculateGrandTotal();
     });
 
-    $('select[name="order_tax_rate"]').on("change", function() {
-        calculateGrandTotal();
-    });
+    // $('select[name="order_tax_rate"]').on("change", function() {
+    //     calculateGrandTotal();
+    // });
 
-    $('select[name="discount_model"]').on("change", function() { 
-        calculateGrandTotal();
-    });
+    // $('select[name="discount_model"]').on("change", function() { 
+    //     calculateGrandTotal();
+    // });
     
     $(window).keydown(function(e) {
         if (e.which == 13) {
