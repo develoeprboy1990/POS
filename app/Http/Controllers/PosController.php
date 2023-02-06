@@ -396,8 +396,7 @@ class PosController extends Controller
                 ->addIndexColumn()
                 ->addColumn('brand_img', function ($row) {
                     if ($row->image)
-                        $brand_img = '<td> <img src="{{ asset("images/brand/" . $row->image) }}" height="80" width="80">
-                    </td>';
+                        $brand_img = '<td><img src="'.url('assets/images/brand', $row->image).'" height="70" width="70"></td>';
                     else
                         $brand_img = '<td>N/A</td>';
 
@@ -444,7 +443,7 @@ class PosController extends Controller
             $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
             $imageName = date("Ymdhis");
             $imageName = $imageName . '.' . $ext;
-            $image->move('public/images/brand', $imageName);
+            $image->move(public_path('assets/images/brand'), $imageName);
             $input['image'] = $imageName;
         }
         Brand::create($input);
@@ -476,7 +475,7 @@ class PosController extends Controller
             $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
             $imageName = date("Ymdhis");
             $imageName = $imageName . '.' . $ext;
-            $image->move('public/images/brand', $imageName);
+            $image->move(public_path('assets/images/brand'), $imageName);
             $lims_brand_data->image = $imageName;
         }
         $lims_brand_data->save();
@@ -675,7 +674,7 @@ class PosController extends Controller
             $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
             $imageName = date("Ymdhis");
             $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('images/category'), $imageName);
+            $image->move(public_path('assets/images/category'), $imageName);
             
         }
 
@@ -709,7 +708,7 @@ class PosController extends Controller
             $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
             $imageName = date("Ymdhis");
             $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('images/category'), $imageName);
+            $image->move(public_path('assets/images/category'), $imageName);
 
             $data = array(
                 "ParentID" => $request->edit_parent_id,
@@ -746,8 +745,7 @@ class PosController extends Controller
                 ->addIndexColumn()
                 ->addColumn('biller_img', function ($row) {
                     if ($row->image)
-                        $biller_img = '<td> <img src="{{ asset("images/biller/" . $row->image) }}" height="80" width="80">
-                    </td>';
+                        $biller_img = '<td><img src="'.url('assets/images/biller', $row->image).'" height="70" width="70"></td>';
                     else
                         $biller_img = '<td>N/A</td>';
 
@@ -795,7 +793,7 @@ class PosController extends Controller
                     $constraints->aspectRatio();
                 })->save('public/images/biller/' . $imageName.'-resize.'.$ext);*/
             $imageName = $imageName . '.' . $ext;
-            $image->move('public/images/biller', $imageName);
+            $image->move(public_path('assets/images/biller'), $imageName);
 
             $lims_biller_data['image'] = $imageName;
         }
@@ -835,7 +833,7 @@ class PosController extends Controller
             $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
             $imageName = preg_replace('/[^a-zA-Z0-9]/', '', $request['company_name']);
             $imageName = $imageName . '.' . $ext;
-            $image->move('public/images/biller', $imageName);
+            $image->move(public_path('assets/images/biller'), $imageName);
             $input['image'] = $imageName;
         }
 
