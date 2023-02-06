@@ -825,38 +825,17 @@ class TeqPosController extends Controller
             ->select('product_warehouse.*', 'item.*')
             ->get();
 
-
-
-        config()->set('database.connections.mysql.strict', false);
-        \DB::reconnect(); //important as the existing connection if any would be in strict mode
-        $lims_product_with_batch_warehouse_data = Product::join('product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
-            ->where([
-                ['products.is_active', true],
-                ['product_warehouse.warehouse_id', $id],
-                ['product_warehouse.qty', '>', 0]
-            ])
-            ->whereNull('product_warehouse.variant_id')
-            ->whereNotNull('product_warehouse.product_batch_id')
-            ->select('product_warehouse.*')
-            ->groupBy('product_warehouse.product_id')
-            ->get();
-
-        //now changing back the strict ON
-        config()->set('database.connections.mysql.strict', true);
-        \DB::reconnect();
-
-        $lims_product_with_variant_warehouse_data = Product::join('product_warehouse', 'products.id', '=', 'product_warehouse.product_id')
-            ->where([
-                ['products.is_active', true],
-                ['product_warehouse.warehouse_id', $id],
-                ['product_warehouse.qty', '>', 0]
-            ])->whereNotNull('product_warehouse.variant_id')->select('product_warehouse.*')->get();
-
         $product_code  = [];
         $product_name  = [];
         $product_qty   = [];
         $product_price = [];
         $product_data  = [];
+        $product_type  = [];
+        $product_id  = [];
+        $product_list  = [];
+        $qty_list  = [];
+        $batch_no  = [];
+        $product_batch_id  = [];
         //product without variant 
         foreach ($lims_product_warehouse_data as $product_warehouse) {
             $product_qty[]     = $product_warehouse->qty;
@@ -871,48 +850,8 @@ class TeqPosController extends Controller
             $batch_no[]        = null;
             $product_batch_id[] = null;
         }
-        //product with batches
-        foreach ($lims_product_with_batch_warehouse_data as $product_warehouse) {
-            $product_qty[] = $product_warehouse->qty;
-            $product_price[] = $product_warehouse->price;
-            $lims_product_data = Product::find($product_warehouse->product_id);
-            $product_code[] =  $lims_product_data->code;
-            $product_name[] = htmlspecialchars($lims_product_data->name);
-            $product_type[] = $lims_product_data->type;
-            $product_id[] = $lims_product_data->id;
-            $product_list[] = $lims_product_data->product_list;
-            $qty_list[] = $lims_product_data->qty_list;
-            $product_batch_data = ProductBatch::select('id', 'batch_no')->find($product_warehouse->product_batch_id);
-            $batch_no[] = $product_batch_data->batch_no;
-            $product_batch_id[] = $product_batch_data->id;
-        }
-        //product with variant
-        foreach ($lims_product_with_variant_warehouse_data as $product_warehouse) {
-            $product_qty[] = $product_warehouse->qty;
-            $lims_product_data = Product::find($product_warehouse->product_id);
-            $lims_product_variant_data = ProductVariant::select('item_code')->FindExactProduct($product_warehouse->product_id, $product_warehouse->variant_id)->first();
-            $product_code[] =  $lims_product_variant_data->item_code;
-            $product_name[] = htmlspecialchars($lims_product_data->name);
-            $product_type[] = $lims_product_data->type;
-            $product_id[] = $lims_product_data->id;
-            $product_list[] = $lims_product_data->product_list;
-            $qty_list[] = $lims_product_data->qty_list;
-            $batch_no[] = null;
-            $product_batch_id[] = null;
-        }
-        //retrieve product with type of digital and combo
-        $lims_product_data = Product::whereIn('type', ['standard'])->where('is_active', true)->get(); //whereNotIn
-        foreach ($lims_product_data as $product) {
-            $product_qty[] = $product->qty;
-            $product_code[] =  $product->code;
-            $product_name[] = $product->name;
-            $product_type[] = $product->type;
-            $product_id[] = $product->id;
-            $product_list[] = $product->product_list;
-            $qty_list[] = $product->qty_list;
-            $batch_no[] = null;
-            $product_batch_id[] = null;
-        }
+        
+     
         $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id];
         return $product_data;
     }

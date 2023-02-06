@@ -524,6 +524,15 @@
 
                                                 <div class="col-md-4">
                                                     <div class="form-group">
+                                                        <label>
+                                                            <strong>{{trans('file.Order Discount')}}</strong>
+                                                        </label>
+                                                        <input type="number" name="order_discount" class="form-control" value="{{@$lims_sale_data->DiscountPer}}" step="any" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
                                                         @if($lims_sale_data->DiscountModel == 'percentage')
                                                         @php
                                                         $discount_model = 1;
@@ -542,15 +551,6 @@
                                                             <option value="percentage" @if($discount_model=='percentage' ) selected='selected' @endif>Percent (%)</option>
                                                             <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed (AED)</option>
                                                         </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>
-                                                            <strong>{{trans('file.Order Discount')}}</strong>
-                                                        </label>
-                                                        <input type="number" name="order_discount" class="form-control" value="{{@$lims_sale_data->DiscountPer}}" step="any" />
                                                     </div>
                                                 </div>
 
