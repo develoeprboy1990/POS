@@ -901,7 +901,7 @@ class TeqPosController extends Controller
             $product_batch_id[] = null;
         }
         //retrieve product with type of digital and combo
-        $lims_product_data = Product::whereNotIn('type', ['standard'])->where('is_active', true)->get();
+        $lims_product_data = Product::whereIn('type', ['standard'])->where('is_active', true)->get(); //whereNotIn
         foreach ($lims_product_data as $product) {
             $product_qty[] = $product->qty;
             $product_code[] =  $product->code;

@@ -15,6 +15,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+
 <style>
     .form-control {
         display: block;
@@ -273,7 +274,7 @@
                                                     <div class="form-group">
                                                         <label>{{trans('file.customer')}} *</label>
                                                         <input type="hidden" name="customer_id_hidden" value="{{ $lims_sale_data->PartyID }}" />
-                                                        <select required name="customer_id" class="select2 form-control" data-live-search="true" id="customer-id" data-live-search-style="begins" title="Select customer...">
+                                                        <select required name="customer_id" class="form-select select2" onchange="getCustomerGroupDetail(this.value)" data-live-search="true" id="customer-id" data-live-search-style="begins" title="Select customer...">
                                                             @foreach($lims_customer_list as $customer)
                                                             <option value="{{$customer->PartyID}}" {{$lims_sale_data->PartyID == $customer->PartyID ? 'selected' : ''}}>{{$customer->PartyName . ' (' . $customer->Phone . ')'}}</option>
                                                             @endforeach
@@ -286,7 +287,7 @@
                                                     <div class="form-group">
                                                         <label>{{trans('file.Warehouse')}} *</label>
                                                         <input type="hidden" name="warehouse_id_hidden" value="{{$lims_sale_data->WarehouseID}}" />
-                                                        <select required id="warehouse_id" name="warehouse_id" class="select2 form-control" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
+                                                        <select required id="warehouse_id" name="warehouse_id" class="form-select select2" onchange="getWarehouseDetail(this.value)" data-live-search="true" data-live-search-style="begins" title="Select warehouse...">
                                                             @foreach($lims_warehouse_list as $warehouse)
                                                             <option value="{{$warehouse->id}}" {{$lims_sale_data->WarehouseID == $warehouse->id ? 'selected' : ''}}>{{$warehouse->name}}</option>
                                                             @endforeach
@@ -297,7 +298,7 @@
                                                     <div class="form-group">
                                                         <label>{{trans('file.Biller')}} *</label>
                                                         <input type="hidden" name="biller_id_hidden" value="{{$lims_sale_data->SupplierID}}" />
-                                                        <select required name="biller_id" class="select2 form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
+                                                        <select required name="biller_id" class="form-select select2" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                                             @foreach($lims_biller_list as $biller)
                                                             <option value="{{$biller->id}}" {{$lims_sale_data->SupplierID == $biller->id ? 'selected' : ''}}>{{$biller->name . ' (' . $biller->company_name . ')'}}</option>
                                                             @endforeach
@@ -519,14 +520,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>
-                                                            <strong>{{trans('file.Order Discount')}}</strong>
-                                                        </label>
-                                                        <input type="number" name="order_discount" class="form-control" value="{{@$lims_sale_data->DiscountPer}}" step="any" />
-                                                    </div>
-                                                </div>
+                                                
 
                                                 <div class="col-md-4">
                                                     <div class="form-group">
@@ -551,7 +545,14 @@
                                                     </div>
                                                 </div>
 
-                                                
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            <strong>{{trans('file.Order Discount')}}</strong>
+                                                        </label>
+                                                        <input type="number" name="order_discount" class="form-control" value="{{@$lims_sale_data->DiscountPer}}" step="any" />
+                                                    </div>
+                                                </div>
 
                                                 
                                             </div>
@@ -1070,16 +1071,20 @@
 
     isCashRegisterAvailable(id);
 
-    $('select[name="customer_id"]').on('change', function() {
-        var id = $(this).val();
-        $.get('../getcustomergroup/' + id, function(data) {
+    function getCustomerGroupDetail(seletedVal) {
+        $.get('../getcustomergroup/' + seletedVal, function(data) {
             customer_group_rate = (data / 100);
         });
-    });
+    }
+    // $('select[name="customer_id"]').on('change', function() {
+    //     var id = $(this).val();
+    //     $.get('../getcustomergroup/' + id, function(data) {
+    //         customer_group_rate = (data / 100);
+    //     });
+    // });getWarehouseDetail
 
-    $('select[name="warehouse_id"]').on('change', function() {
-        var id = $(this).val();
-        $.get('../getproduct/' + id, function(data) {
+    function getWarehouseDetail(seletedVal) {
+        $.get('../getproduct/' + seletedVal, function(data) {
             lims_product_array = [];
             product_code = data[0];
             product_name = data[1];
@@ -1096,8 +1101,30 @@
                 lims_product_array.push(product_code[index] + ' (' + product_name[index] + ')');
             });
         });
-        isCashRegisterAvailable(id);
-    });
+        isCashRegisterAvailable(seletedVal);
+    }
+
+    // $('select[name="warehouse_id"]').on('change', function() {
+    //     var id = $(this).val();
+    //     $.get('../getproduct/' + id, function(data) {
+    //         lims_product_array = [];
+    //         product_code = data[0];
+    //         product_name = data[1];
+    //         product_qty = data[2];
+    //         product_type = data[3];
+    //         product_id = data[4];
+    //         product_list = data[5];
+    //         qty_list = data[6];
+    //         product_warehouse_price = data[7];
+    //         batch_no = data[8];
+    //         product_batch_id = data[9];
+
+    //         $.each(product_code, function(index) {
+    //             lims_product_array.push(product_code[index] + ' (' + product_name[index] + ')');
+    //         });
+    //     });
+    //     isCashRegisterAvailable(id);
+    // });
 
     var lims_productcodeSearch = $('#lims_productcodeSearch');
     lims_productcodeSearch.autocomplete({
