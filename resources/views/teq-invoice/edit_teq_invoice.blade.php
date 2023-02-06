@@ -506,8 +506,11 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <input type="hidden" name="order_tax_rate_hidden" value="{{@$lims_sale_data->TaxPer}}">                                                      
-                                                        <select name="order_tax_rate" id="order_tax_rate" class="form-select  changesNo tax exclusive_cal bg-light">
+                                                        <input type="hidden" name="order_tax_rate_hidden" value="{{@$lims_sale_data->TaxPer}}">
+                                                        <label>
+                                                            <strong>{{trans('file.Order Tax')}}</strong>
+                                                        </label>                                                      
+                                                        <select name="order_tax_rate" id="order_tax_rate" class="form-select  changesNo tax exclusive_cal bg-light select2">
                                                             @foreach($lims_tax_list as $tax)
                                                             <option value="{{$tax->rate}}" @if($tax->name == 'Inclusive') selected="selected" @endif data-id="{{$tax->id}}" data-value="{{$tax->name}}">{{$tax->name}}</option>
                                                             @endforeach
@@ -516,7 +519,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-2">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>
                                                             <strong>{{trans('file.Order Discount')}}</strong>
@@ -525,7 +528,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-1">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         @if($lims_sale_data->DiscountModel == 'percentage')
                                                         @php
@@ -541,23 +544,16 @@
                                                         <label>
                                                             <strong>Discount Type</strong>
                                                         </label>
-                                                        <select id="disc_percent" name="discount_model" class="form-select">
+                                                        <select id="disc_percent" name="discount_model" class="form-select select2">
                                                             <option value="percentage" @if($discount_model=='percentage' ) selected='selected' @endif>Percent (%)</option>
                                                             <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed (AED)</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label>
-                                                            <strong>{{trans('file.Shipping Cost')}}</strong>
-                                                        </label>
-                                                        <input type="number" name="shipping_cost" class="form-control" value="{{@$lims_sale_data->Shipping}}" step="any" />
-                                                    </div>
-                                                </div>
+                                                
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-3">
                                                 <!--  <div class="col-md-4">
                                           <div class="form-group">
                                               <label>
@@ -576,6 +572,14 @@
                                                             <strong>{{ $errors->first('extension') }}</strong>
                                                         </span>
                                                         @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>
+                                                            <strong>{{trans('file.Shipping Cost')}}</strong>
+                                                        </label>
+                                                        <input type="number" name="shipping_cost" class="form-control" value="{{@$lims_sale_data->Shipping}}" step="any" />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -619,7 +623,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-3">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>{{trans('file.Sale Note')}}</label>
@@ -633,7 +637,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group mt-3">
                                                 <input type="submit" value="Save" class="btn btn-success w-lg" id="submit-button">
                                                 <a href="{{url('/invoice-listing')}}" class="btn btn-secondary w-lg">Cancel</a>
                                             </div>
@@ -687,10 +691,10 @@
                             <label>{{trans('file.Unit Discount')}}</label>
                             <input type="number" name="edit_discount" class="form-control" step="any">
                         </div> -->
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label>{{trans('file.Unit Discount')}}</label>
                                     <input type="text" name="edit_discount" class="form-control numkey">
-                                    <div class="form-check">
+                                    <div class="form-check mt-3">
                                         <input class="form-check-input" type="radio" name="flexRadioDefault" value="amount" id="radioAmount">
                                         <label class="form-check-label" for="radioAmount">
                                             Amount
@@ -703,7 +707,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label>{{trans('file.Unit Price')}}</label>
                                     <input type="number" name="edit_unit_price" class="form-control" step="any">
                                 </div>
@@ -715,7 +719,7 @@
                                     $tax_rate_all[] = $tax->rate;
                                 }
                                 ?>
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label>{{trans('file.Tax Rate')}}</label>
                                     <select name="edit_tax_rate" class="form-control select2">
                                         @foreach($tax_name_all as $key => $name)
@@ -723,7 +727,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div id="edit_unit" class="form-group">
+                                <div id="edit_unit" class="form-group mt-3">
                                     <label>{{trans('file.Product Unit')}}</label>
                                     <select name="edit_unit" class="form-control select2">
                                     </select>
