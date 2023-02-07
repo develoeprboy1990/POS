@@ -549,7 +549,7 @@
                                                         </label>
                                                         <select id="disc_percent" name="discount_model" class="form-select select2">
                                                             <option value="percentage" @if($discount_model=='1' ) selected='selected' @endif>Percent (%)</option>
-                                                            <option value="number" @if($discount_model=='2' ) selected='selected' @endif>Fixed (AED)</option>
+                                                            <option value="number" @if($discount_model=='2' ) selected='selected' @endif>Fixed Amount</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -655,45 +655,45 @@
             <div class="container-fluid">
                 <table class="table table-bordered table-condensed totals">
                     <td><strong>{{trans('file.Items')}}</strong>
-                        <span class="pull-right" id="item">0.00</span>
+                        <span class="ps-2" id="item">0.00</span>
                     </td>
                     <td><strong>{{trans('file.Total')}}</strong>
-                        <span class="pull-right" id="subtotal">{{$lims_sale_data->Total}}</span>
+                        <span class="ps-2" id="subtotal">{{$lims_sale_data->Total}}</span>
                     </td>
                     <td><strong>{{trans('file.Order Tax')}}</strong>
-                        <span class="pull-right" id="order_tax">{{$lims_sale_data->Tax}}</span>
+                        <span class="ps-2" id="order_tax">{{$lims_sale_data->Tax}}</span>
                     </td>
                     <td><strong>{{trans('file.Order Discount')}}</strong>
-                        <span class="pull-right" id="order_discount">{{$lims_sale_data->DiscountAmount}}</span>
+                        <span class="ps-2" id="order_discount">{{$lims_sale_data->DiscountAmount}}</span>
                     </td>
                     <td><strong>{{trans('file.Shipping Cost')}}</strong>
-                        <span class="pull-right" id="shipping_cost">0.00</span>
+                        <span class="ps-2" id="shipping_cost">0.00</span>
                     </td>
                     <!-- <td><strong>Daraz Amount</strong>
-                        <span class="pull-right" id="daraz_amount">0.00</span>
+                        <span class="ps-2" id="daraz_amount">0.00</span>
                     </td> -->
                     <td><strong>{{trans('file.grand total')}}</strong>
-                        <span class="pull-right" id="grand_total">0.00</span>
+                        <span class="ps-2" id="grand_total">0.00</span>
                     </td>
                 </table>
             </div>
             <div id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
                 <div role="document" class="modal-dialog">
                     <div class="modal-content">
+                        <form action="" method="post">
                         <div class="modal-header">
                             <h5 id="modal_header" class="modal-title"></h5>
                             <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
                         </div>
                         <div class="modal-body">
-                            <form>
                                 <div class="form-group">
                                     <label>{{trans('file.Quantity')}}</label>
                                     <input type="number" name="edit_qty" class="form-control" step="any">
                                 </div>
                                 <!-- <div class="form-group">
-                            <label>{{trans('file.Unit Discount')}}</label>
-                            <input type="number" name="edit_discount" class="form-control" step="any">
-                        </div> -->
+                                    <label>{{trans('file.Unit Discount')}}</label>
+                                    <input type="number" name="edit_discount" class="form-control" step="any">
+                                </div> -->
                                 <div class="form-group mt-3">
                                     <label>{{trans('file.Unit Discount')}}</label>
                                     <input type="text" name="edit_discount" class="form-control numkey">
@@ -724,7 +724,7 @@
                                 ?>
                                 <div class="form-group mt-3">
                                     <label>{{trans('file.Tax Rate')}}</label>
-                                    <select name="edit_tax_rate" class="form-control select2">
+                                    <select name="edit_tax_rate" class="form-control select2" style="width: 100% !important;padding: 0;">
                                         @foreach($tax_name_all as $key => $name)
                                         <option value="{{$key}}">{{$name}}</option>
                                         @endforeach
@@ -732,12 +732,16 @@
                                 </div>
                                 <div id="edit_unit" class="form-group mt-3">
                                     <label>{{trans('file.Product Unit')}}</label>
-                                    <select name="edit_unit" class="form-control select2">
+                                    <select name="edit_unit" class="form-control select2" style="width: 100% !important;padding: 0;">
                                     </select>
                                 </div>
-                                <button type="button" name="update_btn" class="btn btn-primary">{{trans('file.update')}}</button>
+                                <div class="mt-3">
+                                    <button type="button" name="update_btn" class="btn btn-primary">{{trans('file.update')}}</button>
+                                </div>
+                                
                             </form>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>

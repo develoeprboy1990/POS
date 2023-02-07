@@ -735,6 +735,7 @@ class TeqPosController extends Controller
 
     public function limsProductSearch(Request $request)
     {
+        dd($request->data);
         $ItemCode = $request->get('data');
         $todayDate = date('Y-m-d');
         $product_code = explode("(", $ItemCode);

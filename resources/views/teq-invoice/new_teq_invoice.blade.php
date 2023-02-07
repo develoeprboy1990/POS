@@ -685,7 +685,7 @@
                             @foreach($lims_category_list as $category)
                             <div class="col-md-3 category-img text-center" data-category="{{$category->ItemCategoryID}}">
                                 @if($category->image)
-                                <img src="{{ asset('assets/images/category/' . $category->image) }}">
+                                <img src="{{ asset('assets/images/category/' . $category->image) }}" style="width:93px;height: 70px;">
                                 @else
                                 <img src="{{asset('assets/images/product/zummXD2dvAtI.png')}}" />
                                 @endif
@@ -707,7 +707,7 @@
                             @foreach($lims_brand_list as $brand)
                             @if($brand->image)
                             <div class="col-md-3 brand-img text-center" data-brand="{{$brand->id}}">
-                                <img src="{{ asset('assets/images/brand/' . $brand->image) }}">
+                                <img src="{{ asset('assets/images/brand/' . $brand->image) }}" style="width:93px;height: 70px;">
                                 <p class="text-center">{{$brand->title}}</p>
                             </div>
                             @else

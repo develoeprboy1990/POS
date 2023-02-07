@@ -352,11 +352,6 @@
             $productArray[] = htmlspecialchars($product->ItemCode . ' (' . $product->ItemName . ')');
         ?>
     @endforeach
-    @foreach($lims_product_list_with_variant as $product)
-        <?php
-            $productArray[] = htmlspecialchars($product->ItemCode . ' (' . $product->ItemName . ')');
-        ?>
-    @endforeach
     <?php
         echo  '"'.implode('","', $productArray).'"';
     ?> 
