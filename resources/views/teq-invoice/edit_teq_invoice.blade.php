@@ -545,8 +545,8 @@
                                                             <strong>Discount Type</strong>
                                                         </label>
                                                         <select id="disc_percent" name="discount_model" class="form-select select2">
-                                                            <option value="percentage" @if($discount_model=='percentage' ) selected='selected' @endif>Percent (%)</option>
-                                                            <option value="number" @if($discount_model=='number' ) selected='selected' @endif>Fixed (AED)</option>
+                                                            <option value="percentage" @if($discount_model=='1' ) selected='selected' @endif>Percent (%)</option>
+                                                            <option value="number" @if($discount_model=='2' ) selected='selected' @endif>Fixed (AED)</option>
                                                         </select>
                                                     </div>
                                                 </div>
