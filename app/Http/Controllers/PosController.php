@@ -1086,8 +1086,7 @@ class PosController extends Controller
         // $lims_product_list_without_variant = $this->productWithoutVariant();
         // $lims_product_list_with_variant = $this->productWithVariant();
         $lims_product_list_without_variant = DB::table('item')->where([['IsActive', true],['ItemType', 'standard']])->select('ItemID', 'ItemName', 'ItemCode')->get();
-        $lims_product_list_with_variant = $lims_product_list_without_variant;
-        return view('print_barcode', compact('lims_product_list_without_variant', 'lims_product_list_with_variant'));
+        return view('print_barcode', compact('lims_product_list_without_variant'));
     }
 
     // public function productWithoutVariant()
