@@ -439,12 +439,15 @@ class PosController extends Controller
 
         $input = $request->except('image');
         $input['is_active'] = true;
-        $image = $request->image;
+        $image = $request->file('image');
         if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = date("Ymdhis");
-            $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('assets/images/brand'), $imageName);
+
+            $imageName = time().'.'.$image->extension();
+            $destinationPath = public_path('assets/images/brand');
+            $img = Image::make($image->path());
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath.'/'.$imageName);
             $input['image'] = $imageName;
         }
         Brand::create($input);
@@ -471,12 +474,16 @@ class PosController extends Controller
         ]);
         $lims_brand_data = Brand::findOrFail($request->brand_id);
         $lims_brand_data->title = $request->title;
-        $image = $request->image;
+        $image = $request->file('image');
         if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = date("Ymdhis");
-            $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('assets/images/brand'), $imageName);
+
+            $imageName = time().'.'.$image->extension();
+            $destinationPath = public_path('assets/images/brand');
+            $img = Image::make($image->path());
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath.'/'.$imageName);
+
             $lims_brand_data->image = $imageName;
         }
         $lims_brand_data->save();
@@ -672,23 +679,16 @@ class PosController extends Controller
 
         $image = $request->file('categoryImage');
         if ($image) {
-            // $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            // $imageName = date("Ymdhis");
-            // $imageName = $imageName . '.' . $ext;
-            // $image->move(public_path('assets/images/category'), $imageName);
-
-
             
             $imageName = time().'.'.$image->extension();
-         
-            $destinationPath = public_path('assets/images/thumbnail/category');
+            $destinationPath = public_path('assets/images/category');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath.'/'.$imageName);
        
-            $destinationPath = public_path('assets/images/category');
-            $image->move($destinationPath, $imageName);
+            // $destinationPath = public_path('assets/images/category');
+            // $image->move($destinationPath, $imageName);
             
         }
         else{
@@ -720,12 +720,14 @@ class PosController extends Controller
         ]);
 
         $input = $request->except('editCategoryImage');
-        $image = $request->editCategoryImage;
+        $image = $request->file('editCategoryImage');
         if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = date("Ymdhis");
-            $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('assets/images/category'), $imageName);
+            $imageName = time().'.'.$image->extension();
+            $destinationPath = public_path('assets/images/category');
+            $img = Image::make($image->path());
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath.'/'.$imageName);
 
             $data = array(
                 "ParentID" => $request->edit_parent_id,
@@ -801,12 +803,15 @@ class PosController extends Controller
 
         $lims_biller_data = $request->except('image');
         $lims_biller_data['is_active'] = true;
-        $image = $request->image;
+        $image = $request->file('image');
         if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = preg_replace('/[^a-zA-Z0-9]/', '', $request['company_name']);
-            $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('assets/images/biller'), $imageName);
+
+            $imageName = time().'.'.$image->extension();
+            $destinationPath = public_path('assets/images/biller');
+            $img = Image::make($image->path());
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath.'/'.$imageName);
 
             $lims_biller_data['image'] = $imageName;
         }
@@ -843,11 +848,16 @@ class PosController extends Controller
         $input = $request->except('image');
         $image = $request->image;
         if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = preg_replace('/[^a-zA-Z0-9]/', '', $request['company_name']);
-            $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('assets/images/biller'), $imageName);
+
+            $imageName = time().'.'.$image->extension();
+            $destinationPath = public_path('assets/images/biller');
+            $img = Image::make($image->path());
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath.'/'.$imageName);
             $input['image'] = $imageName;
+
+
         }
 
         $lims_biller_data = Biller::findOrFail($request->biller_id);
