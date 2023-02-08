@@ -248,3 +248,10 @@ ALTER TABLE `item` CHANGE `TaxMethod` `TaxMethod` INT NULL DEFAULT '1';
 
 ALTER TABLE `invoice_master` ADD `DiscountModel` ENUM('number','percentage') NOT NULL DEFAULT 'percentage' AFTER `SubTotal`;
 
+
+=========================================
+
+Date: 8-2-23
+
+ALTER TABLE `item_category` CHANGE `ItemCategoryID` `ItemCategoryID` INT NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`ItemCategoryID`);
+=====================================

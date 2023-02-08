@@ -20,6 +20,7 @@ use App\Models\Product_Warehouse;
 use DNS1D;
 use DNS2D;
 use Keygen;
+use Image;
 
 class PosController extends Controller
 {
@@ -666,16 +667,32 @@ class PosController extends Controller
                     return $query->where('IsActive', 1);
                 }),
             ],
-            'image' => 'image|mimes:jpg,jpeg,png,gif',
+            // 'categoryImage' => 'image|mimes:jpg,jpeg,png,gif',
         ]);
 
-        $image = $request->categoryImage;
+        $image = $request->file('categoryImage');
         if ($image) {
-            $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
-            $imageName = date("Ymdhis");
-            $imageName = $imageName . '.' . $ext;
-            $image->move(public_path('assets/images/category'), $imageName);
+            // $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
+            // $imageName = date("Ymdhis");
+            // $imageName = $imageName . '.' . $ext;
+            // $image->move(public_path('assets/images/category'), $imageName);
+
+
             
+            $imageName = time().'.'.$image->extension();
+         
+            $destinationPath = public_path('assets/images/thumbnail/category');
+            $img = Image::make($image->path());
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath.'/'.$imageName);
+       
+            $destinationPath = public_path('assets/images/category');
+            $image->move($destinationPath, $imageName);
+            
+        }
+        else{
+            $imageName = null;
         }
 
         $data = array(
@@ -788,10 +805,6 @@ class PosController extends Controller
         if ($image) {
             $ext = pathinfo($image->getClientOriginalName(), PATHINFO_EXTENSION);
             $imageName = preg_replace('/[^a-zA-Z0-9]/', '', $request['company_name']);
-            /*Image::make($image)
-                ->resize(250, null, function ($constraints) {
-                    $constraints->aspectRatio();
-                })->save('public/images/biller/' . $imageName.'-resize.'.$ext);*/
             $imageName = $imageName . '.' . $ext;
             $image->move(public_path('assets/images/biller'), $imageName);
 
