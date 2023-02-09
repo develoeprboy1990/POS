@@ -357,7 +357,7 @@
                         if(data)
                         {
                             $('#biller_id').val(data.id);
-                            $('#image').val(data.image);
+                            // $('#image').val(data.image);
                             $('#company_name').val(data.company_name);
                             $('#name').val(data.name);
                             $('#vat_number').val(data.vat_number);
