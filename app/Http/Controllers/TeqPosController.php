@@ -201,7 +201,7 @@ class TeqPosController extends Controller
             "DiscountAmount"     => $request->order_discount,
             "Shipping"           => $request->shipping_cost,
             "GrandTotal"         => $request->grand_total,
-            "Total"         => $request->total,
+            "Total"              => $request->total,
 
         );
 
@@ -582,7 +582,6 @@ class TeqPosController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-     
         $remaining_balance = $data['grand_total'] - $data['paid_amount'];
         $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $id)->first();
         $today_date = date('Y-m-d');
@@ -600,7 +599,8 @@ class TeqPosController extends Controller
             "UserID"             => session::get('UserID'),
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
-            "Tax"                => $request->total_tax,
+            "Total"              => $request->total,
+            "Tax"                => $request->order_tax,
             "Paid"               => $request->paid_amount,
             "Balance"            => $remaining_balance,
             "TotalQty"           => $request->total_qty,
