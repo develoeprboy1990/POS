@@ -16,7 +16,7 @@
 <img src="{{URL('/')}}/assets/images/square.svg" alt="" height="30">
 </span>
 <span class="logo-lg ">
-<h5 class="mt-4 text-white"> Extensive Books</h5>
+<h5 class="mt-4 text-white"> {{ENV('APP_TITLE')}}</h5>
 </span>
 </a>
 </div>
