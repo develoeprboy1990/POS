@@ -397,9 +397,9 @@ class PosController extends Controller
                 ->addIndexColumn()
                 ->addColumn('brand_img', function ($row) {
                     if ($row->image)
-                        $brand_img = '<td><img src="'.url('assets/images/brand', $row->image).'" height="70" width="70"></td>';
+                        $brand_img = '<td><img src="'.url('thumbnail', $row->image).'"></td>';
                     else
-                        $brand_img = '<td>N/A</td>';
+                        $brand_img = '<td><img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="100" width="100"></td>';
 
                     return $brand_img;
                 })
@@ -443,11 +443,13 @@ class PosController extends Controller
         if ($image) {
 
             $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('assets/images/brand');
+            $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath.'/'.$imageName);
+            $destinationPath = public_path('assets/images/brand');
+            $image->move($destinationPath, $imageName);
             $input['image'] = $imageName;
         }
         Brand::create($input);
@@ -478,11 +480,13 @@ class PosController extends Controller
         if ($image) {
 
             $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('assets/images/brand');
+            $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath.'/'.$imageName);
+            $destinationPath = public_path('assets/images/brand');
+            $image->move($destinationPath, $imageName);
 
             $lims_brand_data->image = $imageName;
         }
@@ -613,9 +617,9 @@ class PosController extends Controller
                 ->addIndexColumn()
                 ->addColumn('image', function ($row) {
                     if($row->image)
-                        $image = '<img src="'.url('assets/images/category', $row->image).'" height="70" width="70">';
+                        $image = '<img src="'.url('thumbnail', $row->image).'">';
                     else
-                        $image = '<img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="80" width="80">';
+                        $image = '<img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="100" width="100">';
 
                     return $image;
                 })
@@ -681,14 +685,14 @@ class PosController extends Controller
         if ($image) {
             
             $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('assets/images/category');
+            $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath.'/'.$imageName);
        
-            // $destinationPath = public_path('assets/images/category');
-            // $image->move($destinationPath, $imageName);
+            $destinationPath = public_path('assets/images/category');
+            $image->move($destinationPath, $imageName);
             
         }
         else{
@@ -723,11 +727,14 @@ class PosController extends Controller
         $image = $request->file('editCategoryImage');
         if ($image) {
             $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('assets/images/category');
+            $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath.'/'.$imageName);
+       
+            $destinationPath = public_path('assets/images/category');
+            $image->move($destinationPath, $imageName);
 
             $data = array(
                 "ParentID" => $request->edit_parent_id,
@@ -764,9 +771,9 @@ class PosController extends Controller
                 ->addIndexColumn()
                 ->addColumn('biller_img', function ($row) {
                     if ($row->image)
-                        $biller_img = '<td><img src="'.url('assets/images/biller', $row->image).'" height="70" width="70"></td>';
+                        $biller_img = '<td><img src="'.url('thumbnail', $row->image).'"></td>';
                     else
-                        $biller_img = '<td>N/A</td>';
+                        $biller_img = '<td><img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="100" width="100"></td>';
 
                     return $biller_img;
                 })
@@ -807,11 +814,14 @@ class PosController extends Controller
         if ($image) {
 
             $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('assets/images/biller');
+            $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath.'/'.$imageName);
+       
+            $destinationPath = public_path('assets/images/biller');
+            $image->move($destinationPath, $imageName);
 
             $lims_biller_data['image'] = $imageName;
         }
@@ -850,11 +860,15 @@ class PosController extends Controller
         if ($image) {
 
             $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('assets/images/biller');
+            $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath.'/'.$imageName);
+       
+            $destinationPath = public_path('assets/images/biller');
+            $image->move($destinationPath, $imageName);
+
             $input['image'] = $imageName;
 
 

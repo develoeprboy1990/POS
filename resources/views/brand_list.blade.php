@@ -184,7 +184,7 @@
                     if(data){
                         $('#brand_id').val(data.id);
                         $('#title').val(data.title);
-                        $('#image').val(data.image);
+                        // $('#image').val(data.image);
                         $('#editBrandModal').modal('show');
                     }
                 }
