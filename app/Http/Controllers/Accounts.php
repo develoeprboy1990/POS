@@ -10129,6 +10129,28 @@ return view ('inventory',compact('pagetitle'));
 
 }
 
+public  function Inventory1(request $request)
+{
+
+	$pagetitle = 'Inventory';
+  
+  $company = DB::table('company')->get();    
+  $inventory = DB::table('v_inventory_detail')
+  ->select('ItemID','ItemName','UnitName',DB::RAW('sum(SaleReturn) as SaleReturn, sum(QtyIn) as QtyIn, sum(QtyOut) as QtyOut'))
+  		->whereBetween('Date',array($request->StartDate,$request->EndDate))
+  		->groupBy('ItemID','ItemName','UnitName')
+  				->get();      
+
+ return View ('inventory1',compact('pagetitle','company','inventory'));
+
+
+
+
+}
+
+
+
+
 public  function Inventory1PDF(request $request)
 {
 
@@ -10150,6 +10172,33 @@ public  function Inventory1PDF(request $request)
 
 }
 
+
+	public  function lnventoryDetail($itemid,$startdate,$enddate)
+    {
+
+    	$pagetitle = 'Inventory';
+
+
+    	$company = DB::table('company')->get();
+                
+   $inventory = DB::table('v_inventory_detail')
+   				->where('ItemID',$itemid)
+   				 
+   				->whereBetween('Date',array($startdate,$enddate))
+   				->get();
+
+
+ 
+
+
+ 
+
+
+ return View ('inventory_detail',compact('pagetitle','inventory','company','startdate','enddate'));
+
+
+
+    }
 
 
 
