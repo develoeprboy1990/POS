@@ -33,6 +33,9 @@ class TeqPosController extends Controller
 {
     public function createTeqInvoice()
     {
+
+
+       
         $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
         $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();

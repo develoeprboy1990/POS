@@ -475,7 +475,10 @@ route::get('/ReconcileUpdate/{status}/{id}',[Accounts::class,'ReconcileUpdate'])
 
 
 Route::get('/Inventory/',[Accounts::class,'Inventory']);
+Route::post('/Inventory1/',[Accounts::class,'Inventory1']);
+
 Route::post('/Inventory1PDF/',[Accounts::class,'Inventory1PDF']);
+Route::get('/lnventoryDetail/{itemid}/{startdate}/{enddate}',[Accounts::class,'lnventoryDetail']);
 
 route::get('/km/{id}',[Accounts::class,'km']);
 
