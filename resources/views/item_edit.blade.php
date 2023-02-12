@@ -90,6 +90,33 @@
                   </div>
                 </div>
 
+                 <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Code</label>
+                  </div>
+                  <div class="col-sm-9">
+                    
+                    <input type="text" id="code" class="form-control" name="ItemCode"  value="{{$item[0]->ItemCode}}" >
+                    
+                  </div>
+                </div>
+
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Category</label>
+                  </div>
+                  <div class="col-sm-9">
+                    
+                    <select id="categories" name="category_id" class="form-select">
+                      <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                        <option value="{{$category->ItemCategoryID}}" {{$item[0]->ItemCategoryID == $category->ItemCategoryID ? 'selected' : ''}}>{{$category->title}}</option>
+                        @endforeach
+                    </select>
+                    
+                  </div>
+                </div>
+                
                 <div class="mb-3 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Unit</label>
@@ -101,6 +128,20 @@
                  <option value="{{$value->UnitName}}" {{($value->UnitName== $item[0]->UnitName) ? 'selected=selected':'' }}>{{$value->UnitName}}</option>
                  @endforeach
                       </select>
+                  </div>
+                </div>
+
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Brand</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select id="brand" name="brand_id" class="form-select">
+                      <option value="">Select Brand</option>
+                        @foreach($lims_brand_list as $brand_list)
+                        <option value="{{$brand_list->id}}" {{$item[0]->BrandID == $brand_list->id ? 'selected' : ''}}>{{$brand_list->title}}</option>
+                        @endforeach
+                    </select>
                   </div>
                 </div>
 
@@ -128,6 +169,17 @@
                   </div>
                 </div>
 
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Quantity</label>
+                  </div>
+                  <div class="col-sm-9">
+                    
+                    <input type="number" id="total-qty" class="form-control" name="total_qty"  value="{{$item[0]->TotalQty}}" >
+                    
+                  </div>
+                </div>
+
              
            
              
@@ -138,6 +190,8 @@
 
 
               </div>
+
+
 
       <div class="row mt-5">
         
@@ -151,6 +205,8 @@
                     <input type="text" id="first-name" class="form-control" name="SellingPrice"  value="{{$item[0]->SellingPrice}}">
                   </div>
                 </div>
+
+
 
 
      <div class="mb-3 row">
@@ -167,10 +223,24 @@
                     </select>
                   </div>
                 </div>
+
+                <div class="mb-3 row">
+                  <div class="col-sm-3">
+                    <label class="col-form-label " for="first-name">Featured</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <select name="isFeatured" class="form-select">
+                        <option value="1" {{$item[0]->IsFeatured == 1 ? 'selected' : ''}}>Featured</option>
+                        <option value="0" {{$item[0]->IsFeatured == 0 ? 'selected' : ''}}>UnFeatured</option>
+                      
+
+                    </select>
+                  </div>
+                </div>
                  
               <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label  " for="first-name">Remarks</label>
+                    <label class="col-form-label  " for="first-name">Cost Remarks</label>
                   </div>
                   <div class="col-sm-6">
                    <textarea name="CostDescription" id="" class="form-control" cols="43" rows="3">{{$item[0]->CostDescription}}</textarea>
@@ -181,6 +251,8 @@
                          
 
         </div>
+
+
         <div class="col-md-6"> 
 
           <div class="mb-3 row">
@@ -199,19 +271,33 @@
                   <div class="col-sm-6">
                     <select name="SellingChartofAccountID"  class="form-select select2">
                       
- @foreach($chartofaccount as $value)
+                        @foreach($chartofaccount as $value)
                         <option value="{{$value->ChartOfAccountID}}" >{{$value->ChartOfAccountID}}-{{$value->ChartOfAccountName}}</option>
                        @endforeach
                       
 
                     </select>
                   </div>
-                </div>      
+                </div>  
+
+                <div class="mb-3 row">
+                  <div class="col-sm-3">
+                    <label class="col-form-label " for="first-name">Status</label>
+                  </div>
+                  <div class="col-sm-6">
+                    <select name="isActive" class="form-select">
+                        <option value="1" {{$item[0]->IsActive == 1 ? 'selected' : ''}}>Active</option>
+                        <option value="0" {{$item[0]->IsActive == 0 ? 'selected' : ''}}>InActive</option>
+                      
+
+                    </select>
+                  </div>
+                </div>    
 
  
         <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label " for="first-name">Remarks</label>
+                    <label class="col-form-label " for="first-name">Selling Remarks</label>
                   </div>
                   <div class="col-sm-6">
                    <textarea name="SellingDescription" id="" class="form-control" cols="43" rows="3">{{$item[0]->SellingDescription}}</textarea>
@@ -223,6 +309,7 @@
 
 
       </div>
+
       </div>
       <div class="card-footer">
         

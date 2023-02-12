@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 // end for excel export
-
+use App\Models\Brand;
 use Session;
 use DB;
 use URL;
@@ -1769,10 +1769,12 @@ session::put('menu','Item');
 $pagetitle='Item';
 
 $item = DB::table('item')->where('ItemID',$id)->get();
+$categories = DB::table('item_category')->get();
+$lims_brand_list = Brand::where('is_active', true)->get();
 $unit = DB::table('unit')->get();
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
 
-return view ('item_edit',compact('pagetitle','item','unit','chartofaccount'));
+return view ('item_edit',compact('pagetitle','item','unit','chartofaccount','categories','lims_brand_list'));
 }
 
 public  function ItemUpdate(request $request)
@@ -1801,12 +1803,22 @@ $this->validate($request,[
 ]);
 
 $data = array(
+'ItemCategoryID' => $request->input('category_id'),
+'BrandID' => $request->input('brand_id'),
 'ItemCode' => $request->input('ItemCode'),
 'ItemName' => $request->input('ItemName'),
+'UnitName' => $request->input('Unit'),
 'Taxable' => $request->input('Taxable'),
+'TotalQty' => $request->input('total_qty'),
 'Percentage' => $request->input('Percentage'),
 'CostPrice' => $request->input('CostPrice'),
 'SellingPrice' => $request->input('SellingPrice'),
+'CostChartofAccountID' => $request->input('CostChartofAccountID'),
+'SellingChartofAccountID' => $request->input('SellingChartofAccountID'),
+'CostDescription' => $request->input('CostDescription'),
+'SellingDescription' => $request->input('SellingDescription'),
+'IsFeatured' => $request->input('isFeatured'),
+'IsActive' => $request->input('isActive'),
 
 );
 
