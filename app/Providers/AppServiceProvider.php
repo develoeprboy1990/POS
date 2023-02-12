@@ -47,9 +47,9 @@ class AppServiceProvider extends ServiceProvider
         //Schema::defaultStringLength(191);
         /* NEW TEQ POS SETTING ENDS HERE. */
 
-        $currency = DB::table('currencies')->where('id',1)->first();
+        $currency = Session::get('Currency');
         $currency_position = 'prefix';
-        config(['currency' => $currency->code, 'currency_position' => $currency_position]);
+        config(['currency' => $currency, 'currency_position' => $currency_position]);
 
         view()->composer('*', function ($view) {
             $isAdmin = session::get('isAdmin');

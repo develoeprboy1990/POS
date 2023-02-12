@@ -442,7 +442,7 @@ class TeqPosController extends Controller
         //             // Charge the Customer instead of the card:
         //             $charge = \Stripe\Charge::create([
         //                 'amount' => $grand_total * 100,
-        //                 'currency' => 'usd',
+        //                 'currency' => config('currency'),
         //                 'customer' => $customer->id
         //             ]);
         //             $data['customer_stripe_id'] = $customer->id;
@@ -453,7 +453,7 @@ class TeqPosController extends Controller
 
         //             $charge = \Stripe\Charge::create([
         //                 'amount' => $grand_total * 100,
-        //                 'currency' => 'usd',
+        //                 'currency' => config('currency'),
         //                 'customer' => $customer_id, // Previously stored, then retrieved
         //             ]);
         //             $data['customer_stripe_id'] = $customer_id;

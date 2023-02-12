@@ -1254,7 +1254,7 @@
 
     var public_key = <?php echo json_encode($lims_pos_setting_data->stripe_public_key) ?>;
     var alert_product = <?php echo json_encode(123) ?>;
-    var currency = <?php echo json_encode('usd') ?>;
+    var currency = <?php echo json_encode(config('currency')) ?>;
     var valid;
 
     // array data depend on warehouse
@@ -1295,7 +1295,7 @@
     var warehouse_id = <?php echo json_encode(null) ?>;
     var biller_id = <?php echo json_encode(null) ?>;
     var coupon_list = <?php echo json_encode($lims_coupon_list) ?>;
-    var currency = <?php echo json_encode('usd') ?>;
+    var currency = <?php echo json_encode(config('currency')) ?>;
 
     var localStorageQty = [];
     var localStorageProductId = [];

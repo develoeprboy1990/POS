@@ -1002,7 +1002,7 @@
     var rowindex;
     var customer_group_rate;
     var row_product_price;
-    var currency = <?php echo json_encode('usd') ?>;
+    var currency = <?php echo json_encode(config('currency')) ?>;
     var role_id = <?php echo json_encode(1) ?>;
 
     var rownumber = $('table.order-list tbody tr:last').index();
