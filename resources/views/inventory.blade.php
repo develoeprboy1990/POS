@@ -43,7 +43,7 @@
   <div class="card shadow-sm">
       <div class="card-body">
           <!-- enctype="multipart/form-data" -->
-          <form action="{{URL('/Inventory1PDF')}}" method="post" name="form1" id="form1"> {{csrf_field()}} 
+          <form action="{{URL('/Inventory1')}}" method="post" name="form1" id="form1"> {{csrf_field()}} 
 
  
             
@@ -80,6 +80,7 @@
          
       </div>
       <div class="card-footer bg-light">
+         <button type="submit" class="btn btn-success w-lg float-right" id="online">Submit</button>
          <button type="submit" class="btn btn-success w-lg float-right" id="pdf">PDF</button>
                    <a href="{{URL('/')}}" class="btn btn-secondary w-lg float-right">Cancel</a>
       </div>
@@ -95,8 +96,26 @@
 
     <!-- END: Content-->
  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
- 
- 
+<script>
+  $('#pdf').click(function(){
+     
+   $('#form1').attr('action', '{{URL("/Inventory1PDF")}}');
+   $('#form1').attr('target', '_blank');
+   $('#form1').submit();
+
+});
+
+
+  $('#online').click(function(){
+     
+   $('#form1').attr('action', '{{URL("/Inventory1")}}');
+       $('#form1').attr('target', '_parent');
+
+
+});
+
+
+</script>
 
  
   @endsection

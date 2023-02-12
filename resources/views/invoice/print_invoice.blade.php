@@ -102,7 +102,7 @@
             @endif
             <div class="hidden-print">
                 <div class="row">
-                <div class="col-sm-4"><a href="{{ $url }}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                <div class="col-sm-4"><a href="{{URL('/create-invoice')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                                 {{ trans('file.Back') }}</a></div>
                 <div class="col-sm-4"><button style="margin-right: 260px !important;" onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>
                                 {{ trans('file.Print') }}</button></div>
@@ -119,7 +119,6 @@
                       <input style="display: none;" class="d-none" type="text" name="sale_id" value="{{$lims_sale_data->InvoiceMasterID}}" class="form-control">
                       <input style="display: none;" class="d-none" type="text" name="extra_tax" value="{{$lims_sale_data->ReferenceNo}}" class="form-control">
                       <!-- <button class="btn btn-info" style="width: 100%;">Charge Extra</button> -->
-                      
                   </form>
                   @endif
                     

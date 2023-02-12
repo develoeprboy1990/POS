@@ -198,7 +198,8 @@ return [
          Barryvdh\DomPDF\ServiceProvider::class,
          Maatwebsite\Excel\ExcelServiceProvider::class,
          Milon\Barcode\BarcodeServiceProvider::class,
-         'Intervention\Image\ImageServiceProvider',
+        Intervention\Image\ImageServiceProvider::class
+
 
     ],
 
@@ -221,7 +222,8 @@ return [
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
         'Keygen' => Keygen\Keygen::class,
-        'Image' => 'Intervention\Image\Facades\Image',
+        'Image' => Intervention\Image\Facades\Image::class
+
 
     ])->toArray(),
 

@@ -16,7 +16,7 @@
 <img src="{{URL('/')}}/assets/images/square.svg" alt="" height="30">
 </span>
 <span class="logo-lg ">
-<h5 class="mt-4 text-white"> Extensive Books</h5>
+<h5 class="mt-4 text-white"> {{ENV('APP_TITLE')}}</h5>
 </span>
 </a>
 </div>
@@ -106,17 +106,13 @@ font-size-16 align-middle me-2"></i>Favorite <i class="mdi mdi-chevron-down"></i
         <a class="dropdown-item" href="{{URL('/Inventory')}}">Stock Inventory</a>
         
     </div>
-    </div><!-- /btn-group -->
-    <!--   <div class="btn-group ">
-        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Reports <i class="mdi mdi-chevron-down"></i></button>
-        <div class="dropdown-menu">
-            <a class="dropdown-item  " href="{{URL('/Journal')}}">Journal</a>
-            <a class="dropdown-item" href="{{URL('/CashbookReport')}}">Cash Book</a>
-            <div class="dropdown-divider"></div>
-            
-            
-        </div>
-    </div><  /btn-group -->
+    </div>
+
+    <!-- /btn-group -->
+      <div class="btn-group ">
+       <a href="{{route('invoice.create')}}" class="btn btn-outline-primary w-sm">POS</a>
+      
+    </div>
     
 </div>
 </div>

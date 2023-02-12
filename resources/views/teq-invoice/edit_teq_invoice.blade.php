@@ -486,6 +486,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
+                                                        <input type="hidden" name="total" value="{{$lims_sale_data->Total}}" />
                                                         <input type="hidden" name="total_price" value="{{$lims_sale_data->GrandTotal}}" />
                                                     </div>
                                                 </div>
@@ -1600,6 +1601,7 @@
         $('#item').text(item);
         $('input[name="item"]').val($('table.order-list tbody tr:last').index() + 1);
         $('#subtotal').text(subtotal.toFixed(2));
+        $('input[name="total"]').val(subtotal.toFixed(2));
         $('#order_tax').text(order_tax.toFixed(2));
         $('input[name="order_tax"]').val(order_tax.toFixed(2));
         $('#shipping_cost').text(shipping_cost.toFixed(2));
