@@ -294,7 +294,7 @@
                                     <div class="col-sm-9">
                                         <select name="warehouse_id" id="warehouse_id" class="form-select" required>
                                             @foreach($lims_warehouse_list as $warehouse)
-                                                <option value="{{$warehouse->id}}" {{@$warehouse_id == $warehouse->id ? 'selected' : ''}}>{{$warehouse->name}}</option>
+                                                <option value="{{$warehouse->id}}" {{@$invoice_master[0]->WarehouseID == $warehouse->id ? 'selected' : ''}}>{{$warehouse->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -7254,7 +7254,6 @@ public function Bill()
 
       return Datatables::of($data)
         ->addIndexColumn()
-
         ->addColumn('action', function ($row) {
           // if you want to use direct link instead of dropdown use this line below
           // <a href="javascript:void(0)"  onclick="edit_data('.$row->customer_id.')" >Edit</a> | <a href="javascript:void(0)"  onclick="del_data('.$row->customer_id.')"  >Delete</a>
@@ -7595,9 +7594,8 @@ $tax = DB::table('tax')->get();
     $supplier = DB::table('supplier')->get();
     $user = DB::table('user')->get();
    $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-   $warehouse_id = DB::table('invoice_master')->where('InvoiceMasterID', $id)->pluck('WarehouseID')->first();
 
-    return view('purchase.bill_edit', compact('invoice_type', 'items', 'supplier', 'pagetitle', 'item', 'user', 'invoice_master', 'invoice_detail','tax','lims_warehouse_list','warehouse_id'));
+    return view('purchase.bill_edit', compact('invoice_type', 'items', 'supplier', 'pagetitle', 'item', 'user', 'invoice_master', 'invoice_detail','tax','lims_warehouse_list'));
   }
   public function BillUpdate(Request $request)
   {

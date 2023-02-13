@@ -303,17 +303,11 @@ class PosController extends Controller
             return Datatables::of($wareHouses)
                 ->addIndexColumn()
                 ->addColumn('no_of_prod', function ($row) {
-                    $no_of_prod = Product_Warehouse::join('item', 'product_warehouse.product_id', '=', 'item.ItemID')
-                        ->where([
-                            ['product_warehouse.warehouse_id', $row->id]
-                        ])->count();
+                    $no_of_prod = DB::table('v_inventory')->where('WarehouseID',$row->id)->count('ItemID');
                     return $no_of_prod;
                 })
                 ->addColumn('stock_qty', function ($row) {
-                    $stock_qty = Product_Warehouse::join('item', 'product_warehouse.product_id', '=', 'item.ItemID')
-                        ->where([
-                            ['product_warehouse.warehouse_id', $row->id]
-                        ])->sum('product_warehouse.qty');
+                    $stock_qty = DB::table('v_inventory')->where('WarehouseID',$row->id)->sum('Balance');
                     return $stock_qty;
                 })
                 ->addColumn('action', function ($row) {
