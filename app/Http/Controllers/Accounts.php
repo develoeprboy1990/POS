@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
+use App\Models\Warehouse;
 // for excel export
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -7319,16 +7320,16 @@ $tax = DB::table('tax')->get();
 
 session::put('VHNO','BILL-'.$vhno[0]->VHNO);
 
-
+   $lims_warehouse_list = Warehouse::where('is_active', true)->get();
     // $items=DB::table('product')->get();
-    return view('purchase.bill_create', compact('supplier',  'items', 'user', 'vhno', 'item', 'items','pagetitle','tax'));
+    return view('purchase.bill_create', compact('supplier',  'items', 'user', 'vhno', 'item', 'items','pagetitle','tax','lims_warehouse_list'));
   }
 
 public function BillSave(Request $request)
   {
 
-     // dd($request->all());
        $invoice_mst = array(
+              'WarehouseID' => $request->warehouse_id, 
               'InvoiceNo' => $request->InvoiceNo, 
                'Date' => $request->Date, 
               'DueDate' => $request->DueDate, 
@@ -7593,14 +7594,16 @@ $tax = DB::table('tax')->get();
     // dd($item);
     $supplier = DB::table('supplier')->get();
     $user = DB::table('user')->get();
-   
+   $lims_warehouse_list = Warehouse::where('is_active', true)->get();
+   $warehouse_id = DB::table('invoice_master')->where('InvoiceMasterID', $id)->pluck('WarehouseID')->first();
 
-    return view('purchase.bill_edit', compact('invoice_type', 'items', 'supplier', 'pagetitle', 'item', 'user', 'invoice_master', 'invoice_detail','tax'));
+    return view('purchase.bill_edit', compact('invoice_type', 'items', 'supplier', 'pagetitle', 'item', 'user', 'invoice_master', 'invoice_detail','tax','lims_warehouse_list','warehouse_id'));
   }
   public function BillUpdate(Request $request)
   {
     // dd($request->all());
       $invoice_mst = array(
+              'WarehouseID' => $request->warehouse_id, 
               'InvoiceNo' => $request->InvoiceNo, 
               'InvoiceType' => $request->InvoiceType, 
               'Date' => $request->Date, 
