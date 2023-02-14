@@ -709,12 +709,13 @@ var json = data.find(function(item, i) {
 });
 
 
-
+if (json["Percentage"] == null) { 
+  json["Percentage"] = 0;
+}
 $('#Qty_' + id[1]).val(1);
 $('#Price_' + id[1]).val(json["CostPrice"]);
 $('#TaxID_' + id[1]).val(json["Percentage"]);
 $('#TaxVal_' + id[1]).val(((parseFloat(json["Percentage"])) / 100) * (parseFloat(json["SellingPrice"])));
-
 
 $('#ItemTotal_' + id[1]).val(((parseFloat(json["SellingPrice"]) * parseFloat($('#Qty_' + id[1]).val())) + (((parseFloat(json["Percentage"])) / 100) * (parseFloat(json["SellingPrice"])))).toFixed(2));
 
