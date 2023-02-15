@@ -290,6 +290,8 @@
                                         </select>
                                     </div>
                                 </div>
+
+
                                 
 <div class="mb-1 row">
                                     <div class="col-sm-3">
@@ -301,6 +303,22 @@
  <option value="TaxInclusive">Tax Inclusive</option>
  <option value="TaxExclusive" selected>Tax Exclusive</option>
  </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-1 row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label" for="warehouse">Warehouse</label>
+                                    </div>
+
+                                    <div class="col-sm-9">
+                                        <select name="warehouse_id" id="warehouse_id" class="form-select" required>
+                                            <option value="">Select Warehouse</option>
+                                            @foreach ($lims_warehouse_list as $warehouse)
+                                                <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                                            @endforeach
+
+                                        </select>
                                     </div>
                                 </div>
 

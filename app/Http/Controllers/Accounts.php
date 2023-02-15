@@ -5911,10 +5911,12 @@ $pagetitle='Sales Invoice';
 
 $chartofaccount = DB::table('chartofaccount')->whereNotNull('Category')->get();
 session::put('VHNO','TAX-'.$vhno[0]->VHNO);
+
+$lims_warehouse_list = Warehouse::where('is_active', true)->get();
  
 
  
-    return view ('sale_invoice_create',compact('invoice_type','items','vhno','party','pagetitle','item','user','tax','chartofaccount'));
+    return view ('sale_invoice_create',compact('invoice_type','items','vhno','party','pagetitle','item','user','tax','chartofaccount','lims_warehouse_list'));
     }
 
 
@@ -5937,6 +5939,7 @@ session::put('VHNO','TAX-'.$vhno[0]->VHNO);
 
  // dd($request->all());ext
        $invoice_mst = array(
+              'WarehouseID' => $request->warehouse_id, 
               'InvoiceNo' => $request->InvoiceNo, 
               'InvoiceType' => $request->InvoiceType, 
               'Date' => $request->Date, 
@@ -6209,11 +6212,13 @@ $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID',$id)->get
 session()->forget('VHNO');
 session::put('VHNO',$invoice_master[0]->InvoiceNo);
 
+$lims_warehouse_list = Warehouse::where('is_active', true)->get();
+
  
       $vhno = DB::table('invoice_master')
      ->select( DB::raw('LPAD(IFNULL(MAX(right(InvoiceNo,5)),0)+1,5,0) as VHNO '))->where(DB::raw('left(InvoiceNo,3)'),'INV','invoice_type')->get();  
 
-     return view ('sale_invoice_edit',compact('invoice_type','items','vhno','party','pagetitle','item','user','invoice_master','invoice_detail','tax'));
+     return view ('sale_invoice_edit',compact('invoice_type','items','vhno','party','pagetitle','item','user','invoice_master','invoice_detail','tax','lims_warehouse_list'));
     }
   
 public  function SaleInvoiceUpdate(request $request)
@@ -6235,6 +6240,7 @@ public  function SaleInvoiceUpdate(request $request)
  
  // dd($request->all());
       $invoice_mst = array(
+              'WarehouseID' => $request->warehouse_id,
               'InvoiceNo' => $request->InvoiceNo, 
               'InvoiceType' => $request->InvoiceType, 
               'Date' => $request->Date, 
