@@ -98,7 +98,7 @@ class TeqPosController extends Controller
 
 
             if ($data['draft']) {
-                $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['sale_id')->first();
+                $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['sale_id'])->first();
                 $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $lims_sale_data->InvoiceMasterID)->get();
                 foreach ($lims_product_sale_data as $product_sale_data) {
                     $product_sale_data->delete();
