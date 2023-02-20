@@ -22,7 +22,6 @@ use App\Models\Brand;
 use App\Models\Unit;
 use App\Models\Coupon;
 use App\Models\Tax;
-use App\Models\Product_Warehouse;
 use App\Models\Product_Sale;
 use App\Models\Payment;
 /* use Keygen\Keygen;
@@ -41,48 +40,22 @@ class TeqPosController extends Controller
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
         $lims_biller_list        = Biller::where('is_active', true)->get();
         $lims_tax_list           = Tax::where('is_active', true)->get();
-        $lims_product_list       = Product::select('id', 'name', 'code', 'image')->ActiveFeatured()->whereNull('is_variant')->get();
-        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->get();
+        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->get();
 
         foreach ($lims_product_list as $key => $product) {
             $images = explode(",", $product->image);
             $product->base_image = $images[0];
         }
-        $lims_product_list_with_variant = Product::select('id', 'name', 'code', 'image')->ActiveFeatured()->whereNotNull('is_variant')->get();
 
-
-        foreach ($lims_product_list_with_variant as $product) {
-            $images = explode(",", $product->image);
-            $product->base_image = $images[0];
-            $lims_product_variant_data = $product->variant()->orderBy('position')->get();
-            $main_name = $product->name;
-            $temp_arr = [];
-            foreach ($lims_product_variant_data as $key => $variant) {
-                $product->name = $main_name . ' [' . $variant->name . ']';
-                $product->code = $variant->pivot['item_code'];
-                $lims_product_list[] = clone ($product);
-            }
-        }
         $product_number = count($lims_product_list);
         $lims_pos_setting_data = PosSetting::latest()->first();
         $lims_brand_list = Brand::where('is_active', true)->get();
         $lims_category_list = DB::table('item_category')->get();
 
-        // if(Auth::user()->role_id > 2 && config('staff_access') == 'own') {
-        //     $recent_sale = Sale::where([
-        //         ['sale_status', 1],
-        //         ['user_id', Auth::id()]
-        //     ])->orderBy('id', 'desc')->take(10)->get();
-        //     $recent_draft = Sale::where([
-        //         ['sale_status', 3],
-        //         ['user_id', Auth::id()]
-        //     ])->orderBy('id', 'desc')->take(10)->get();
-        // }
-        // else {
-        // else {
-        $recent_sale = Sale::where('sale_status', 1)->orderBy('id', 'desc')->take(10)->get();
-        $recent_draft = Sale::where('sale_status', 3)->orderBy('id', 'desc')->take(10)->get();
-        // }
+
+        $recent_sale = DB::table('invoice_master')->where('InvoiceNo','like','INV%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
+        $recent_draft = DB::table('invoice_master')->where('InvoiceNo','like','INV%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
+     
         $lims_coupon_list = Coupon::where('is_active', true)->get();
         $flag = 0;
         $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->count();
@@ -125,8 +98,8 @@ class TeqPosController extends Controller
 
 
             if ($data['draft']) {
-                $lims_sale_data = Sale::find($data['sale_id']);
-                $lims_product_sale_data = Product_Sale::where('sale_id', $data['sale_id'])->get();
+                $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['sale_id')->first();
+                $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $lims_sale_data->InvoiceMasterID)->get();
                 foreach ($lims_product_sale_data as $product_sale_data) {
                     $product_sale_data->delete();
                 }
@@ -284,27 +257,6 @@ class TeqPosController extends Controller
 
     public function edit($InvoiceMasterID)
     {
-        // $lims_customer_list     = Customer::where('is_active', true)->get();
-        // $lims_warehouse_list    = Warehouse::where('is_active', true)->get();
-        // $lims_biller_list       = Biller::where('is_active', true)->get();
-        // $lims_tax_list          = Tax::where('is_active', true)->get();
-        // $lims_sale_data         = Sale::find($InvoiceMasterID);
-
-
-        // $lims_product_sale_data = Product_Sale::where('sale_id', $InvoiceMasterID)->get();
-
-        // $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
-
-        // $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
-
-        // $items          = DB::table('item')->get();
-        // $categories     = DB::table('item_category')->get();
-        // $salemans       = DB::table('salesman')->pluck('name', 'SalesmanID')->toArray();
-        // $parties        = DB::table('party')->get();
-        // $customer_name = DB::table('party')->where('PartyID', $invoice_master->PartyID)->pluck('PartyName')->first();
-        // $discount = 0;
-
-        // return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','items', 'categories', 'salemans', 'invoice_detail', 'InvoiceMasterID', 'invoice_master', 'parties', 'discount', 'customer_name'));
 
         $lims_customer_list = DB::table('party')->where('Active', 'Yes')->get();
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();

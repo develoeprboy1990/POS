@@ -963,12 +963,12 @@
                                             </thead>
                                             <tbody>
                                                 @foreach($recent_sale as $sale)
-                                                <?php $customer = DB::table('party')->where('PartyID', $sale->customer_id); ?>
+                                                <?php $customer = DB::table('party')->where('PartyID', $sale->PartyID); ?>
                                                 <tr>
-                                                    <td>{{date('d-m-Y', strtotime($sale->created_at))}}</td>
-                                                    <td>{{$sale->reference_no}}</td>
+                                                    <td>{{date('d-m-Y', strtotime($sale->Date))}}</td>
+                                                    <td>{{$sale->ReferenceNo}}</td>
                                                     <td>{{@$customer->PartyName}}</td>
-                                                    <td>{{$sale->grand_total}}</td>
+                                                    <td>{{$sale->GrandTotal}}</td>
                                                     <td>
                                                         <div class="btn-group">
                                                             <a href="" class="btn btn-success btn-sm" title="Edit"><i class="dripicons-document-edit"></i></a>&nbsp;
@@ -999,10 +999,10 @@
                                                 @foreach($recent_draft as $draft)
                                                 <?php $customer = DB::table('party')->where('PartyID', $draft->customer_id); ?>
                                                 <tr>
-                                                    <td>{{date('d-m-Y', strtotime($draft->created_at))}}</td>
-                                                    <td>{{$draft->reference_no}}</td>
+                                                    <td>{{date('d-m-Y', strtotime($draft->Date))}}</td>
+                                                    <td>{{$draft->ReferenceNo}}</td>
                                                     <td>{{@$customer->PartyName}}</td>
-                                                    <td>{{$draft->grand_total}}</td>
+                                                    <td>{{$draft->GrandTotal}}</td>
                                                     <td>
                                                         <div class="btn-group">
                                                             <a href="" class="btn btn-success btn-sm" title="Edit"><i class="dripicons-document-edit"></i></a>&nbsp;

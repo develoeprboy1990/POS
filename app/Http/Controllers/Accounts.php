@@ -1691,6 +1691,7 @@ $cash = DB::table('v_journal')
 
 
 $cash1 = DB::table('v_rev_exp_chart')->get();
+// dd($cash1);
 // $exp_chart = DB::table('v_expense_chart')->where('MonthName','February-2022')->get();
 
 
