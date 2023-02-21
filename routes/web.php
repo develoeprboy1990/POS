@@ -559,8 +559,6 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::resource('sales', TeqPosController::class);
     //end TEQ POS
 
-    Route::get('/edit-invoice/{id}', [PosController::class, 'editInvoice'])->name('invoice.edit');
-    Route::post('/update-pos-invoice', [PosController::class, 'updateInvoice']);
 
     Route::get('/show-invoice/{id}', [PosController::class, 'showInvoice'])->name('invoice.show');
     Route::get('/print-invoice/{id}', [PosController::class, 'printInvoice'])->name('invoice.print');
