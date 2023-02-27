@@ -81,6 +81,11 @@
                    <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="Service" {{ old('ItemType') == 'Service' ? 'checked' : '' }}>
                    <label class="form-check-label" for="inlineRadio1">Service</label>
                  </div>
+
+                 <div class="form-check form-check-inline pt-2">
+                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="resturent" {{ old('ItemType') == 'resturent' ? 'checked' : '' }}>
+                   <label class="form-check-label" for="inlineRadio1">Resturent</label>
+                 </div>
                   </div>
                 </div>
               
@@ -103,6 +108,20 @@
                        <option value="0">Select</option>
                  @foreach($unit as $value)
                  <option value="{{$value->UnitName}}">{{$value->UnitName}}</option>
+                 @endforeach
+                      </select>
+                  </div>
+                </div>
+
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Units</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select name="unit_id" id="unit_id" class="form-select">
+                       <option value="">Select</option>
+                 @foreach($units as $unit)
+                 <option value="{{$unit->id}}">{{$unit->base_unit}}</option>
                  @endforeach
                       </select>
                   </div>

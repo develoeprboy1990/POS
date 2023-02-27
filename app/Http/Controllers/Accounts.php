@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Warehouse;
+use App\Models\Unit;
 // for excel export
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -1710,9 +1711,10 @@ session::put('menu','Item');
 $pagetitle='Item';
 $item = DB::table('item')->get();
 $unit = DB::table('unit')->get();
+$units = Unit::get();
 
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
-return view ('item',compact('pagetitle','item','unit','chartofaccount'));
+return view ('item',compact('pagetitle','item','unit','chartofaccount','units'));
 }
 
 
@@ -1743,8 +1745,10 @@ $this->validate($request,[
 
 ]);
 $data = array(
+'UnitID' => $request->input('unit_id'),
 'ItemCode' => $request->input('ItemCode'),
 'ItemName' => $request->input('ItemName'),
+'ItemType' => $request->input('ItemType'),
 'Taxable' => $request->input('Taxable'),
 'Percentage' => $request->input('Percentage'),
 'CostPrice' => $request->input('CostPrice'),

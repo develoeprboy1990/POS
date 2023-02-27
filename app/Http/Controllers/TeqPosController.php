@@ -440,23 +440,23 @@ class TeqPosController extends Controller
         $product[] = 1; // $lims_product_data->tax_method;
         //if($lims_product_data->type == 'standard'){
         if (1) {
-            $units = Unit::where("base_unit", 1)
-                ->orWhere('id', 1)
-                ->get();
-            $unit_name = array();
-            $unit_operator = array();
-            $unit_operation_value = array();
-            foreach ($units as $unit) {
-                if ($lims_product_data->sale_unit_id == $unit->id) {
-                    array_unshift($unit_name, $unit->unit_name);
-                    array_unshift($unit_operator, $unit->operator);
-                    array_unshift($unit_operation_value, $unit->operation_value);
-                } else {
-                    $unit_name[]  = $unit->unit_name;
-                    $unit_operator[] = $unit->operator;
-                    $unit_operation_value[] = $unit->operation_value;
-                }
-            }
+            // $units = Unit::where("base_unit", 1)
+            //     ->orWhere('id', 1)
+            //     ->get();
+            $unit_name = ['piece','carton','12piece container','24pc cnt','36pc cntr','48pc cntr','test unit upd'];
+            $unit_operator = ['*','*','*','*','*','*','*'];
+            $unit_operation_value = ['1','12','12','24','36','48','12'];
+            // foreach ($units as $unit) {
+            //     if ($lims_product_data->sale_unit_id == $unit->id) {
+            //         array_unshift($unit_name, $unit->unit_name);
+            //         array_unshift($unit_operator, $unit->operator);
+            //         array_unshift($unit_operation_value, $unit->operation_value);
+            //     } else {
+            //         $unit_name[]  = $unit->unit_name;
+            //         $unit_operator[] = $unit->operator;
+            //         $unit_operation_value[] = $unit->operation_value;
+            //     }
+            // }
             $product[] = implode(",", $unit_name) . ',';
             $product[] = implode(",", $unit_operator) . ',';
             $product[] = implode(",", $unit_operation_value) . ',';

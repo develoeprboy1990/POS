@@ -8,12 +8,12 @@ class Unit extends Model
 {
     protected $fillable =[
 
-        "unit_code", "unit_name", "base_unit", "operator", "operation_value", "is_active"
+        "base_unit", "child_unit", "unit_value" ,"status"
     ];
 
-    public function product()
+    public function item()
     {
-    	return $this->hasMany('App/Product');
-    	
+        return $this->hasMany('App\Models\Item', 'UnitID');
     }
+
 }

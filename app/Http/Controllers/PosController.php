@@ -282,40 +282,24 @@ class PosController extends Controller
 
     public function unitList(Request $request)
     {
-        $lims_unit_all = Unit::where('is_active', true)->get();
+        $lims_unit_all = Unit::get();
         if ($request->ajax()) {
             return Datatables::of($lims_unit_all)
                 ->addIndexColumn()
-                ->addColumn('base_unit', function ($row) {
-                    if($row->base_unit)
-                    $unit_name = DB::table('units')->where('id', $row->base_unit)->pluck('unit_name')->first();
+                ->addColumn('status', function ($row) {
+                    if($row->status == 1)
+                    $status = 'Active';
                     else
-                    $unit_name = '<td>N/A</td>';
+                    $status = 'In Active';
 
-                    return $unit_name;
-                })
-                ->addColumn('operator', function ($row) {
-                    if($row->operator)
-                    $operator = $row->operator;
-                    else
-                    $operator = '<td>N/A</td>';
-
-                    return $operator;
-                })
-                ->addColumn('operation_value', function ($row) {
-                    if($row->operation_value)
-                    $operation_value = $row->operation_value;
-                    else
-                    $operation_value = '<td>N/A</td>';
-
-                    return $operation_value;
+                    return $status;
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" class="edit_unit" data-id="' . $row->id . '"><i class="bx bx-pencil align-middle me-1"></i></a> <a href="#" onclick="delete_confirm2(`unitDelete`,' . $row->id . ')"><i class="bx bx-trash  align-middle me-1"></i></a>';
 
                     return $btn;
                 })
-                ->rawColumns(['base_unit','operator','operation_value','action'])
+                ->rawColumns(['status','action'])
                 ->make(true);
         }
 
@@ -325,27 +309,15 @@ class PosController extends Controller
     public function storeUnit(Request $request)
     {
         $this->validate($request, [
-            'unit_code' => [
+            'base_unit' => [
                 'max:255',
                     Rule::unique('units')->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-
-            'unit_name' => [
-                'max:255',
-                    Rule::unique('units')->where(function ($query) {
-                    return $query->where('is_active', 1);
+                    return $query->where('status', 1);
                 }),
             ]
 
         ]);
         $input = $request->all();
-        $input['is_active'] = true;
-        if(!$input['base_unit']){
-            $input['operator'] = '*';
-            $input['operation_value'] = 1;
-        }
         Unit::create($input);
         return redirect('unit-list')->with('error', 'Saved Successfully')->with('class', 'success');
     }
@@ -359,18 +331,13 @@ class PosController extends Controller
     public function updateUnit(Request $request)
     {
         $this->validate($request, [
-            'unit_code' => [
+            'base_unit' => [
                 'max:255',
-                    Rule::unique('units')->ignore($request->unit_id)->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-            'unit_name' => [
-                'max:255',
-                    Rule::unique('units')->ignore($request->unit_id)->where(function ($query) {
-                    return $query->where('is_active', 1);
+                    Rule::unique('units')->where(function ($query) {
+                    return $query->where('status', 1);
                 }),
             ]
+
         ]);
 
         $input = $request->all();
@@ -382,8 +349,7 @@ class PosController extends Controller
     public function deleteUnit($id)
     {
         $lims_unit_data = Unit::findOrFail($id);
-        $lims_unit_data->is_active = false;
-        $lims_unit_data->save();
+        $lims_unit_data->delete();
         return redirect('unit-list')->with('error', 'Deleted Successfully')->with('class', 'success');
     }
 

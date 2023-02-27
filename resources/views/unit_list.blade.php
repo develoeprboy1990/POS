@@ -56,45 +56,34 @@
               <div class="modal-body">
                 <form action="{{url('store-unit')}}" method="POST">
                     @csrf
-                    <div class="row col-md-12">
+                    <div class="row col-md-12 mt-3">
                         <div class="form-group">
-                            <label for="code">Code</label>
-                            <input type="text" name="unit_code" class="form-control" placeholder="Type Unit Code" required>
+                            <label for="name">Unit</label>
+                            <input type="text" name="base_unit" class="form-control" placeholder="Type Unit Name" id="unit" required>
                         </div>
                         
                     </div>
                     <div class="row col-md-12 mt-3">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" name="unit_name" class="form-control" placeholder="Type Unit Name" required>
+                            <label for="name">Child Unit</label>
+                            <input type="text" name="child_unit" class="form-control" placeholder="Type Child Unit Name" id="child_unit" required>
                         </div>
                         
                     </div>
                     <div class="row col-md-12 mt-3">
                         <div class="form-group">
-                            <label for="base_unit">Base Unit</label>
-                            <select class="form-control" id="base_unit_create" name="base_unit">
-                                <option value="">No Base Unit</option>
-                                @foreach($lims_unit_all as $unit)
-                                    @if($unit->base_unit==null)
-                                    <option value="{{$unit->id}}">{{$unit->unit_name}}</option>
-                                    @endif
-                                @endforeach
+                            <label for="">Unit Convert</label><br>
+                            1 <span id="print_unit">Unit</span> = <input type="text" class="form-control" name="unit_value" required=""><span id="print_child_unit">Child Unit</span>
+                            
+                        </div>
+                    </div>
+                    <div class="row col-md-12 mt-3">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" name="status">
+                                <option value="1">Active</option>
+                                <option value="0">In-Active</option>
                             </select>
-                        </div>
-                        
-                    </div>
-                    <div class="row col-md-12 mt-3 operator">
-                        <div class="form-group">
-                            <label>Operator</label>
-                            <input type="text" name="operator" placeholder="Enter Operator" class="form-control" />
-                        </div>
-                        
-                    </div>
-                    <div class="row col-md-12 mt-3 operation_value">
-                        <div class="form-group">
-                            <label>Operation Value</label>
-                            <input type="number" name="operation_value" placeholder="Enter operation value" class="form-control" step="any"/>
                         </div>
                         
                     </div>
@@ -114,7 +103,7 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="editUnitModalTitle">Edit Brand</h5>
+                <h5 class="modal-title" id="editUnitModalTitle">Edit Unit</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -123,45 +112,34 @@
                 <form action="{{url('update-unit')}}" method="POST">
                     @csrf
                     <input type="hidden" name="unit_id" value="" id="unit_id">
-                    <div class="row col-md-12">
+                    <div class="row col-md-12 mt-3">
                         <div class="form-group">
-                            <label for="code">Code</label>
-                            <input type="text" name="unit_code" id="edit_unit_code" class="form-control" required>
+                            <label for="name">Unit</label>
+                            <input type="text" name="base_unit" class="form-control" id="edit_unit" required>
                         </div>
                         
                     </div>
                     <div class="row col-md-12 mt-3">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" name="unit_name" id="edit_unit_name" class="form-control" required>
+                            <label for="name">Child Unit</label>
+                            <input type="text" name="child_unit" class="form-control" id="edit_child_unit" required>
                         </div>
                         
                     </div>
                     <div class="row col-md-12 mt-3">
                         <div class="form-group">
-                            <label for="edit_base_unit">Base Unit</label>
-                            <select class="form-control" id="base_unit_edit" name="base_unit">
-                                <option value="">No Base Unit</option>
-                                @foreach($lims_unit_all as $unit)
-                                    @if($unit->base_unit==null)
-                                    <option value="{{$unit->id}}">{{$unit->unit_name}}</option>
-                                    @endif
-                                @endforeach
+                            <label for="">Unit Convert</label><br>
+                            1 <span id="edit_print_unit">Unit</span> = <input type="text" class="form-control" name="unit_value" id="edit_unit_value" required=""><span id="edit_print_child_unit">Child Unit</span>
+                            
+                        </div>
+                    </div>
+                    <div class="row col-md-12 mt-3">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" name="status" id="edit_status">
+                                <option value="1">Active</option>
+                                <option value="0">In-Active</option>
                             </select>
-                        </div>
-                        
-                    </div>
-                    <div class="row col-md-12 mt-3 operator">
-                        <div class="form-group">
-                            <label>Operator</label>
-                            <input type="text" name="operator" id="operator" placeholder="Enter Operator" class="form-control" />
-                        </div>
-                        
-                    </div>
-                    <div class="row col-md-12 mt-3 operation_value">
-                        <div class="form-group">
-                            <label>Operation Value</label>
-                            <input type="number" name="operation_value" id="operation_value" placeholder="Enter operation value" class="form-control" step="any"/>
                         </div>
                         
                     </div>
@@ -177,18 +155,15 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title mb-4">Brands</h4>
+                    <h4 class="card-title mb-4">Units</h4>
 
 
                     <table class="table datatable table-hover dt-responsive nowrap w-100 table-sm">
                         <thead>
                         <tr>
                             <th scope="col" >S.No</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Base Unit</th>
-                            <th scope="col">Operator</th>
-                            <th scope="col">Operation Value</th>
+                            <th scope="col">Unit Name</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -219,40 +194,30 @@
             "ajax": "{{ url('unit-list') }}",
             "columns":[
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable:false, searchable: false},
-                { "data": "unit_code" },
-                { "data": "unit_name" },
                 { "data": "base_unit", name: 'base_unit' },
-                { "data": "operator", name: 'operator' },
-                { "data": "operation_value", name: 'operation_value' },
+                { "data": "status", name: 'status' },
                 { "data": "action" }
             ]
              
          });
 
-        $(".operator").hide();
-        $(".operation_value").hide();
-
-        $('#base_unit_create').on('change', function() {
-            if($(this).val()){
-                $("#addUnitModal .operator").show();
-                $("#addUnitModal .operation_value").show();
-            }
-            else{
-                $("#addUnitModal .operator").hide();
-                $("#addUnitModal .operation_value").hide();
-            }
+        $("#unit").on('keyup',function (e) {
+                $("#print_unit").html($("#unit").val());
         });
 
-        $('#base_unit_edit').on('change', function() {
-            if($(this).val()){
-                $("#editUnitModal .operator").show();
-                $("#editUnitModal .operation_value").show();
-            }
-            else{
-                $("#editUnitModal .operator").hide();
-                $("#editUnitModal .operation_value").hide();
-            }
+        $("#child_unit").on('keyup',function (e) {
+            $("#print_child_unit").html($("#child_unit").val());
         });
+
+        $("#edit_unit").on('keyup',function (e) {
+                $("#edit_print_unit").html($("#edit_unit").val());
+        });
+
+        $("#edit_child_unit").on('keyup',function (e) {
+            $("#edit_print_child_unit").html($("#edit_child_unit").val());
+        });
+
+
 
         $(document.body).on('click','.edit_unit',function(){
             var unit_id = $(this).data('id');
@@ -269,21 +234,12 @@
                 success: function(data) {
                     if(data){
                         $("#unit_id").val(data.id);
-                        $("#edit_unit_code").val(data.unit_code);
-                        $("#edit_unit_name").val(data.unit_name);
-                        $("#operator").val(data.operator);
-                        $("#operation_value").val(data.operation_value);
-                        $("#base_unit_edit").val(data.base_unit);
-                        if(data.base_unit!=null)
-                        {
-                            $(".operator").show();
-                            $(".operation_value").show();
-                        }
-                        else
-                        {
-                            $(".operator").hide();
-                            $(".operation_value").hide();
-                        }
+                        $("#edit_unit").val(data.base_unit);
+                        $("#edit_child_unit").val(data.child_unit);
+                        $("#edit_unit_value").val(data.unit_value);
+                        $("#edit_print_unit").html(data.base_unit);
+                        $("#edit_print_child_unit").html(data.child_unit);
+                        $("#edit_status").val(data.status);
                         $('#editUnitModal').modal('show');
                     }
                 }

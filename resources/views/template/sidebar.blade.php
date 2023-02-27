@@ -103,6 +103,19 @@
                      
                     </ul>
                 </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-food"></i>
+                        <span key="t-ecommerce">Dish</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{URL('/create-dish')}}" key="t-products">Add Dish</a></li>
+                        <li><a href="{{URL('/biller-list')}}" key="t-products">All Dishes</a></li>
+
+                     
+                    </ul>
+                </li>
             
                 
                 

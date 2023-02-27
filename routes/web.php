@@ -23,6 +23,7 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Documents;
+use App\Http\Controllers\DishController;
  
    
  Route::get('/base1/',[KM::class,'base1']);
@@ -601,6 +602,23 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::post('/get-tax-detail', [PosController::class, 'getTaxDetail']);
     Route::post('/update-tax', [PosController::class, 'updateTax']);
     Route::get('/taxDelete/{id}', [PosController::class, 'deleteTax']);
+
+    // Dish Routes
+    Route::get('/create-dish', [DishController::class, 'create']);
+    Route::post('/saveDish', [DishController::class, 'store']);
+    Route::get('/edit-dish/{dish}', [DishController::class, 'edit'])->name('dish.edit');
+    Route::post('/updateDish/{dish}', [DishController::class, 'update'])->name('dish.update');
+    Route::get('/dish-type/{dish}', [DishController::class, 'dishType'])->name('dish.type');
+    Route::post('/storeDishType/{dish}', [DishController::class, 'storeDishType'])->name('dish.type.store');
+    Route::get('/dish-image/{dish}', [DishController::class, 'dishImage'])->name('dish.image');
+    Route::post('/storeDishImage/{dish}', [DishController::class, 'storeDishImage'])->name('dish.image.store');
+    Route::get('/dish-recipe/{dish}', [DishController::class, 'dishRecipe'])->name('dish.recipe');
+    Route::post('/storeDishRecipe/{dish}', [DishController::class, 'storeDishRecipe'])->name('dish.recipe.store');
+    Route::get('/get-unit-of-item/{item_id}', [DishController::class, 'getItemUnit'])->name('item.unit');
+    Route::get('/dishTypeDelete/{id}', [DishController::class, 'deleteDishType']);
+    Route::get('/dishImageDelete/{id}', [DishController::class, 'deleteDishImage']);
+    Route::get('/dishRecipeDelete/{id}', [DishController::class, 'deleteDishRecipe']);
+    
 
 
     // Item Category

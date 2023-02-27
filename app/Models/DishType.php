@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class DishType extends Model
+{
+    protected $fillable = ['dish_id','type','price'];
+    use HasFactory;
+
+    public function dish_recipe()
+    {
+        return $this->hasMany(DishRecipe::class);
+    }
+}
