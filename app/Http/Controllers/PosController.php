@@ -920,4 +920,10 @@ class PosController extends Controller
         return $id;
     }
 
+    public function testList(Request $request)
+    {
+
+        return view('test_list');
+    }
+
 }

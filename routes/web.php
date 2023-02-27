@@ -646,6 +646,8 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     // Barcode
     Route::get('/print-barcode', [PosController::class, 'printBarcode']);
     Route::get('products/lims_product_search', [PosController::class, 'limsProductSearch'])->name('product.search');
+
+   Route::get('/test-list', [PosController::class, 'testList']);
     
 
 
