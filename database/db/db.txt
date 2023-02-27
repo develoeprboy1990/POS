@@ -255,3 +255,14 @@ Date: 8-2-23
 
 ALTER TABLE `item_category` CHANGE `ItemCategoryID` `ItemCategoryID` INT NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`ItemCategoryID`);
 =====================================
+
+27-02-2023
+
+delete current units table
+
+php artisan migrate --path=database/migrations/2023_02_25_095423_create_units_table.php
+php artisan migrate --path=database/migrations/2023_02_25_110407_create_dishes_table.php
+php artisan migrate --path=database/migrations/2023_02_25_110937_create_dish_images_table.php
+php artisan migrate --path=database/migrations/2023_02_26_105746_create_dish_types_table.php
+php artisan migrate --path=database/migrations/2023_02_26_110251_create_dish_recipes_table.php
+php artisan migrate --path=database/migrations/2023_02_27_101155_add_unit_id_to_item.php
