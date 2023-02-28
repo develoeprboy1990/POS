@@ -19,4 +19,9 @@ class DishRecipe extends Model
     {
         return $this->belongsTo('App\Models\Item', 'item_id', 'ItemID');
     }
+
+    public function dish()
+    {
+        return $this->belongsTo(Dish::class);
+    }
 }

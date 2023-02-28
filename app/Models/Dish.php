@@ -14,4 +14,19 @@ class Dish extends Model
     {
         return 'id';
     }
+
+    public function dish_types()
+    {
+        return $this->hasMany(DishType::class);
+    }
+
+    public function dish_images()
+    {
+        return $this->hasMany(DishImage::class);
+    }
+
+    public function dish_recipes()
+    {
+        return $this->hasMany(DishRecipe::class);
+    }
 }

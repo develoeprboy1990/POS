@@ -32,15 +32,12 @@ class TeqPosController extends Controller
 {
     public function createTeqInvoice()
     {
-
-
-       
         $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
         $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
         $lims_biller_list        = Biller::where('is_active', true)->get();
         $lims_tax_list           = Tax::where('is_active', true)->get();
-        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->get();
+        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
 
         foreach ($lims_product_list as $key => $product) {
             $images = explode(",", $product->image);
@@ -598,7 +595,8 @@ class TeqPosController extends Controller
         $data = [];
         $lims_product_list = DB::table('item')->where([
             ['IsActive', true],
-            ['IsFeatured', true]
+            ['IsFeatured', true],
+            ['ItemType','!=','resturent']
         ])->select('item.ItemID', 'item.ItemName', 'item.ItemCode', 'item.ItemImage')->get();
 
         $index = 0;

@@ -20,7 +20,8 @@ class DishController extends Controller
      */
     public function index()
     {
-        //
+        $dishes = Dish::get();
+        return view('dish.list',compact('dishes'));
     }
 
     /**
@@ -180,7 +181,11 @@ class DishController extends Controller
     {
         $dish_types = DishType::where('dish_id',$dish->id)->get();
         $kitchen_items = Item::where('ItemType','resturent')->get();
-        $dish_recipes = DishRecipe::where('dish_id',$dish->id)->get();
+        $dish_recipes = [];
+        foreach($dish_types as $dish_type)
+        {
+            $dish_recipes[$dish_type->type] = $dish_type->dish_recipe;
+        }
         return view('dish.dish-recipe',compact('dish','dish_types','kitchen_items','dish_recipes'));
     }
 
@@ -241,8 +246,20 @@ class DishController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Dish $dish)
     {
-        //
+        $dish_recipes = $dish->dish_recipes()->delete();
+        $dish_types = $dish->dish_types()->delete();
+        $dish_images = $dish->dish_images;
+        foreach($dish_images as $dish_image)
+        {
+            $file_path = public_path().'/assets/images/dishes/'.$dish_image->image;
+            unlink($file_path);
+            $dish_image->delete();
+        }
+        $thumbnail_path = public_path().'/thumbnail/'.$dish->image_thumbnail;
+        unlink($thumbnail_path);
+        $dish->delete();
+        return redirect()->back()->with('error', 'Deleted Successfully')->with('class', 'success');
     }
 }

@@ -301,38 +301,40 @@
                           </div>
                     </div>
                     <hr>
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Dish Type</th>
-                          <th scope="col">Item Name</th>
-                          <th scope="col">Unit</th>
-                          <th scope="col">Child Unit</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php $i = 1; ?>
-                        @forelse ($dish_recipes as $dish_recipe)
-                              <th scope="row">{{$i}}</th>
-                              <td>{{ucwords($dish_recipe->dish_type->type)}}</td>
-                              <td>{{ucwords($dish_recipe->item->ItemName)}}</td>
-                              <td>{{$dish_recipe->base_unit_amount_cooked}}&nbsp;{{$dish_recipe->item->unit->base_unit}}</td>
-                              <td>{{$dish_recipe->child_unit_amount_cooked}}&nbsp;{{$dish_recipe->item->unit->child_unit}}</td>
-                              <td>
-                                <!-- <a href="javascript:void(0)" class="edit_dish_image" data-id="{{ $dish_recipe->id}}"><i class="bx bx-pencil align-middle me-1"></i></a> -->
-                                <a href="javascript:void(0)" onclick="delete_confirm2(`dishRecipeDelete`,'{{$dish_recipe->id}}')"><i class="bx bx-trash  align-middle me-1"></i></a></td>
-                            </tr>
-                        <?php $i++; ?>
-                        @empty
+                    @foreach($dish_recipes as $dish_type => $dish_recipe)
+                        <h2>{{ucwords($dish_type)}}</h2>
+                        <table class="table">
+                          <thead>
                             <tr>
-                              <td scope="row" colspan="6" align="center">No Dish recipes Available</td>
+                              <th scope="col">#</th>
+                              <th scope="col">Item Name</th>
+                              <th scope="col">Unit</th>
+                              <th scope="col">Child Unit</th>
+                              <th scope="col">Action</th>
                             </tr>
+                          </thead>
+                          <tbody>
+                            <?php $i = 1; ?>
+                            @forelse ($dish_recipe as $recipe)
+                                  <th scope="row">{{$i}}</th>
+                                  <td>{{ucwords($recipe->item->ItemName)}}</td>
+                                  <td>{{$recipe->base_unit_amount_cooked}}&nbsp;{{$recipe->item->unit->base_unit}}</td>
+                                  <td>{{$recipe->child_unit_amount_cooked}}&nbsp;{{$recipe->item->unit->child_unit}}</td>
+                                  <td>
+                                    <!-- <a href="javascript:void(0)" class="edit_dish_image" data-id="{{ $recipe->id}}"><i class="bx bx-pencil align-middle me-1"></i></a> -->
+                                    <a href="javascript:void(0)" onclick="delete_confirm2(`dishRecipeDelete`,'{{$recipe->id}}')"><i class="bx bx-trash  align-middle me-1"></i></a></td>
+                                </tr>
+                            <?php $i++; ?>
+                            @empty
+                                <tr>
+                                  <td scope="row" colspan="6" align="center">No Dish recipes Available in &nbsp;<b>{{ucwords($dish_type)}}</b></td>
+                                </tr>
 
-                        @endforelse
-                      </tbody>
-                    </table>
+                            @endforelse
+                          </tbody>
+                        </table><br>
+                    @endforeach
+                    
                 </div>
         </div>
     </div>

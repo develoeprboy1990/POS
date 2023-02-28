@@ -618,6 +618,9 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::get('/dishTypeDelete/{id}', [DishController::class, 'deleteDishType']);
     Route::get('/dishImageDelete/{id}', [DishController::class, 'deleteDishImage']);
     Route::get('/dishRecipeDelete/{id}', [DishController::class, 'deleteDishRecipe']);
+
+    Route::get('/all-dishes', [DishController::class, 'index']);
+    Route::get('/dishDelete/{dish}', [DishController::class, 'destroy']);
     
 
 

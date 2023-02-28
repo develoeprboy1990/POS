@@ -14,4 +14,10 @@ class DishType extends Model
     {
         return $this->hasMany(DishRecipe::class);
     }
+
+    public function dish()
+    {
+        return $this->belongsTo(Dish::class);
+    }
+
 }
