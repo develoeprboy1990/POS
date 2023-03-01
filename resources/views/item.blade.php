@@ -59,7 +59,8 @@
       <h2>Item</h2>
     </div>
       <div class="card-body">
-         <div class="col-md-6 col-sm-12">
+        <div class="row">
+            <div class="col-md-6">
                 
 
                 
@@ -150,16 +151,88 @@
                   </div>
                 </div>
 
-             
-           
-             
-             
+              </div>
 
-              
+
+              <div class="col-md-6">
+                
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Category</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select name="item_category_id" id="item_category_id" class="form-select">
+                       <option value="">Select Item Category</option>
+                       @foreach($item_categories as $category)
+                        <option value="{{$category->ItemCategoryID}}">{{$category->title}}</option>
+                        @endforeach
+                      </select>
+                  </div>
+                </div>
+                <!-- <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Warehouse</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select name="warehouse_id" id="warehouse_id" class="form-select">
+                       <option value="">Select Warehouse</option>
+                       @foreach($lims_warehouse_list as $warehouse)
+                        <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                        @endforeach
+                      </select>
+                  </div>
+                </div> -->
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Brand</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select name="brand_id" id="brand" class="form-select">
+                       <option value="">Select Brand</option>
+                       @foreach($lims_brand_all as $brand)
+                        <option value="{{$brand->id}}">{{$brand->title}}</option>
+                        @endforeach
+                      </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Item Code</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="item_code" class="form-control" name="ItemCode" placeholder="Item Code">
+                  </div>
+                </div>
+
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Quantity</label>
+                  </div>
+                  <div class="col-sm-9">
+                    
+                    <input type="number" id="total-qty" class="form-control" name="total_qty">
+                    
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Active / Featured</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="checkbox" name="isActive" value="1" checked>
+                    <label for="active"> Active</label><br>
+                    <input type="checkbox" value="1" name="isFeatured">
+                    <label for="vehicle2"> Featured</label><br>
+                  </div>
+                </div>
+
+
                 
 
 
               </div>
+        </div>
+         
 
       <div class="row mt-5">
         

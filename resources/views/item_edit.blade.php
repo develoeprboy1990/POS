@@ -53,13 +53,8 @@
       <h2>Item</h2>
     </div>
       <div class="card-body">
-         <div class="col-md-6 col-sm-12">
-                
-
-                
-                 
-                
-                
+        <div class="row">
+            <div class="col-md-6">
                 
                 <div class="mb-3 row">
                   <div class="col-sm-2">
@@ -67,13 +62,18 @@
                   </div>
                   <div class="col-sm-9">
                   <div class="form-check form-check-inline pt-2">
-                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="Goods" checked {{ old('ItemType') == 'Goods' ? 'checked' : '' }}>
+                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="Goods" {{ $item[0]->ItemType == 'Goods' ? 'checked' : '' }}>
                    <label class="form-check-label" for="inlineRadio1">Goods</label>
                  </div>
 
                   <div class="form-check form-check-inline pt-2">
-                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="Service" {{ old('ItemType') == 'Service' ? 'checked' : '' }}>
+                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="Service" {{ $item[0]->ItemType == 'Service' ? 'checked' : '' }}>
                    <label class="form-check-label" for="inlineRadio1">Service</label>
+                 </div>
+
+                 <div class="form-check form-check-inline pt-2">
+                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="resturent" {{ $item[0]->ItemType == 'resturent' ? 'checked' : '' }}>
+                   <label class="form-check-label" for="inlineRadio1">Resturent</label>
                  </div>
                   </div>
                 </div>
@@ -92,7 +92,7 @@
 
                  <div class="mb-3 row">
                   <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Code</label>
+                    <label class="col-form-label fw-bold" for="first-name">Item Code</label>
                   </div>
                   <div class="col-sm-9">
                     
@@ -101,21 +101,7 @@
                   </div>
                 </div>
 
-                <div class="mb-3 row">
-                  <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Category</label>
-                  </div>
-                  <div class="col-sm-9">
-                    
-                    <select id="categories" name="category_id" class="form-select">
-                      <option value="">Select Category</option>
-                        @foreach($categories as $category)
-                        <option value="{{$category->ItemCategoryID}}" {{$item[0]->ItemCategoryID == $category->ItemCategoryID ? 'selected' : ''}}>{{$category->title}}</option>
-                        @endforeach
-                    </select>
-                    
-                  </div>
-                </div>
+                
                 
                 <div class="mb-3 row">
                   <div class="col-sm-2">
@@ -128,6 +114,56 @@
                  <option value="{{$value->UnitName}}" {{($value->UnitName== $item[0]->UnitName) ? 'selected=selected':'' }}>{{$value->UnitName}}</option>
                  @endforeach
                       </select>
+                  </div>
+                </div>
+
+                
+
+                 <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Taxable</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select name="Taxable" id="Taxable" class="form-select">
+                        <option value="">Select</option>
+                        <option value="No"  {{($item[0]->Taxable== 'No') ? 'selected=selected':'' }}
+>No</option>
+                        <option value="Yes" {{($item[0]->Taxable== 'Yes') ? 'selected=selected':'' }}>Yes</option>
+                  
+                      </select>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-md-6">
+                <div class="mb-3 row">
+                    <div class="col-sm-2">
+                      <label class="col-form-label fw-bold" for="first-name">Units</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <select name="unit_id" id="unit_id" class="form-select">
+                         <option value="">Select</option>
+                           @foreach($units as $unit)
+                           <option value="{{$unit->id}}" {{($item[0]->UnitID == $unit->id) ? 'selected=selected':'' }}>{{$unit->base_unit}}</option>
+                           @endforeach
+                        </select>
+                    </div>
+                  </div>
+
+                  <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Category</label>
+                  </div>
+                  <div class="col-sm-9">
+                    
+                    <select id="categories" name="category_id" class="form-select">
+                      <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                        <option value="{{$category->ItemCategoryID}}" {{$item[0]->ItemCategoryID == $category->ItemCategoryID ? 'selected' : ''}}>{{$category->title}}</option>
+                        @endforeach
+                    </select>
+                    
                   </div>
                 </div>
 
@@ -145,22 +181,7 @@
                   </div>
                 </div>
 
-                 <div class="mb-3 row">
-                  <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Taxable</label>
-                  </div>
-                  <div class="col-sm-9">
-                    <select name="Taxable" id="Taxable" class="form-select">
-                        <option value="">Select</option>
-                        <option value="No"  {{($item[0]->Taxable== 'No') ? 'selected=selected':'' }}
->No</option>
-                        <option value="Yes" {{($item[0]->Taxable== 'Yes') ? 'selected=selected':'' }}>Yes</option>
-                  
-                      </select>
-                  </div>
-                </div>
-
-                <div class="mb-1 row">
+                  <div class="mb-3 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Percentage</label>
                   </div>
@@ -179,17 +200,9 @@
                     
                   </div>
                 </div>
-
-             
-           
-             
-             
-
-              
-                
-
-
               </div>
+        </div>
+         
 
 
 

@@ -10,6 +10,7 @@ use App\Models\Item;
 use App\Models\DishRecipe;
 use App\Models\Unit;
 use Image;
+use Yajra\DataTables\DataTables;
 
 class DishController extends Controller
 {
@@ -18,10 +19,38 @@ class DishController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $dishes = Dish::get();
-        return view('dish.list',compact('dishes'));
+        if ($request->ajax()) {
+            $dishes = Dish::get();
+            return Datatables::of($dishes)
+                ->addIndexColumn()
+                ->addColumn('dish_img', function ($row) {
+                    if ($row->image_thumbnail)
+                        $dish_img = '<td><img src="'.url('thumbnail', $row->image_thumbnail).'" height="50"></td>';
+                    else
+                        $dish_img = '<td><img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="100" width="100"></td>';
+
+                    return $dish_img;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == 1)
+                        $status = 'Active';
+                    else
+                        $status = 'In-Active';
+
+                    return $status;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="' . route('dish.edit', $row->id) . '" target="_blank"><i class="bx bx-pencil align-middle me-1"></i></a> <a href="#" onclick="delete_confirm2(`dishDelete`,' . $row->id . ')"><i class="bx bx-trash  align-middle me-1"></i></a>';
+
+                    return $btn;
+                })
+                ->rawColumns(['dish_img', 'status' ,'action'])
+                ->make(true);
+        }
+
+        return view('dish.list');
     }
 
     /**

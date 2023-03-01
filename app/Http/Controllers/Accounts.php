@@ -1712,9 +1712,12 @@ $pagetitle='Item';
 $item = DB::table('item')->get();
 $unit = DB::table('unit')->get();
 $units = Unit::get();
+$lims_warehouse_list = Warehouse::where('is_active', true)->get();
+$item_categories = DB::table('item_category')->get();
+$lims_brand_all = Brand::where('is_active', true)->get();
 
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
-return view ('item',compact('pagetitle','item','unit','chartofaccount','units'));
+return view ('item',compact('pagetitle','item','unit','chartofaccount','units','lims_warehouse_list','item_categories','lims_brand_all'));
 }
 
 
@@ -1746,6 +1749,10 @@ $this->validate($request,[
 ]);
 $data = array(
 'UnitID' => $request->input('unit_id'),
+'UnitName' => $request->input('Unit'),
+'ItemCategoryID' => $request->input('item_category_id'),
+'BrandID' => $request->input('brand_id'),
+// 'WarehouseID' => $request->input('warehouse_id'),
 'ItemCode' => $request->input('ItemCode'),
 'ItemName' => $request->input('ItemName'),
 'ItemType' => $request->input('ItemType'),
@@ -1753,6 +1760,9 @@ $data = array(
 'Percentage' => $request->input('Percentage'),
 'CostPrice' => $request->input('CostPrice'),
 'SellingPrice' => $request->input('SellingPrice'),
+'isFeatured' => $request->input('isFeatured'),
+'isActive' => $request->input('isActive'),
+'TotalQty' => $request->input('total_qty'),
 
 );
 
@@ -1777,10 +1787,11 @@ $pagetitle='Item';
 $item = DB::table('item')->where('ItemID',$id)->get();
 $categories = DB::table('item_category')->get();
 $lims_brand_list = Brand::where('is_active', true)->get();
+$units = Unit::get();
 $unit = DB::table('unit')->get();
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
 
-return view ('item_edit',compact('pagetitle','item','unit','chartofaccount','categories','lims_brand_list'));
+return view ('item_edit',compact('pagetitle','item','unit','chartofaccount','categories','lims_brand_list','units'));
 }
 
 public  function ItemUpdate(request $request)
@@ -1812,8 +1823,10 @@ $data = array(
 'ItemCategoryID' => $request->input('category_id'),
 'BrandID' => $request->input('brand_id'),
 'ItemCode' => $request->input('ItemCode'),
+'ItemType' => $request->input('ItemType'),
 'ItemName' => $request->input('ItemName'),
 'UnitName' => $request->input('Unit'),
+'UnitID' => $request->input('unit_id'),
 'Taxable' => $request->input('Taxable'),
 'TotalQty' => $request->input('total_qty'),
 'Percentage' => $request->input('Percentage'),
