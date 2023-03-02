@@ -447,6 +447,7 @@ class PosController extends Controller
             "ParentID" => $request->parent_id,
             "title" => $category_name,
             "image" => $imageName,
+            "type" => $request->type,
             "IsActive" => true,
         );
 
@@ -484,12 +485,14 @@ class PosController extends Controller
                 "ParentID" => $request->edit_parent_id,
                 "title" => $category_name,
                 "image" => $imageName,
+                "type" => $request->edit_type,
             );
         }
         else{
             $data = array(
                 "ParentID" => $request->edit_parent_id,
                 "title" => $category_name,
+                "type" => $request->edit_type,
             );
         }
 

@@ -47,7 +47,7 @@ class TeqPosController extends Controller
         $product_number = count($lims_product_list);
         $lims_pos_setting_data = PosSetting::latest()->first();
         $lims_brand_list = Brand::where('is_active', true)->get();
-        $lims_category_list = DB::table('item_category')->get();
+        $lims_category_list = DB::table('item_category')->where('type', '!=', 'kitchen')->orWhere('type',null)->get();
 
 
         $recent_sale = DB::table('invoice_master')->where('InvoiceNo','like','INV%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();

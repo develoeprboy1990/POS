@@ -67,7 +67,15 @@
                         </div>
                         
                     </div>
-                    <div class="row col-md-12">
+                    <div class="row col-md-12 mt-3">
+                        <div class="form-group col-md-6">
+                            <label for="name">Category Type</label>
+                            <select name="type" class="form-control">
+                                <option value="">Select Type</option>
+                                <option value="pos">POS</option>
+                                <option value="kitchen">Kitchen</option>
+                            </select>
+                        </div>
                         <div class="form-group col-md-6">
                             <label for="name">Parent Category</label>
                             <select name="parent_id" class="form-control">
@@ -92,7 +100,7 @@
 
         <!-- Edit Modal -->
         <div class="modal fade" id="editItemCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editItemCategoryModalTitle" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="editItemCategoryModalTitle">Edit Item Category</h5>
@@ -115,8 +123,16 @@
                         </div>
                         
                     </div>
-                    <div class="row col-md-12">
-                        <div class="form-group">
+                    <div class="row col-md-12 mt-3">
+                        <div class="form-group col-md-6">
+                            <label for="name">Category Type</label>
+                            <select name="edit_type" id="edit_type" class="form-control">
+                                <option value="">Select Type</option>
+                                <option value="pos">POS</option>
+                                <option value="kitchen">Kitchen</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
                             <label for="name">Parent Category</label>
                             <select name="edit_parent_id" id="edit_parent_id" class="form-control">
                                 <option value="">No Parent Category</option>
@@ -125,6 +141,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        
                         
                     </div>
                     <div class="modal-footer">
@@ -206,11 +223,12 @@
                     cat_id: cat_id,
                 },
                 success: function(data) {
-                    if(data){
+                    if(data){console.log(data);
                         $('#itemCategoryId').val(data.lims_category_data.ItemCategoryID);
                         $("#editItemCategoryName").val(data.lims_category_data.title);
                         // $("#editCategoryImage").val(data.lims_category_data.image);
                         $("#edit_parent_id").val(data.parent_id);
+                        $("#edit_type").val(data.lims_category_data.type);
                         $('#editItemCategoryModal').modal('show');
                     }
                 }

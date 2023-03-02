@@ -102,20 +102,6 @@
 
                 <div class="mb-3 row">
                   <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Unit</label>
-                  </div>
-                  <div class="col-sm-9">
-                    <select name="Unit" id="Unit" class="form-select">
-                       <option value="0">Select</option>
-                 @foreach($unit as $value)
-                 <option value="{{$value->UnitName}}">{{$value->UnitName}}</option>
-                 @endforeach
-                      </select>
-                  </div>
-                </div>
-
-                <div class="mb-3 row">
-                  <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Units</label>
                   </div>
                   <div class="col-sm-9">
@@ -155,8 +141,8 @@
 
 
               <div class="col-md-6">
-                
-                <div class="mb-3 row">
+
+                <div class="mb-3 mt-5 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Category</label>
                   </div>

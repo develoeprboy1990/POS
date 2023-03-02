@@ -1710,14 +1710,14 @@ public  function Item()
 session::put('menu','Item');
 $pagetitle='Item';
 $item = DB::table('item')->get();
-$unit = DB::table('unit')->get();
+
 $units = Unit::get();
 $lims_warehouse_list = Warehouse::where('is_active', true)->get();
 $item_categories = DB::table('item_category')->get();
 $lims_brand_all = Brand::where('is_active', true)->get();
 
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
-return view ('item',compact('pagetitle','item','unit','chartofaccount','units','lims_warehouse_list','item_categories','lims_brand_all'));
+return view ('item',compact('pagetitle','item','chartofaccount','units','lims_warehouse_list','item_categories','lims_brand_all'));
 }
 
 
@@ -1749,7 +1749,6 @@ $this->validate($request,[
 ]);
 $data = array(
 'UnitID' => $request->input('unit_id'),
-'UnitName' => $request->input('Unit'),
 'ItemCategoryID' => $request->input('item_category_id'),
 'BrandID' => $request->input('brand_id'),
 // 'WarehouseID' => $request->input('warehouse_id'),
@@ -1788,10 +1787,9 @@ $item = DB::table('item')->where('ItemID',$id)->get();
 $categories = DB::table('item_category')->get();
 $lims_brand_list = Brand::where('is_active', true)->get();
 $units = Unit::get();
-$unit = DB::table('unit')->get();
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
 
-return view ('item_edit',compact('pagetitle','item','unit','chartofaccount','categories','lims_brand_list','units'));
+return view ('item_edit',compact('pagetitle','item','chartofaccount','categories','lims_brand_list','units'));
 }
 
 public  function ItemUpdate(request $request)
@@ -1825,7 +1823,6 @@ $data = array(
 'ItemCode' => $request->input('ItemCode'),
 'ItemType' => $request->input('ItemType'),
 'ItemName' => $request->input('ItemName'),
-'UnitName' => $request->input('Unit'),
 'UnitID' => $request->input('unit_id'),
 'Taxable' => $request->input('Taxable'),
 'TotalQty' => $request->input('total_qty'),
