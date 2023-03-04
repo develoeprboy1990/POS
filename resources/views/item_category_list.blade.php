@@ -72,8 +72,8 @@
                             <label for="name">Category Type</label>
                             <select name="type" class="form-control">
                                 <option value="">Select Type</option>
-                                <option value="pos">POS</option>
-                                <option value="kitchen">Kitchen</option>
+                                <option value="POS">POS</option>
+                                <option value="RES">RES</option>
                             </select>
                         </div>
                         <div class="form-group col-md-6">
@@ -128,8 +128,8 @@
                             <label for="name">Category Type</label>
                             <select name="edit_type" id="edit_type" class="form-control">
                                 <option value="">Select Type</option>
-                                <option value="pos">POS</option>
-                                <option value="kitchen">Kitchen</option>
+                                <option value="POS">POS</option>
+                                <option value="RES">RES</option>
                             </select>
                         </div>
                         <div class="form-group col-md-6">
@@ -167,8 +167,6 @@
                             <th scope="col">Category</th>
                             <th scope="col">Parent Category</th>
                             <th scope="col">No of Products</th>
-                            <th scope="col">Stock Quantity</th>
-                            <th scope="col">Stock Worth (Price/Cost)</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -203,8 +201,6 @@
                 { "data": "title" },
                 { "data": "parent_cat", name: "parent_cat" },
                 { "data": "number_of_product", name: "number_of_product" },
-                { "data": "stock_qty", name: "stock_qty" },
-                { "data": "stock_worth", name: "stock_worth" },
                 { "data": "action" }
             ]
              

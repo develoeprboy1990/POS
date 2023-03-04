@@ -121,12 +121,10 @@
 
                 <div class="mb-3 row">
                   <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Quantity</label>
+                    <label class="col-form-label fw-bold" for="first-name">Percentage</label>
                   </div>
                   <div class="col-sm-9">
-                    
-                    <input type="number" id="total-qty" class="form-control" name="total_qty"  value="{{$item[0]->TotalQty}}" >
-                    
+                    <input type="text" id="Percentage"  class="form-control" name="Percentage" value="{{$item[0]->Percentage}}" >
                   </div>
                 </div>
 
@@ -174,15 +172,6 @@
                         <option value="{{$brand_list->id}}" {{$item[0]->BrandID == $brand_list->id ? 'selected' : ''}}>{{$brand_list->title}}</option>
                         @endforeach
                     </select>
-                  </div>
-                </div>
-
-                  <div class="mb-3 row">
-                  <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Percentage</label>
-                  </div>
-                  <div class="col-sm-9">
-                    <input type="text" id="Percentage"  class="form-control" name="Percentage" value="{{$item[0]->Percentage}}" >
                   </div>
                 </div>
 

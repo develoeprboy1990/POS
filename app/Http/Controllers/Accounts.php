@@ -1761,7 +1761,6 @@ $data = array(
 'SellingPrice' => $request->input('SellingPrice'),
 'isFeatured' => $request->input('isFeatured'),
 'isActive' => $request->input('isActive'),
-'TotalQty' => $request->input('total_qty'),
 
 );
 
@@ -1825,7 +1824,6 @@ $data = array(
 'ItemName' => $request->input('ItemName'),
 'UnitID' => $request->input('unit_id'),
 'Taxable' => $request->input('Taxable'),
-'TotalQty' => $request->input('total_qty'),
 'Percentage' => $request->input('Percentage'),
 'CostPrice' => $request->input('CostPrice'),
 'SellingPrice' => $request->input('SellingPrice'),

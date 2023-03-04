@@ -10,6 +10,22 @@ use App\Models\Item;
 use App\Models\DishRecipe;
 use App\Models\Unit;
 use Image;
+use DB;
+use Session;
+use Illuminate\Validation\Rule;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\ProductVariant;
+use App\Models\ProductBatch;
+use App\Models\Customer;
+use App\Models\CustomerGroup;
+use App\Models\Sale;
+use App\Models\PosSetting;
+use App\Models\Brand;
+use App\Models\Coupon;
+use App\Models\Tax;
+use App\Models\Product_Sale;
+use App\Models\Payment;
 use Yajra\DataTables\DataTables;
 
 class DishController extends Controller
@@ -290,5 +306,32 @@ class DishController extends Controller
         unlink($thumbnail_path);
         $dish->delete();
         return redirect()->back()->with('error', 'Deleted Successfully')->with('class', 'success');
+    }
+
+    public function createDishOrder()
+    {
+        $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
+        $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
+        $lims_tax_list           = Tax::where('is_active', true)->get();
+        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
+
+        foreach ($lims_product_list as $key => $product) {
+            $images = explode(",", $product->image);
+            $product->base_image = $images[0];
+        }
+
+        $product_number = count($lims_product_list);
+        $lims_pos_setting_data = PosSetting::latest()->first();
+        $lims_category_list = DB::table('item_category')->where('type','RES')->get();
+
+
+        $recent_sale = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
+        $recent_draft = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
+     
+        $lims_coupon_list = Coupon::where('is_active', true)->get();
+        $flag = 0;
+        $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->count();
+        $invoice_no = 'RES-0000' . ++$invoice_no;
+        return view('dish.order-dish', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no'));
     }
 }

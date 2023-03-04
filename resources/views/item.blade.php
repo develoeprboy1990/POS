@@ -128,12 +128,22 @@
                   </div>
                 </div>
 
-                <div class="mb-1 row">
+                <div class="mb-3 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Percentage</label>
                   </div>
                   <div class="col-sm-9">
                     <input type="text" id="Percentage" disabled="" class="form-control" name="Percentage" >
+                  </div>
+                </div>
+
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Featured</label>
+                  </div>
+                  <div class="col-sm-9 mt-2">
+                    <input type="checkbox" value="1" name="isFeatured">
+                    <label for="vehicle2"> Featured</label>
                   </div>
                 </div>
 
@@ -192,23 +202,11 @@
 
                 <div class="mb-3 row">
                   <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Quantity</label>
+                    <label class="col-form-label fw-bold" for="first-name">Active</label>
                   </div>
-                  <div class="col-sm-9">
-                    
-                    <input type="number" id="total-qty" class="form-control" name="total_qty">
-                    
-                  </div>
-                </div>
-                <div class="mb-3 row">
-                  <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Active / Featured</label>
-                  </div>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9 mt-2">
                     <input type="checkbox" name="isActive" value="1" checked>
-                    <label for="active"> Active</label><br>
-                    <input type="checkbox" value="1" name="isFeatured">
-                    <label for="vehicle2"> Featured</label><br>
+                    <label for="active"> Active</label>
                   </div>
                 </div>
 
