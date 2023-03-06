@@ -621,6 +621,8 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
 
     Route::get('/all-dishes', [DishController::class, 'index']);
     Route::get('/dishDelete/{dish}', [DishController::class, 'destroy']);
+
+    Route::get('/create-dish-order', [DishController::class, 'createDishOrder']);
     
 
 

@@ -379,16 +379,6 @@ class PosController extends Controller
                     $number_of_product = DB::table('item')->where('ItemCategoryID',$row->ItemCategoryID)->where('IsActive', true)->count();
                     return @$number_of_product;
                 })
-                ->addColumn('stock_qty', function ($row) {
-                    $stock_qty = DB::table('item')->where('ItemCategoryID',$row->ItemCategoryID)->where('IsActive', true)->sum('TotalQty');
-                    return @$stock_qty;
-                })
-                ->addColumn('stock_worth', function ($row) {
-                    $total_price = DB::table('item')->where('ItemCategoryID',$row->ItemCategoryID)->where('IsActive', true)->sum(DB::raw('SellingPrice * TotalQty'));
-                    $total_cost = DB::table('item')->where('ItemCategoryID',$row->ItemCategoryID)->where('IsActive', true)->sum(DB::raw('CostPrice * TotalQty'));
-                    $stock_worth = 'USD '.$total_price.' / USD '.$total_cost;
-                    return @$stock_worth;
-                })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" class="edit_category" data-id="' . $row->ItemCategoryID . '"><i class="bx bx-pencil align-middle me-1"></i></a> <a href="#" onclick="delete_confirm2(`itemCategoryDelete`,' . $row->ItemCategoryID . ')"><i class="bx bx-trash  align-middle me-1"></i></a>';
 

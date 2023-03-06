@@ -112,6 +112,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{URL('/create-dish')}}" key="t-products">Add Dish</a></li>
                         <li><a href="{{URL('/all-dishes')}}" key="t-products">All Dishes</a></li>
+                        <!-- <li><a href="{{URL('/create-dish-order')}}" key="t-products">Create Order</a></li> -->
 
                      
                     </ul>
