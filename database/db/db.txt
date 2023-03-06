@@ -268,6 +268,7 @@ php artisan migrate --path=database/migrations/2023_02_26_110251_create_dish_rec
 php artisan migrate --path=database/migrations/2023_02_27_101155_add_unit_id_to_item.php
 
 
+
 =======================================
 
 3-3-2023
@@ -275,3 +276,10 @@ php artisan migrate --path=database/migrations/2023_02_27_101155_add_unit_id_to_
 ALTER TABLE `item` DROP `TotalQty`;
 
 ====================================
+=======
+=======================================================
+
+03-02-2023
+php artisan migrate --path=database/migrations/2023_03_02_103212_create_invoice_dish_details_table.php
+
+php artisan migrate --path=database/migrations/2023_03_02_103916_add_type_to_item_category.php
