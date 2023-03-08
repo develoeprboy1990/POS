@@ -9,23 +9,10 @@ use App\Models\DishImage;
 use App\Models\Item;
 use App\Models\DishRecipe;
 use App\Models\Unit;
+use App\Models\InvoiceDishDetail;
 use Image;
 use DB;
-use Session;
-use Illuminate\Validation\Rule;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\ProductBatch;
-use App\Models\Customer;
-use App\Models\CustomerGroup;
-use App\Models\Sale;
-use App\Models\PosSetting;
-use App\Models\Brand;
-use App\Models\Coupon;
-use App\Models\Tax;
-use App\Models\Product_Sale;
-use App\Models\Payment;
+use session;
 use Yajra\DataTables\DataTables;
 
 class DishController extends Controller
@@ -310,28 +297,98 @@ class DishController extends Controller
 
     public function createDishOrder()
     {
-        $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
-        $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
-        $lims_tax_list           = Tax::where('is_active', true)->get();
-        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
+        $pagetitle='Order Dish';
+        $items = DB::table('item')->get();
+        $tax = DB::table('tax')->get();
+        $item = json_encode($items);
+        $dishes = Dish::orderBy('name')->pluck('name','id')->toArray();
+        // $items=DB::table('product')->get();
+        return view('dish.order-dish', compact('items', 'item','pagetitle','tax','dishes'));
+    }
 
-        foreach ($lims_product_list as $key => $product) {
-            $images = explode(",", $product->image);
-            $product->base_image = $images[0];
-        }
+    public function getDishTypes(Request $request)
+    {
+        $dish_types = DishType::where('dish_id',$request->dish_id)->get();
+        return response()->json($dish_types);
+    }
 
-        $product_number = count($lims_product_list);
-        $lims_pos_setting_data = PosSetting::latest()->first();
-        $lims_category_list = DB::table('item_category')->where('type','RES')->get();
+    public function getDishTypeDetail(Request $request)
+    {
+        $dish_type_detail = DishType::findOrFail($request->item_idd);
+        return response()->json($dish_type_detail);
+    }
 
-
-        $recent_sale = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
-        $recent_draft = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
-     
-        $lims_coupon_list = Coupon::where('is_active', true)->get();
-        $flag = 0;
+    public function saveOrderDish(Request $request)
+    {
         $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->count();
         $invoice_no = 'RES-0000' . ++$invoice_no;
-        return view('dish.order-dish', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no'));
+        $today_date = date('Y-m-d');
+        $reference_no = date("his");
+        $paying_method = 'Cash';
+
+        $invoice_mst = array(
+          'InvoiceNo' => $invoice_no, 
+          'Date' => $today_date, 
+          'DueDate' => $today_date, 
+          'WalkinCustomerName' => $request->WalkinCustomerName, 
+          'ReferenceNo' => $reference_no, 
+          'PaymentMode' => $paying_method, 
+          // 'PaymentDetails' => $request->PaymentDetails, 
+          // 'Subject' => $request->Subject, 
+          'SubTotal' => $request->SubTotal, 
+          'DiscountPer' => $request->DiscountPer, 
+          'DiscountAmount' => $request->DiscountAmount, 
+          'Total' => $request->Total, 
+          'TaxPer' => $request->Taxpercentage, 
+          'Tax' => $request->grandtotaltax, 
+          'Shipping' => $request->Shipping, 
+          'GrandTotal' => $request->Grandtotal, 
+          'Paid' => $request->Grandtotal, 
+          'Balance' => $request->amountDue, 
+          // 'CustomerNotes' => $request->CustomerNotes,               
+          // 'DescriptionNotes' => $request->DescriptionNotes,               
+          'UserID' => session::get('UserID'), 
+        );
+
+        $InvoiceMasterID = DB::table('invoice_master')->insertGetId($invoice_mst);
+        $dish_types = $request->ItemID;
+ 
+
+        foreach ($dish_types as $key => $dish_type_id) {
+            $dish_type = DishType::findOrFail($dish_type_id);            
+
+            $invoice_dish_detail = new InvoiceDishDetail();
+            $invoice_dish_detail->invoice_master_id = $InvoiceMasterID;
+            $invoice_dish_detail->dish_id = $dish_type->dish_id;
+            $invoice_dish_detail->dish_type_id = $dish_type_id;
+            $invoice_dish_detail->save();
+
+            $dish_items = $dish_type->dish_recipe;
+            foreach($dish_items as $dish_item)
+            {
+                $item_name = DB::table('item')->where('ItemID', $dish_item->item_id)->pluck('ItemName')->first();
+                $invoice_det = array (
+                    'InvoiceMasterID' =>  $InvoiceMasterID, 
+                    'InvoiceNo' => $invoice_no, 
+                    'dish_id' => $dish_type->dish_id,
+                    'dish_type_id' => $dish_type_id,
+                    'ItemID' => $dish_item->item_id,
+                    "Description" => $item_name,
+                    'Qty' => $dish_item->base_unit_amount_cooked,
+                    // 'TaxPer' => $request->Tax[$key],
+                    // 'Tax' => $request->TaxVal[$key],
+                    // 'Rate' => $request->Price[$key],
+                    // 'Total' => $request->ItemTotal[$key],
+                
+                );
+
+                $id = DB::table('invoice_detail')->insertGetId($invoice_det);
+            }
+
+            
+        }
+        return redirect('create-dish-order')->with('error', 'Order Placed Successfully')->with('class', 'success');
     }
+
+    
 }
