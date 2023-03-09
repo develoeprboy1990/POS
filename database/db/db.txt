@@ -283,3 +283,14 @@ ALTER TABLE `item` DROP `TotalQty`;
 php artisan migrate --path=database/migrations/2023_03_02_103212_create_invoice_dish_details_table.php
 
 php artisan migrate --path=database/migrations/2023_03_02_103916_add_type_to_item_category.php
+=======================================================
+
+08-03-2023
+
+php artisan migrate --path=database/migrations/2023_03_08_162122_add_dish_type_id_to_invoice_dish_detail.php
+
+php artisan migrate --path=database/migrations/2023_03_08_162200_add_cols_to_invoice_detail.php
+
+php artisan migrate --path=database/migrations/2023_03_09_091758_create_dish_tables_table.php
+
+php artisan migrate --path=database/migrations/2023_03_09_091933_add_dish_table_id_to_invoice_master.php
