@@ -45,7 +45,7 @@
   
   <!-- enctype="multipart/form-data" -->
  <!-- enctype="multipart/form-data" -->
- <form action="{{URL('/ItemUpdate')}}" method="post"> 
+ <form action="{{URL('/ItemUpdate')}}" enctype="multipart/form-data" method="post"> 
 <input type="hidden" name="ItemID" value="{{$item[0]->ItemID}}">
  {{csrf_field()}} 
  <div class="card shadow-sm">
@@ -132,6 +132,18 @@
 
               <div class="col-md-6">
                 <div class="mb-3 mt-5 row">
+                  <input type="hidden" name="item_image" value="{{$item[0]->ItemImage}}">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Image</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                  </div>
+                  <div class="col-sm-2">
+                    <img src="{{asset('thumbnail').'/'.$item[0]->ItemImage}}" width="50px" height="50px">
+                  </div>
+                </div>
+                <div class="mb-3 row">
                     <div class="col-sm-2">
                       <label class="col-form-label fw-bold" for="first-name">Units</label>
                     </div>

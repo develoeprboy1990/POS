@@ -244,7 +244,7 @@
                                           <label>Dish Type <sup class="text-danger">*</sup></label>
                                       </div>
                                       <div class="col-md-6 form-group">
-                                        <select class="form-control" name="dish_type_id" required>
+                                        <select class="form-select form-control-sm select2" name="dish_type_id" required>
                                             <option>Select Dish Type</option>
                                             @foreach($dish_types as $dish_type)
                                                 <option value="{{$dish_type->id}}">{{$dish_type->type}}</option>
@@ -257,7 +257,7 @@
                                           <label>Item <sup class="text-danger">*</sup></label>
                                       </div>
                                       <div class="col-md-6 form-group">
-                                        <select class="form-control" name="item_id" id="item" required>
+                                        <select class="form-select form-control-sm select2" name="item_id" id="item" required>
                                             <option>Select Item</option>
                                             @foreach($kitchen_items as $item)
                                                 <option value="{{$item->ItemID}}">{{$item->ItemName}}</option>

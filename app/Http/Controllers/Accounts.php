@@ -1747,6 +1747,21 @@ $this->validate($request,[
 
 
 ]);
+
+$imageName = null;
+$image = $request->file('image');
+if ($image) {
+
+    $imageName = time().'.'.$image->extension();
+    $destinationPath = public_path('/thumbnail');
+    $img = Image::make($image->path());
+    $img->resize(100, 100, function ($constraint) {
+        $constraint->aspectRatio();
+    })->save($destinationPath.'/'.$imageName);
+    $destinationPath = public_path('assets/images/items');
+    $image->move($destinationPath, $imageName);
+}
+
 $data = array(
 'UnitID' => $request->input('unit_id'),
 'ItemCategoryID' => $request->input('item_category_id'),
@@ -1754,6 +1769,7 @@ $data = array(
 // 'WarehouseID' => $request->input('warehouse_id'),
 'ItemCode' => $request->input('ItemCode'),
 'ItemName' => $request->input('ItemName'),
+'ItemImage' => $imageName,
 'ItemType' => $request->input('ItemType'),
 'Taxable' => $request->input('Taxable'),
 'Percentage' => $request->input('Percentage'),
@@ -1816,12 +1832,27 @@ $this->validate($request,[
 
 ]);
 
+$image = $request->file('image');
+$imageName = $request->item_image;
+if ($image) {
+
+    $imageName = time().'.'.$image->extension();
+    $destinationPath = public_path('/thumbnail');
+    $img = Image::make($image->path());
+    $img->resize(100, 100, function ($constraint) {
+        $constraint->aspectRatio();
+    })->save($destinationPath.'/'.$imageName);
+    $destinationPath = public_path('assets/images/items');
+    $image->move($destinationPath, $imageName);
+}
+
 $data = array(
 'ItemCategoryID' => $request->input('category_id'),
 'BrandID' => $request->input('brand_id'),
 'ItemCode' => $request->input('ItemCode'),
 'ItemType' => $request->input('ItemType'),
 'ItemName' => $request->input('ItemName'),
+'ItemImage' => $imageName,
 'UnitID' => $request->input('unit_id'),
 'Taxable' => $request->input('Taxable'),
 'Percentage' => $request->input('Percentage'),

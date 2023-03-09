@@ -52,7 +52,7 @@
               @endif
   
  <!-- enctype="multipart/form-data" -->
- <form action="{{URL('/ItemSave')}}" method="post"> 
+ <form action="{{URL('/ItemSave')}}" enctype="multipart/form-data" method="post"> 
  {{csrf_field()}} 
  <div class="card shadow-sm">
     <div class="card-header">
@@ -151,8 +151,15 @@
 
 
               <div class="col-md-6">
-
                 <div class="mb-3 mt-5 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Item Image</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                  </div>
+                </div>
+                <div class="mb-3 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Category</label>
                   </div>
@@ -165,6 +172,7 @@
                       </select>
                   </div>
                 </div>
+                
                 <!-- <div class="mb-3 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Warehouse</label>

@@ -216,9 +216,37 @@
     <div class="page-content">
         <div class="container-fluid">
             <!-- start page title -->
-
             <!-- enctype="multipart/form-data" -->
             <form action="{{URL('/saveOrderDish')}}" method="post">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h3>Order Dish</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row col-md-12">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" name="invoice_no" value="{{$invoice_no}}" id="invoice_no" readonly class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="date" name="invoice_date" value="<?php echo date('Y-m-d'); ?>" id="invoice_date" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="dish_table_id" id="dish_table_id" class="form-select form-control-sm select2">
+                                        <option value="">Select Table</option>
+                                        @foreach ($dish_tables as $dish_table)
+                                            <option value="{{$dish_table->id}}">{{$dish_table->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <input type="hidden" name="_token" id="csrf" value="{{Session::token()}}">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -230,10 +258,10 @@
                                             <th width="2%" class="text-center"><input id="check_all" type="checkbox" /></th>
                                             <th width="2%">DISH</th>
                                             <th width="2%">DISH TYPE </th>
-                                            <th width="4%">QUANTITY</th>
+                                            <th width="2%">QUANTITY</th>
                                             <th width="4%">RATE</th>
-                                            <th width="4%">Tax</th>
-                                            <th width="4%">Tax Val</th>
+                                           <!--  <th width="4%">Tax</th>
+                                            <th width="4%">Tax Val</th> -->
                                             <th width="4%">AMOUNT</th>
                                         </tr>
                                     </thead>
@@ -255,25 +283,25 @@
                                                 <input type="hidden" name="ItemID[]" id="ItemID_1">
                                             </td>
                                             <td>
-                                                <input type="number" name="Qty[]" id="Qty_1" class=" form-control changesNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" step="0.01" value="1">
+                                                <input type="number" name="Qty[]" style="width: 200px !important;" id="Qty_1" class=" form-control changesNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" step="0.01" value="1">
                                             </td>
 
                                             <td>
-                                                <input type="number" name="Price[]" id="Price_1" class=" form-control changesNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" step="0.01">
+                                                <input type="number" name="Price[]" id="Price_1" class=" form-control" autocomplete="off" onkeypress="return IsNumeric(event);" style="width: 100px !important;" ondrop="return false;" onpaste="return false;" step="0.01" readonly>
                                             </td>
-                                            <td>
+                                            <td class="d-none">
                                                 <select name="Tax[]" id="TaxID_1" class="form-control changesNo tax exclusive_cal" required="">
-                                                    <?php foreach ($tax as $key => $valueX1) : ?>
+                                                    @foreach ($tax as $key => $valueX1)
                                                         <option value="{{$valueX1->TaxPer}}">{{$valueX1->Description}}</option>
-                                                    <?php endforeach ?>
+                                                    @endforeach
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td class="d-none">
                                                 <input type="number" name="TaxVal[]" id="TaxVal_1" class=" form-control totalLinePrice2" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" step="0.01">
                                             </td>
 
                                             <td>
-                                                <input type="number" name="ItemTotal[]" id="ItemTotal_1" class=" form-control totalLinePrice " autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" step="0.01">
+                                                <input type="number" name="ItemTotal[]" id="ItemTotal_1" class=" form-control totalLinePrice " autocomplete="off" onkeypress="return IsNumeric(event);" style="width: 270px !important;" ondrop="return false;" onpaste="return false;" step="0.01" readonly>
                                             </td>
                                         </tr>
 
@@ -301,12 +329,20 @@
                         <div class="row mt-4">
 
                             <div class="col-lg-6 col-12  ">
-                                <div class="form-group mt-1">
+                                <div class="form-group mt-1 d-none">
                                     <label>Grand Total Tax: &nbsp;</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light">{{session::get('Currency')}}</span>
 
                                         <input type="text" class="form-control" id="grandtotaltax" name="grandtotaltax" placeholder="Subtotal" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;">
+                                    </div>
+                                </div>
+                                <div class="form-group mt-1">
+                                    <label>Sub Total: &nbsp;</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">{{session::get('Currency')}}</span>
+
+                                        <input type="text" class="form-control" id="subTotal" name="SubTotal" placeholder="Subtotal" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group mt-1">
@@ -321,7 +357,7 @@
                                         <input type="text" name="DiscountAmount" class="form-control" id="discountAmount" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="0">
                                     </div>
                                 </div>
-                                <div class="form-group mt-1">
+                                <div class="form-group mt-1 d-none">
 
                                     <label>Shipping: &nbsp;</label>
                                     <div class="input-group">
@@ -329,7 +365,7 @@
                                         <input type="number" name="Shipping" class="form-control" step="0.01" id="shipping" placeholder="Grand Total" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="0">
                                     </div>
                                 </div>
-                                <div class="mt-2"><button type="submit" class="btn btn-success w-md float-right">Save</button>
+                                <div class="mt-4"><button type="submit" class="btn btn-success w-md float-right">Save</button>
                                     <a href="{{URL('/DeliveryChallan')}}" class="btn btn-secondary w-md float-right">Cancel</a>
 
                                 </div>
@@ -340,14 +376,7 @@
 
                             <div class="col-lg-6 col-12 ">
                                 <!-- <input type="text" class="form-control" id="TotalTaxAmount" name="TaxTotal" placeholder="TaxTotal" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;"> -->
-                                    <div class="form-group mt-1">
-                                        <label>Sub Total: &nbsp;</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light">{{session::get('Currency')}}</span>
-
-                                            <input type="text" class="form-control" id="subTotal" name="SubTotal" placeholder="Subtotal" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;">
-                                        </div>
-                                    </div>
+                                    
                                     
 
 
@@ -461,19 +490,19 @@
         
 
 
-        html += '<td><input type="text" name="Qty[]" id="Qty_' + i + '" class="form-control changesNo " autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1"></td>';
+        html += '<td><input type="text" name="Qty[]" id="Qty_' + i + '" class="form-control changesNo " autocomplete="off" onkeypress="return IsNumeric(event);" style="width: 200px !important;" ondrop="return false;" onpaste="return false;" value="1"></td>';
 
-        html += '<td><input type="text" name="Price[]" id="Price_' + i + '" class="form-control changesNo " autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;"></td>';
+        html += '<td><input type="text" name="Price[]" id="Price_' + i + '" class="form-control changesNo " autocomplete="off" onkeypress="return IsNumeric(event);" style="width: 100px !important;" readonly ondrop="return false;" onpaste="return false;"></td>';
         
         
-        html += '<td><select name="Tax[]" id="TaxID_' + i + '" class="form-control changesNo exclusive_cal"><?php foreach ($tax as $key => $valueX1) : ?><option value="{{$valueX1->TaxPer}}">{{$valueX1->Description}}</option><?php endforeach ?></select></td>';
+        html += '<td class="d-none"><select name="Tax[]" id="TaxID_' + i + '" class="form-control changesNo exclusive_cal">@foreach ($tax as $key => $valueX1)<option value="{{$valueX1->TaxPer}}">{{$valueX1->Description}}</option>@endforeach</select></td>';
 
 
-        html += '<td><input type="number" name="TaxVal[]" id="TaxVal_' + i + '" class=" form-control totalLinePrice2 "autocomplete="off"         onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" step="0.01"></td>';
+        html += '<td class="d-none"><input type="number" name="TaxVal[]" id="TaxVal_' + i + '" class=" form-control totalLinePrice2 "autocomplete="off"         onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" step="0.01"></td>';
 
 
         
-        html += '<td><input type="text" name="ItemTotal[]" id="ItemTotal_' + i + '" class="form-control totalLinePrice" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;"></td>';
+        html += '<td><input type="text" name="ItemTotal[]" id="ItemTotal_' + i + '" class="form-control totalLinePrice" autocomplete="off" style="width: 270px !important;" readonly onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;"></td>';
         html += '</tr>';
         i++;
         $('table').append(html);

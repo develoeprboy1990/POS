@@ -9,6 +9,7 @@ use App\Models\DishImage;
 use App\Models\Item;
 use App\Models\DishRecipe;
 use App\Models\Unit;
+use App\Models\DishTable;
 use App\Models\InvoiceDishDetail;
 use Image;
 use DB;
@@ -298,12 +299,12 @@ class DishController extends Controller
     public function createDishOrder()
     {
         $pagetitle='Order Dish';
-        $items = DB::table('item')->get();
         $tax = DB::table('tax')->get();
-        $item = json_encode($items);
         $dishes = Dish::orderBy('name')->pluck('name','id')->toArray();
-        // $items=DB::table('product')->get();
-        return view('dish.order-dish', compact('items', 'item','pagetitle','tax','dishes'));
+        $dish_tables = DishTable::orderBy('name')->get();
+        $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->count();
+        $invoice_no = 'RES-0000' . ++$invoice_no;
+        return view('dish.order-dish', compact('invoice_no','pagetitle','tax','dishes','dish_tables'));
     }
 
     public function getDishTypes(Request $request)
@@ -323,6 +324,9 @@ class DishController extends Controller
         $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->count();
         $invoice_no = 'RES-0000' . ++$invoice_no;
         $today_date = date('Y-m-d');
+        if (!empty($request->invoice_date))
+            $today_date = $request->invoice_date;
+
         $reference_no = date("his");
         $paying_method = 'Cash';
 
@@ -330,6 +334,7 @@ class DishController extends Controller
           'InvoiceNo' => $invoice_no, 
           'Date' => $today_date, 
           'DueDate' => $today_date, 
+          'DishTableID' => $request->dish_table_id, 
           'WalkinCustomerName' => $request->WalkinCustomerName, 
           'ReferenceNo' => $reference_no, 
           'PaymentMode' => $paying_method, 
