@@ -1,5 +1,5 @@
 @extends('template.tmp')
-@section('title', 'Edit Dish')
+@section('title', 'Edit Dish Type')
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -226,7 +226,7 @@
                             <a class="nav-link" href="{{route('dish.edit',[$dish->id])}}">{{ucwords($dish->name)}}</a>
                           </li>
                           <li class="nav-item" role="presentation">
-                            <a class="nav-link active" href="{{route('dish.type',[$dish->id])}}">Dish Price</a>
+                            <a class="nav-link active" href="{{route('dish.type',[$dish->id])}}">Dish Types</a>
                           </li>
                           <li class="nav-item" role="presentation">
                             <a class="nav-link" href="{{route('dish.image',[$dish->id])}}">Dish Images</a>
@@ -239,10 +239,11 @@
                           <div class="tab-pane fade show active" role="tabpanel">
                             <form action="{{route('dish.type.store',[$dish->id])}}" method="post">
                                     @csrf
+                                  <input type="hidden" name="dish_type_id" value="{{@$dish_type->id}}">  
                                   <div class="row mt-4">
                                       <div class="col-md-4 form-group">
                                           <label>Dish Type</label>
-                                          <input type="text" name="type" class="form-control" placeholder="1/3 , 1/5" required>
+                                          <input type="text" name="type" class="form-control" value="{{@$dish_type->type}}" placeholder="1/3 , 1/5" required>
                                       </div>
                                       <div class="col-md-4 form-group">
                                           <label>Price</label>
@@ -250,11 +251,11 @@
                                               <div class="input-group-prepend">
                                                 <span class="input-group-text">$</span>
                                               </div>
-                                              <input type="number" class="form-control" name="price" aria-label="Amount (to the nearest dollar)" required>
+                                              <input type="number" class="form-control" name="price" aria-label="Amount (to the nearest dollar)" value="{{@$dish_type->price}}" required>
                                             </div>
                                       </div>
                                       <div class="col-md-4 form-group mt-4">
-                                          <button type="submit" class="btn btn-success">Save</button>
+                                          <button type="submit" class="btn btn-success">{{$dish_type ? 'Update' : 'Save'}}</button>
                                       </div>
                                   </div>
                               </form>
@@ -278,7 +279,7 @@
                               <td>{{ucwords($dish_type->type)}}</td>
                               <td>{{$dish_type->price}}</td>
                               <td>
-                                <!-- <a href="javascript:void(0)" class="edit_dish_type" data-id="{{ $dish_type->id}}"><i class="bx bx-pencil align-middle me-1"></i></a> -->
+                                <a href="{{route('dish.type',['dish'=>$dish->id,'dish_type_id'=>$dish_type->id])}}"><i class="bx bx-pencil align-middle me-1"></i></a>
                                 <a href="javascript:void(0)" onclick="delete_confirm2(`dishTypeDelete`,'{{$dish_type->id}}')"><i class="bx bx-trash  align-middle me-1"></i></a></td>
                             </tr>
                         <?php $i++; ?>

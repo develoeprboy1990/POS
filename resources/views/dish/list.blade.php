@@ -11,7 +11,7 @@
                         <h4 class="mb-sm-0 font-size-18">Dish Listing</h4>
 
                         <div class="page-title-right">
-                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBillerModal">Add Dish</button>
+                             <a href="{{URL('/create-dish')}}"  class="btn btn-primary"><i class="bx bx-plus"></i> Add Dish</a>
                         </div>
 
                     </div>

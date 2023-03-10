@@ -226,7 +226,7 @@
                             <a class="nav-link active" href="{{route('dish.edit',[$dish->id])}}">{{ucwords($dish->name)}}</a>
                           </li>
                           <li class="nav-item" role="presentation">
-                            <a class="nav-link" href="{{route('dish.type',[$dish->id])}}">Dish Price</a>
+                            <a class="nav-link" href="{{route('dish.type',[$dish->id])}}">Dish Types</a>
                           </li>
                           <li class="nav-item" role="presentation">
                             <a class="nav-link" href="{{route('dish.image',[$dish->id])}}">Dish Images</a>

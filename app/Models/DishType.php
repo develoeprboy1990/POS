@@ -10,6 +10,11 @@ class DishType extends Model
     protected $fillable = ['dish_id','type','price'];
     use HasFactory;
 
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
+
     public function dish_recipe()
     {
         return $this->hasMany(DishRecipe::class);

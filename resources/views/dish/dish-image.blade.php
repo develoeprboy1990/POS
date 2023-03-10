@@ -1,5 +1,5 @@
 @extends('template.tmp')
-@section('title', 'Edit Dish')
+@section('title', 'Edit Dish Image')
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -226,7 +226,7 @@
                             <a class="nav-link" href="{{route('dish.edit',[$dish->id])}}">{{ucwords($dish->name)}}</a>
                           </li>
                           <li class="nav-item" role="presentation">
-                            <a class="nav-link" href="{{route('dish.type',[$dish->id])}}">Dish Price</a>
+                            <a class="nav-link" href="{{route('dish.type',[$dish->id])}}">Dish Types</a>
                           </li>
                           <li class="nav-item" role="presentation">
                             <a class="nav-link active" href="{{route('dish.image',[$dish->id])}}">Dish Images</a>

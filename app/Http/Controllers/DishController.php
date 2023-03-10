@@ -155,10 +155,16 @@ class DishController extends Controller
         return redirect()->route('dish.edit', $id)->with('error', 'Saved Successfully')->with('class', 'success');
     }
 
-    public function dishType(Dish $dish)
+    public function dishType(Dish $dish, $dish_type_id = null)
     {
         $dish_types = DishType::where('dish_id',$dish->id)->get();
-        return view('dish.dish-type',compact('dish','dish_types'));
+        if($dish_type_id)
+            $dish_type = $dish_types->firstWhere('id',$dish_type_id);
+        else
+            $dish_type = $dish_type_id;
+            
+
+        return view('dish.dish-type',compact('dish','dish_types','dish_type'));
     }
 
     public function storeDishType(Request $request, $id)
@@ -171,8 +177,17 @@ class DishController extends Controller
             ]
         );
         $input = $request->all();
-        $input['dish_id'] = $id;
-        $dish_type = DishType::create($input);
+        if($input['dish_type_id']){
+            $dish_type = DishType::findOrFail($input['dish_type_id']);
+            $dish_type->type = $input['type'];
+            $dish_type->price = $input['price'];
+            $dish_type->save();
+        }
+        else{
+            $input['dish_id'] = $id;
+            $dish_type = DishType::create($input);
+        }
+        
         return redirect()->route('dish.type', $id)->with('error', 'Saved Successfully')->with('class', 'success');
     }
 
@@ -210,16 +225,31 @@ class DishController extends Controller
         return redirect()->route('dish.image', $id)->with('error', 'Saved Successfully')->with('class', 'success');
     }
 
-    public function dishRecipe(Dish $dish)
+    public function dishRecipe(Dish $dish, $dish_type_id = null, $item_id = null)
     {
         $dish_types = DishType::where('dish_id',$dish->id)->get();
+        if($dish_type_id){
+            $dish_type_recipe = DishRecipe::where([
+                'dish_id' => $dish->id,
+                'dish_type_id' => $dish_type_id,
+                'item_id' => $item_id
+            ])->first();
+            $item = Item::where('ItemID',$item_id)->first();
+            $item_unit = $item->unit;
+        }
+        else{
+            $dish_type_recipe = $dish_type_id;
+            $item_unit = $item_id;
+        }
+
+
         $kitchen_items = Item::where('ItemType','resturent')->get();
         $dish_recipes = [];
         foreach($dish_types as $dish_type)
         {
             $dish_recipes[$dish_type->type] = $dish_type->dish_recipe;
         }
-        return view('dish.dish-recipe',compact('dish','dish_types','kitchen_items','dish_recipes'));
+        return view('dish.dish-recipe',compact('dish','dish_types','kitchen_items','dish_recipes','dish_type_recipe','item_unit'));
     }
 
     public function storeDishRecipe(Request $request, $id)
@@ -235,8 +265,19 @@ class DishController extends Controller
         );
 
         $input = $request->all();
-        $input['dish_id'] = $id;
-        DishRecipe::create($input);
+        if($input['dish_type_recipe_id']){
+            $dish_type_recipe = DishRecipe::findOrFail($input['dish_type_recipe_id']);
+            $dish_type_recipe->dish_type_id = $input['dish_type_id'];
+            $dish_type_recipe->item_id = $input['item_id'];
+            $dish_type_recipe->base_unit_amount_cooked = $input['base_unit_amount_cooked'];
+            $dish_type_recipe->child_unit_amount_cooked = $input['child_unit_amount_cooked'];
+            $dish_type_recipe->save();
+        }
+        else{
+            $input['dish_id'] = $id;
+            DishRecipe::create($input);
+        }
+        
         return redirect()->route('dish.recipe', $id)->with('error', 'Saved Successfully')->with('class', 'success');
     }
 
@@ -253,7 +294,12 @@ class DishController extends Controller
     public function deleteDishType($id)
     {
         $dish_type = DishType::find($id);
-        $dish_type->delete();
+        $dish_type_recipe = $dish_type->dish_recipe;
+        if($dish_type_recipe->isNotEmpty())
+            return redirect()->back()->with('error', 'Dish Recipe exist of Selected Dish type! Delete its recipe first')->with('class', 'danger');
+        else
+            $dish_type->delete();
+
         return redirect()->back()->with('error', 'Deleted Successfully')->with('class', 'success');
     }
 
@@ -301,7 +347,7 @@ class DishController extends Controller
         $pagetitle='Order Dish';
         $tax = DB::table('tax')->get();
         $dishes = Dish::orderBy('name')->pluck('name','id')->toArray();
-        $dish_tables = DishTable::orderBy('name')->get();
+        $dish_tables = DishTable::orderBy('id')->get();
         $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->count();
         $invoice_no = 'RES-0000' . ++$invoice_no;
         return view('dish.order-dish', compact('invoice_no','pagetitle','tax','dishes','dish_tables'));

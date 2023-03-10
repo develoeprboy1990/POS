@@ -1,5 +1,5 @@
 @extends('template.tmp')
-@section('title', 'Edit Dish')
+@section('title', 'Edit Dish Recipe')
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -226,7 +226,7 @@
                             <a class="nav-link" href="{{route('dish.edit',[$dish->id])}}">{{ucwords($dish->name)}}</a>
                           </li>
                           <li class="nav-item" role="presentation">
-                            <a class="nav-link" href="{{route('dish.type',[$dish->id])}}">Dish Price</a>
+                            <a class="nav-link" href="{{route('dish.type',[$dish->id])}}">Dish Types</a>
                           </li>
                           <li class="nav-item" role="presentation">
                             <a class="nav-link" href="{{route('dish.image',[$dish->id])}}">Dish Images</a>
@@ -239,6 +239,7 @@
                           <div class="tab-pane fade show active" role="tabpanel">
                             <form action="{{route('dish.recipe.store',[$dish->id])}}" method="post">
                                     @csrf
+                                  <input type="hidden" name="dish_type_recipe_id" value="{{@$dish_type_recipe->id}}"> 
                                   <div class="row mt-4">
                                       <div class="col-md-2">
                                           <label>Dish Type <sup class="text-danger">*</sup></label>
@@ -247,7 +248,7 @@
                                         <select class="form-select form-control-sm select2" name="dish_type_id" required>
                                             <option>Select Dish Type</option>
                                             @foreach($dish_types as $dish_type)
-                                                <option value="{{$dish_type->id}}">{{$dish_type->type}}</option>
+                                                <option value="{{$dish_type->id}}" {{@$dish_type_recipe->dish_type_id == $dish_type->id ? 'selected' : ''}}>{{$dish_type->type}}</option>
                                             @endforeach
                                         </select>
                                       </div>
@@ -260,7 +261,7 @@
                                         <select class="form-select form-control-sm select2" name="item_id" id="item" required>
                                             <option>Select Item</option>
                                             @foreach($kitchen_items as $item)
-                                                <option value="{{$item->ItemID}}">{{$item->ItemName}}</option>
+                                                <option value="{{$item->ItemID}}" {{@$dish_type_recipe->item_id == $item->ItemID ? 'selected' : ''}}>{{$item->ItemName}}</option>
                                             @endforeach
                                         </select>
                                       </div>
@@ -271,7 +272,7 @@
                                       </div>
                                       <div class="col-md-4 form-group">
                                           <div class="input-group mb-3">
-                                              <input type="number" class="form-control" name="base_unit_amount_cooked" aria-label="Amount (to the nearest dollar)" step="0.01" id="unit_input" required>
+                                              <input type="number" class="form-control" name="base_unit_amount_cooked" aria-label="Amount (to the nearest dollar)" value="{{@$dish_type_recipe->base_unit_amount_cooked}}" step="0.01" id="unit_input" required>
                                               <div class="input-group-append">
                                                 <span class="input-group-text" id="unit">.00</span>
                                               </div>
@@ -282,7 +283,7 @@
                                       </div>
                                       <div class="col-md-4 form-group">
                                           <div class="input-group mb-3">
-                                              <input type="number" class="form-control" name="child_unit_amount_cooked" id="child_unit_input" step="0.01" aria-label="Amount (to the nearest dollar)" required>
+                                              <input type="number" class="form-control" name="child_unit_amount_cooked" id="child_unit_input" step="0.01" aria-label="Amount (to the nearest dollar)" value="{{@$dish_type_recipe->child_unit_amount_cooked}}" required>
                                               <div class="input-group-append">
                                                 <span class="input-group-text" id="childUnit">.00</span>
                                               </div>
@@ -293,7 +294,7 @@
                                     <div class="col-md-2">
                                     </div>
                                     <div class="col-md-6 form-group">
-                                        <button type="submit" class="btn btn-success">Add Item to recipe</button>
+                                        <button type="submit" class="btn btn-success">{{@$dish_type_recipe ? 'Update Item to Recipe' : 'Add Item to Recipe'}}</button>
                                     </div>
                                     
                                   </div>
@@ -321,7 +322,7 @@
                                   <td>{{$recipe->base_unit_amount_cooked}}&nbsp;{{$recipe->item->unit->base_unit}}</td>
                                   <td>{{$recipe->child_unit_amount_cooked}}&nbsp;{{$recipe->item->unit->child_unit}}</td>
                                   <td>
-                                    <!-- <a href="javascript:void(0)" class="edit_dish_image" data-id="{{ $recipe->id}}"><i class="bx bx-pencil align-middle me-1"></i></a> -->
+                                    <a href="{{route('dish.recipe',['dish'=>$dish->id,'dish_type_id'=>$recipe->dish_type_id,'item_id'=>$recipe->item_id])}}"><i class="bx bx-pencil align-middle me-1"></i></a>
                                     <a href="javascript:void(0)" onclick="delete_confirm2(`dishRecipeDelete`,'{{$recipe->id}}')"><i class="bx bx-trash  align-middle me-1"></i></a></td>
                                 </tr>
                             <?php $i++; ?>
@@ -344,7 +345,7 @@
 <!-- END: Content-->
 <script type="text/javascript">
     
-    var convert_rate = 0;
+    var convert_rate = {!! $item_unit ? $item_unit->unit_value : 0 !!};
     $(document).ready(function () {
         $("#unit_input").on('keyup', function () {
             if (convert_rate != 0) {
@@ -364,7 +365,6 @@
                 type: 'GET',
                 url: '{{url("get-unit-of-item")}}' +'/'+ item_id,
                 success: function(data) {
-                    console.log(data);
                     $("#unit").text(data.base_unit);
                     $("#childUnit").text(data.child_unit);
                     convert_rate = data.unit_value;
