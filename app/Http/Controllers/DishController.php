@@ -64,7 +64,7 @@ class DishController extends Controller
      */
     public function create()
     {
-        return view('dish.create');
+        return view('dish.create'); //create page
     }
 
     /**

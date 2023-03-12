@@ -215,7 +215,7 @@
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
-            <!-- start page title -->
+            <!-- start page titles -->
                 <div class="card shadow-sm">
                     <div class="card-header">
                         <h2>Edit Dish</h2>

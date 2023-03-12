@@ -603,7 +603,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::post('/update-tax', [PosController::class, 'updateTax']);
     Route::get('/taxDelete/{id}', [PosController::class, 'deleteTax']);
 
-    // Dish Routes
+    // Dish module Routes
     Route::get('/create-dish', [DishController::class, 'create']);
     Route::post('/saveDish', [DishController::class, 'store']);
     Route::get('/edit-dish/{dish}', [DishController::class, 'edit'])->name('dish.edit');
