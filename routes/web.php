@@ -612,7 +612,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::post('/storeDishType/{dish}', [DishController::class, 'storeDishType'])->name('dish.type.store');
     Route::get('/dish-image/{dish}', [DishController::class, 'dishImage'])->name('dish.image');
     Route::post('/storeDishImage/{dish}', [DishController::class, 'storeDishImage'])->name('dish.image.store');
-    Route::get('/dish-recipe/{dish}/{dish_type_id?}/{item_id?}', [DishController::class, 'dishRecipe'])->name('dish.recipe');
+    Route::get('/dish-recipe/{dish}/{dish_recipe_id?}', [DishController::class, 'dishRecipe'])->name('dish.recipe');
     Route::post('/storeDishRecipe/{dish}', [DishController::class, 'storeDishRecipe'])->name('dish.recipe.store');
     Route::get('/get-unit-of-item/{item_id}', [DishController::class, 'getItemUnit'])->name('item.unit');
     Route::get('/dishTypeDelete/{id}', [DishController::class, 'deleteDishType']);
@@ -623,9 +623,12 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::get('/dishDelete/{dish}', [DishController::class, 'destroy']);
 
     Route::get('/create-dish-order', [DishController::class, 'createDishOrder']);
+    Route::get('/invoice-dish-listing', [DishController::class, 'dishInvoices']);
+    Route::get('/edit-invoice-dish/{id}', [DishController::class, 'editDishInvoice'])->name('dish.invoice.edit');
     Route::post('/get-dish-types', [DishController::class, 'getDishTypes']);
     Route::post('/get-dish-type-detail', [DishController::class, 'getDishTypeDetail']);
     Route::post('/saveOrderDish', [DishController::class, 'saveOrderDish']);
+    Route::post('/updateDishOrder', [DishController::class, 'updateDishOrder']);
     
 
 

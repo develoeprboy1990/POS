@@ -322,7 +322,7 @@
                                   <td>{{$recipe->base_unit_amount_cooked}}&nbsp;{{$recipe->item->unit->base_unit}}</td>
                                   <td>{{$recipe->child_unit_amount_cooked}}&nbsp;{{$recipe->item->unit->child_unit}}</td>
                                   <td>
-                                    <a href="{{route('dish.recipe',['dish'=>$dish->id,'dish_type_id'=>$recipe->dish_type_id,'item_id'=>$recipe->item_id])}}"><i class="bx bx-pencil align-middle me-1"></i></a>
+                                    <a href="{{route('dish.recipe',['dish'=>$dish->id,'dish_recipe_id'=>$recipe->id])}}"><i class="bx bx-pencil align-middle me-1"></i></a>
                                     <a href="javascript:void(0)" onclick="delete_confirm2(`dishRecipeDelete`,'{{$recipe->id}}')"><i class="bx bx-trash  align-middle me-1"></i></a></td>
                                 </tr>
                             <?php $i++; ?>

@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceDishDetail extends Model
 {
-    protected $fillable = ['invoice_master_id','dish_id'];
+    protected $fillable = ['invoice_master_id','dish_id','dish_type_id','quantity'];
     use HasFactory;
 }

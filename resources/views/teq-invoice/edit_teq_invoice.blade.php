@@ -391,9 +391,9 @@
                                                                                 $unit_operation_value[] = $unit->operation_value;
                                                                             }
                                                                         }
-                                                                        if ($unit_operator[0] == '*') {
+                                                                        if (@$unit_operator[0] == '*') {
                                                                             @$product_price = $product_price / $unit_operation_value[0];
-                                                                        } elseif ($unit_operator[0] == '/') {
+                                                                        } elseif (@$unit_operator[0] == '/') {
                                                                             $product_price = $product_price * $unit_operation_value[0];
                                                                         }
                                                                     } else {

@@ -274,13 +274,18 @@
                       <tbody>
                         <?php $i = 1; ?>
                         @forelse ($dish_types as $dish_type)
+                        @php
+                         $dish_type_recipe = $dish_type->dish_recipe;
+                        @endphp
                             <tr>
                               <th scope="row">{{$i}}</th>
                               <td>{{ucwords($dish_type->type)}}</td>
                               <td>{{$dish_type->price}}</td>
                               <td>
                                 <a href="{{route('dish.type',['dish'=>$dish->id,'dish_type_id'=>$dish_type->id])}}"><i class="bx bx-pencil align-middle me-1"></i></a>
+                                @if($dish_type_recipe->isEmpty())
                                 <a href="javascript:void(0)" onclick="delete_confirm2(`dishTypeDelete`,'{{$dish_type->id}}')"><i class="bx bx-trash  align-middle me-1"></i></a></td>
+                                @endif
                             </tr>
                         <?php $i++; ?>
                         @empty

@@ -46,7 +46,9 @@ class DishController extends Controller
                     return $status;
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="' . route('dish.edit', $row->id) . '" target="_blank"><i class="bx bx-pencil align-middle me-1"></i></a> <a href="#" onclick="delete_confirm2(`dishDelete`,' . $row->id . ')"><i class="bx bx-trash  align-middle me-1"></i></a>';
+                    $btn = '<a href="' . route('dish.edit', $row->id) . '" target="_blank"><i class="bx bx-pencil align-middle me-1"></i></a>';
+                    if($row->dish_types->isEmpty() && $row->dish_images->isEmpty() && $row->dish_recipes->isEmpty())
+                    $btn .= '<a href="#" onclick="delete_confirm2(`dishDelete`,' . $row->id . ')"><i class="bx bx-trash  align-middle me-1"></i></a>';
 
                     return $btn;
                 })
@@ -225,21 +227,17 @@ class DishController extends Controller
         return redirect()->route('dish.image', $id)->with('error', 'Saved Successfully')->with('class', 'success');
     }
 
-    public function dishRecipe(Dish $dish, $dish_type_id = null, $item_id = null)
+    public function dishRecipe(Dish $dish, $dish_recipe_id = null)
     {
         $dish_types = DishType::where('dish_id',$dish->id)->get();
-        if($dish_type_id){
-            $dish_type_recipe = DishRecipe::where([
-                'dish_id' => $dish->id,
-                'dish_type_id' => $dish_type_id,
-                'item_id' => $item_id
-            ])->first();
-            $item = Item::where('ItemID',$item_id)->first();
+        if($dish_recipe_id){
+            $dish_type_recipe = DishRecipe::findOrFail($dish_recipe_id);
+            $item = Item::where('ItemID',$dish_type_recipe->item_id)->first();
             $item_unit = $item->unit;
         }
         else{
-            $dish_type_recipe = $dish_type_id;
-            $item_unit = $item_id;
+            $dish_type_recipe = $dish_recipe_id;
+            $item_unit = $dish_recipe_id;
         }
 
 
@@ -294,12 +292,7 @@ class DishController extends Controller
     public function deleteDishType($id)
     {
         $dish_type = DishType::find($id);
-        $dish_type_recipe = $dish_type->dish_recipe;
-        if($dish_type_recipe->isNotEmpty())
-            return redirect()->back()->with('error', 'Dish Recipe exist of Selected Dish type! Delete its recipe first')->with('class', 'danger');
-        else
-            $dish_type->delete();
-
+        $dish_type->delete();
         return redirect()->back()->with('error', 'Deleted Successfully')->with('class', 'success');
     }
 
@@ -336,8 +329,12 @@ class DishController extends Controller
             unlink($file_path);
             $dish_image->delete();
         }
-        $thumbnail_path = public_path().'/thumbnail/'.$dish->image_thumbnail;
-        unlink($thumbnail_path);
+        if($dish->image_thumbnail){
+            $thumbnail_path = public_path().'/thumbnail/'.$dish->image_thumbnail;
+            unlink($thumbnail_path);
+        }
+        
+
         $dish->delete();
         return redirect()->back()->with('error', 'Deleted Successfully')->with('class', 'success');
     }
@@ -412,6 +409,7 @@ class DishController extends Controller
             $invoice_dish_detail->invoice_master_id = $InvoiceMasterID;
             $invoice_dish_detail->dish_id = $dish_type->dish_id;
             $invoice_dish_detail->dish_type_id = $dish_type_id;
+            $invoice_dish_detail->quantity = $request->Qty[$key];
             $invoice_dish_detail->save();
 
             $dish_items = $dish_type->dish_recipe;
@@ -441,5 +439,132 @@ class DishController extends Controller
         return redirect('create-dish-order')->with('error', 'Order Placed Successfully')->with('class', 'success');
     }
 
+    public function dishInvoices(Request $request)
+    {
+        if ($request->ajax()) {
+            $invoices = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->get();
+            return Datatables::of($invoices)
+                ->addIndexColumn()
+                ->addColumn('payment_status', function ($row) {
+                    if ($row->Balance == 0)
+                        $pay_status = '<span class="badge alert-success">Paid</span>';
+                    else
+                        $pay_status = '<span class="badge alert-danger">Due</span>';
+
+                    return $pay_status;
+                })
+                ->addColumn('table_no', function ($row) {
+                    if ($row->DishTableID)
+                        $table_no = DishTable::where('id',$row->DishTableID)->pluck('name')->first();
+                    else
+                        $table_no = 'Take Away';
+
+                    return $table_no;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown"><a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal font-size-18"></i></a><div class="dropdown-menu dropdown-menu-end">';
+                    $btn .= '<a href="' . route('dish.invoice.edit',$row->InvoiceMasterID) . '" class="dropdown-item" target="_blank">Edit Invoice</a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">View Invoice</a><a href="' . route('invoice.print', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">Print Invoice</a><button type="button" class="add-payment dropdown-item" data-id = "'.$row->InvoiceMasterID.'" data-bs-toggle="modal" data-bs-target="#add-payment">'.trans('file.Add Payment').'</button>';
+                    $btn .= ' </div></div>';
+                    return $btn;
+                })
+                ->rawColumns(['payment_status','table_no', 'action'])
+                ->make(true);
+        }
+        return view('dish.invoice_listing');
+    }
+
+    public function editDishInvoice($id)
+    {
+        $tax = DB::table('tax')->get();
+        $dishes = Dish::orderBy('name')->pluck('name','id')->toArray();
+        $dish_tables = DishTable::orderBy('id')->get();
+        $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $id)->first();
+        $dish_table_id = DishTable::where('id',$invoice_master->DishTableID)->pluck('id')->first();
+        $invoice_detail = InvoiceDishDetail::where('invoice_master_id', $id)->get();
+
+        return view('dish.edit_dish_invoice', compact('dishes','dish_table_id','dish_tables','invoice_master', 'invoice_detail','tax'));
+    }
+
+    public function updateDishOrder(Request $request)
+    {
+        $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','RES%')->count();
+        $invoice_no = 'RES-0000' . ++$invoice_no;
+        $today_date = date('Y-m-d');
+        if (!empty($request->invoice_date))
+            $today_date = $request->invoice_date;
+
+        $reference_no = date("his");
+        $paying_method = 'Cash';
+
+        $invoice_mst = array(
+          'InvoiceNo' => $invoice_no, 
+          'Date' => $today_date, 
+          'DueDate' => $today_date, 
+          'DishTableID' => $request->dish_table_id, 
+          'WalkinCustomerName' => $request->WalkinCustomerName, 
+          'ReferenceNo' => $reference_no, 
+          'PaymentMode' => $paying_method, 
+          // 'PaymentDetails' => $request->PaymentDetails, 
+          // 'Subject' => $request->Subject, 
+          'SubTotal' => $request->SubTotal, 
+          'DiscountPer' => $request->DiscountPer, 
+          'DiscountAmount' => $request->DiscountAmount, 
+          'Total' => $request->Total, 
+          'TaxPer' => $request->Taxpercentage, 
+          'Tax' => $request->grandtotaltax, 
+          'Shipping' => $request->Shipping, 
+          'GrandTotal' => $request->Grandtotal, 
+          'Paid' => $request->Grandtotal, 
+          'Balance' => $request->amountDue, 
+          // 'CustomerNotes' => $request->CustomerNotes,               
+          // 'DescriptionNotes' => $request->DescriptionNotes,               
+          'UserID' => session::get('UserID'), 
+        );
+
+      
+        $InvoiceMst= DB::table('invoice_master')->where('InvoiceMasterID',$request->InvoiceMasterID)->update($invoice_mst);
+
+        $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID',$request->InvoiceMasterID)->delete();
+        $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id',$request->InvoiceMasterID)->delete();
+
+        $dish_types = $request->ItemID;
+ 
+
+        foreach ($dish_types as $key => $dish_type_id) {
+            $dish_type = DishType::findOrFail($dish_type_id);            
+
+            $invoice_dish_detail = new InvoiceDishDetail();
+            $invoice_dish_detail->invoice_master_id = $request->InvoiceMasterID;
+            $invoice_dish_detail->dish_id = $dish_type->dish_id;
+            $invoice_dish_detail->dish_type_id = $dish_type_id;
+            $invoice_dish_detail->quantity = $request->Qty[$key];
+            $invoice_dish_detail->save();
+
+            $dish_items = $dish_type->dish_recipe;
+            foreach($dish_items as $dish_item)
+            {
+                $item_name = DB::table('item')->where('ItemID', $dish_item->item_id)->pluck('ItemName')->first();
+                $invoice_det = array (
+                    'InvoiceMasterID' =>  $request->InvoiceMasterID, 
+                    'InvoiceNo' => $invoice_no, 
+                    'dish_id' => $dish_type->dish_id,
+                    'dish_type_id' => $dish_type_id,
+                    'ItemID' => $dish_item->item_id,
+                    "Description" => $item_name,
+                    'Qty' => $dish_item->base_unit_amount_cooked,
+                    // 'TaxPer' => $request->Tax[$key],
+                    // 'Tax' => $request->TaxVal[$key],
+                    // 'Rate' => $request->Price[$key],
+                    // 'Total' => $request->ItemTotal[$key],
+                
+                );
+
+                $id = DB::table('invoice_detail')->insertGetId($invoice_det);
+            }
+
+            
+        }
+        return redirect('invoice-dish-listing')->with('error', 'Order Updated Successfully')->with('class', 'success');
+    }
     
 }
