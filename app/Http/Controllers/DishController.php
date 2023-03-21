@@ -410,6 +410,7 @@ class DishController extends Controller
             $invoice_dish_detail->dish_id = $dish_type->dish_id;
             $invoice_dish_detail->dish_type_id = $dish_type_id;
             $invoice_dish_detail->quantity = $request->Qty[$key];
+            $invoice_dish_detail->price = $dish_type->price;
             $invoice_dish_detail->save();
 
             $dish_items = $dish_type->dish_recipe;
@@ -538,6 +539,7 @@ class DishController extends Controller
             $invoice_dish_detail->dish_id = $dish_type->dish_id;
             $invoice_dish_detail->dish_type_id = $dish_type_id;
             $invoice_dish_detail->quantity = $request->Qty[$key];
+            $invoice_dish_detail->price = $dish_type->price;
             $invoice_dish_detail->save();
 
             $dish_items = $dish_type->dish_recipe;
