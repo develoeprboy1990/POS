@@ -299,3 +299,7 @@ INSERT INTO `dish_tables` (`id`, `name`, `created_at`, `updated_at`) VALUES (NUL
 
 
 php artisan migrate --path=database/migrations/2023_03_14_172529_add_quantity_to_invoice_dish_details.php
+
+
+php artisan migrate --path=database/migrations/2023_03_21_073307_add_price_to_invoice_dish_details.php
+
