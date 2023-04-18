@@ -55,6 +55,7 @@ return [
 	'Promotional Price' => 'Promotional Price',
 	'Promotion' => 'Promotion',
 	'Featured' => 'Featured',
+	'Dish' => 'Dish',
 	'Tax' => 'Tax',
 	'Invoice Details' => 'Invoice Details',
 	'Generate' => 'Generate',

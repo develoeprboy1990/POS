@@ -356,6 +356,25 @@ class DishController extends Controller
         return response()->json($dish_types);
     }
 
+    public function getDishTypesByFilter($dish_id)
+    {
+        $data = [];
+        if ($dish_id) {
+            $lims_product_list = DishType::where('dish_id',$dish_id)->get();
+        } else
+            $lims_product_list = DishType::get();
+
+        $index = 0;
+        foreach ($lims_product_list as $product) {
+            $data['name'][$index] = $product->type;
+            $data['code'][$index] = 111;
+            $images = explode(",", $product->dish->image_thumbnail);
+            $data['image'][$index] = $images[0];
+            $index++;
+        }
+        return $data;
+    }
+
     public function getDishTypeDetail(Request $request)
     {
         $dish_type_detail = DishType::findOrFail($request->item_idd);

@@ -24,6 +24,8 @@ use App\Models\Coupon;
 use App\Models\Tax;
 use App\Models\Product_Sale;
 use App\Models\Payment;
+use App\Models\Dish;
+use App\Models\DishType;
 /* use Keygen\Keygen;
 use DNS1D;
 use DNS2D; */
@@ -58,6 +60,37 @@ class TeqPosController extends Controller
         $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->count();
         $invoice_no = 'POS-0000' . ++$invoice_no;
         return view('teq-invoice.new_teq_invoice', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no'));
+    }
+
+    public function createVoucher()
+    {
+        $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
+        $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
+        $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
+        $lims_biller_list        = Biller::where('is_active', true)->get();
+        $lims_tax_list           = Tax::where('is_active', true)->get();
+        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
+
+        foreach ($lims_product_list as $key => $product) {
+            $images = explode(",", $product->image);
+            $product->base_image = $images[0];
+        }
+
+        $product_number = count($lims_product_list);
+        $lims_pos_setting_data = PosSetting::latest()->first();
+        $lims_brand_list = Brand::where('is_active', true)->get();
+        $lims_category_list = DB::table('item_category')->where('type', '!=', 'RES')->orWhere('type',null)->get();
+
+
+        $recent_sale = DB::table('invoice_master')->where('InvoiceNo','like','INV%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
+        $recent_draft = DB::table('invoice_master')->where('InvoiceNo','like','INV%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
+     
+        $lims_coupon_list = Coupon::where('is_active', true)->get();
+        $flag = 0;
+        $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->count();
+        $invoice_no = 'POS-0000' . ++$invoice_no;
+        $dishes = Dish::where('status',1)->get();
+        return view('teq-invoice.voucher', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no','dishes'));
     }
 
     public function storeInvoice(Request $request)

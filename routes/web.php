@@ -539,6 +539,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
 //POS routs..
   // TEQ POS Section
     Route::get('/create-invoice', [TeqPosController::class, 'createTeqInvoice'])->name('invoice.create');
+    Route::get('/create-voucher', [TeqPosController::class, 'createVoucher'])->name('voucher.create');
     Route::post('/save-teq-invoice', [TeqPosController::class, 'storeInvoice']);
     Route::get('/edit-teq-invoice/{id}', [TeqPosController::class, 'editTeqInvoice']);
     Route::post('/update-teq-invoice/{id}', [TeqPosController::class, 'update'])->name('teqInvoice.update');
@@ -626,6 +627,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::get('/invoice-dish-listing', [DishController::class, 'dishInvoices']);
     Route::get('/edit-invoice-dish/{id}', [DishController::class, 'editDishInvoice'])->name('dish.invoice.edit');
     Route::post('/get-dish-types', [DishController::class, 'getDishTypes']);
+    Route::get('/get-dish-types-by-filter/{dish_id}', [DishController::class, 'getDishTypesByFilter']);
     Route::post('/get-dish-type-detail', [DishController::class, 'getDishTypeDetail']);
     Route::post('/saveOrderDish', [DishController::class, 'saveOrderDish']);
     Route::post('/updateDishOrder', [DishController::class, 'updateDishOrder']);
