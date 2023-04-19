@@ -360,16 +360,15 @@ class DishController extends Controller
     {
         $data = [];
         if ($dish_id) {
-            $lims_product_list = DishType::where('dish_id',$dish_id)->get();
+            $dish_types = DishType::where('dish_id',$dish_id)->get();
         } else
-            $lims_product_list = DishType::get();
+            $dish_types = DishType::get();
 
         $index = 0;
-        foreach ($lims_product_list as $product) {
-            $data['name'][$index] = $product->type;
-            $data['code'][$index] = 111;
-            $images = explode(",", $product->dish->image_thumbnail);
-            $data['image'][$index] = $images[0];
+        foreach ($dish_types as $dish_type) {
+            $data['name'][$index] = $dish_type->type;
+            $data['code'][$index] = $dish_type->code;
+            $data['image'][$index] = $dish_type->image;
             $index++;
         }
         return $data;

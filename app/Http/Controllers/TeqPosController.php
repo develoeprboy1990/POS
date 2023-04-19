@@ -96,7 +96,6 @@ class TeqPosController extends Controller
     public function storeInvoice(Request $request)
     {
         $data = $request->all();
-
         if (isset($request->reference_no)) {
             $this->validate($request, [
                 'ReferenceNo' => [
@@ -447,58 +446,67 @@ class TeqPosController extends Controller
         $product_code = explode("(", $ItemCode);
         $product_code[0] = rtrim($product_code[0], " ");
         $product_variant_id = null;
-        $lims_product_data = Item::where([
-            ['ItemCode', $product_code[0]]
-        ])->first();
+        
+        if(preg_match('/RES/', $product_code[0])){
+            $lims_product_data = DishType::where('code',$product_code[0])->first();
+            $product[] = $lims_product_data->type;
+            $product[] = $lims_product_data->code;
 
-        $product[] = $lims_product_data->ItemName;
-        $product[] = $lims_product_data->ItemCode;
+            $product[] = $lims_product_data->price;
 
-        $product[] = $lims_product_data->SellingPrice;
-
-        if ($lims_product_data->Taxable == 'Yes') {
-            /* $lims_tax_data = Tax::find($lims_product_data->tax_id);
-            $product[]     = $lims_tax_data->rate;
-            $product[]     = $lims_tax_data->name;*/
-
-            $product[]     = $lims_product_data->Percentage;
-            $product[]     = 'unregistered ';
-        } else {
             $product[] = 0;
             $product[] = 'No Tax';
+            $product[] = 1;
+            if (1) {
+                $unit_name = ['piece','carton','12piece container','24pc cnt','36pc cntr','48pc cntr','test unit upd'];
+                $unit_operator = ['*','*','*','*','*','*','*'];
+                $unit_operation_value = ['1','12','12','24','36','48','12'];
+                $product[] = implode(",", $unit_name) . ',';
+                $product[] = implode(",", $unit_operator) . ',';
+                $product[] = implode(",", $unit_operation_value) . ',';
+            } else {
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+            }
+            $product[] = $lims_product_data->id;
+            $product[] = $product_variant_id;
+            $product[] = null;
+            $product[] = null;
         }
-        $product[] = 1; // $lims_product_data->tax_method;
-        //if($lims_product_data->type == 'standard'){
-        if (1) {
-            // $units = Unit::where("base_unit", 1)
-            //     ->orWhere('id', 1)
-            //     ->get();
-            $unit_name = ['piece','carton','12piece container','24pc cnt','36pc cntr','48pc cntr','test unit upd'];
-            $unit_operator = ['*','*','*','*','*','*','*'];
-            $unit_operation_value = ['1','12','12','24','36','48','12'];
-            // foreach ($units as $unit) {
-            //     if ($lims_product_data->sale_unit_id == $unit->id) {
-            //         array_unshift($unit_name, $unit->unit_name);
-            //         array_unshift($unit_operator, $unit->operator);
-            //         array_unshift($unit_operation_value, $unit->operation_value);
-            //     } else {
-            //         $unit_name[]  = $unit->unit_name;
-            //         $unit_operator[] = $unit->operator;
-            //         $unit_operation_value[] = $unit->operation_value;
-            //     }
-            // }
-            $product[] = implode(",", $unit_name) . ',';
-            $product[] = implode(",", $unit_operator) . ',';
-            $product[] = implode(",", $unit_operation_value) . ',';
-        } else {
-            $product[] = 'n/a' . ',';
-            $product[] = 'n/a' . ',';
-            $product[] = 'n/a' . ',';
+        else{
+            $lims_product_data = Item::where('ItemCode',$product_code[0])->first();
+            $product[] = $lims_product_data->ItemName;
+            $product[] = $lims_product_data->ItemCode;
+
+            $product[] = $lims_product_data->SellingPrice;
+
+            if ($lims_product_data->Taxable == 'Yes') {
+                $product[]     = $lims_product_data->Percentage;
+                $product[]     = 'unregistered ';
+            } else {
+                $product[] = 0;
+                $product[] = 'No Tax';
+            }
+            $product[] = 1;
+            if (1) {
+                $unit_name = ['piece','carton','12piece container','24pc cnt','36pc cntr','48pc cntr','test unit upd'];
+                $unit_operator = ['*','*','*','*','*','*','*'];
+                $unit_operation_value = ['1','12','12','24','36','48','12'];
+                $product[] = implode(",", $unit_name) . ',';
+                $product[] = implode(",", $unit_operator) . ',';
+                $product[] = implode(",", $unit_operation_value) . ',';
+            } else {
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+            }
+            $product[] = $lims_product_data->ItemID;
+            $product[] = $product_variant_id;
+            $product[] = null;
+            $product[] = null;
         }
-        $product[] = $lims_product_data->ItemID;
-        $product[] = $product_variant_id;
-        $product[] = null; //$lims_product_data->promotion;
-        $product[] = null; //$lims_product_data->is_batch;
+
         return $product;
     }
 
@@ -512,6 +520,8 @@ class TeqPosController extends Controller
             ])
             ->select('v_inventory.*', 'item.*')
             ->get();
+
+        $dish_type_codes = DishType::pluck('code')->toArray();
 
         $product_code  = [];
         $product_name  = [];
@@ -538,7 +548,11 @@ class TeqPosController extends Controller
             $batch_no[]        = null;
             $product_batch_id[] = null;
         }
-        
+
+        foreach ($dish_type_codes as $code) {
+            $product_code[]    =  $code;
+        }
+
      
         $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id];
         return $product_data;

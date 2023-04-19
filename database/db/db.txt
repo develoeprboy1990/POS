@@ -296,3 +296,12 @@ php artisan migrate --path=database/migrations/2023_03_09_091758_create_dish_tab
 php artisan migrate --path=database/migrations/2023_03_09_091933_add_dish_table_id_to_invoice_master.php
 
 INSERT INTO `dish_tables` (`id`, `name`, `created_at`, `updated_at`) VALUES (NULL, 'Take Away', '2023-03-09 16:27:02', '2023-03-09 16:27:02'), (NULL, 'Table 01', '2023-03-09 16:27:02', '2023-03-09 16:27:02')
+
+====================================
+date: 19-4-2023
+
+php artisan migrate --path=database/migrations/2023_04_19_091741_add_image_to_dish_types.php
+php artisan migrate --path=database/migrations/2023_04_19_095616_add_code_to_dish_types.php
+
+
+======================================
