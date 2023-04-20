@@ -305,3 +305,8 @@ php artisan migrate --path=database/migrations/2023_04_19_095616_add_code_to_dis
 
 
 ======================================
+
+php artisan migrate --path=database/migrations/2023_03_14_172529_add_quantity_to_invoice_dish_details.php
+
+
+php artisan migrate --path=database/migrations/2023_03_21_073307_add_price_to_invoice_dish_details.php
