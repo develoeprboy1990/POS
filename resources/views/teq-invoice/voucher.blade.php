@@ -217,7 +217,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body" style="padding-bottom: 0">
-                        <form action="{{url('/save-teq-invoice')}}" method="post" class="payment-form">
+                        <form action="{{url('/save-voucher')}}" method="post" class="payment-form">
                             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                             @php
                             if($lims_pos_setting_data)

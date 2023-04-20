@@ -53,6 +53,27 @@ class PosController extends Controller
         return view('invoice.print_invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','company'));
     }
 
+    public function printVoucher($InvoiceMasterID)
+    {
+        $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
+        $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->whereNull('dish_type_id')->get();
+        $lims_product_dish_data = DB::table('invoice_dish_details')->where('invoice_master_id', $InvoiceMasterID)->get();
+        $lims_biller_data = Biller::find($lims_sale_data->SupplierID);
+        $lims_warehouse_data = Warehouse::find($lims_sale_data->WarehouseID);
+        $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
+        $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->get();
+
+        $company = DB::table('company')->first();
+
+        $numberToWords = new NumberToWords();
+        if(\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
+            $numberTransformer = $numberToWords->getNumberTransformer('en');
+        else
+            $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
+        $numberInWords = $numberTransformer->toWords($lims_sale_data->GrandTotal);
+        return view('invoice.print_voucher', compact('lims_sale_data', 'lims_product_sale_data','lims_product_dish_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','company'));
+    }
+
     public function invoiceListing(Request $request)
     {
         if ($request->ajax()) {

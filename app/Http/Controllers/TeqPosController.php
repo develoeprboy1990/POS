@@ -23,6 +23,7 @@ use App\Models\Unit;
 use App\Models\Coupon;
 use App\Models\Tax;
 use App\Models\Product_Sale;
+use App\Models\InvoiceDishDetail;
 use App\Models\Payment;
 use App\Models\Dish;
 use App\Models\DishType;
@@ -281,6 +282,228 @@ class TeqPosController extends Controller
             return redirect()->back()->with('message', $message);
     }
 
+    public function storeVoucher(Request $request)
+    {
+        $data = $request->all();
+        if (isset($request->reference_no)) {
+            $this->validate($request, [
+                'ReferenceNo' => [
+                    'max:191', 'required', 'unique:sales'
+                ],
+            ]);
+        }
+        //return dd($data);
+        $data['user_id'] = session::get('UserID');
+
+        // $cash_register_data = CashRegister::where([
+        //     ['user_id', $data['user_id']],
+        //     ['warehouse_id', $data['warehouse_id']],
+        //     ['status', true]
+        // ])->first();
+
+        // if($cash_register_data)
+        //     $data['cash_register_id'] = $cash_register_data->id;
+
+        if ($data['pos']) {
+            if (!isset($data['reference_no']))
+                $data['reference_no'] = date("his");
+
+            $balance = $data['grand_total'] - $data['paid_amount'];
+            if ($balance > 0 || $balance < 0)
+                $data['payment_status'] = 2;
+            else
+                $data['payment_status'] = 4;
+
+
+            if ($data['draft']) {
+                $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['sale_id'])->first();
+                $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $lims_sale_data->InvoiceMasterID)->get();
+                foreach ($lims_product_sale_data as $product_sale_data) {
+                    $product_sale_data->delete();
+                }
+                $lims_sale_data->delete();
+            }
+        } else {
+            if (!isset($data['reference_no']))
+                $data['reference_no'] = date("his");
+        }
+
+        $document = $request->document;
+        if ($document) {
+            $v = Validator::make(
+                [
+                    'extension' => strtolower($request->document->getClientOriginalExtension()),
+                ],
+                [
+                    'extension' => 'in:jpg,jpeg,png,gif,pdf,csv,docx,xlsx,txt',
+                ]
+            );
+            if ($v->fails())
+                return redirect()->back()->withErrors($v->errors());
+
+            $documentName = $document->getClientOriginalName();
+            $document->move('public/sale/documents', $documentName);
+            $data['document'] = $documentName;
+        }
+        if ($data['coupon_active']) {
+            $lims_coupon_data = Coupon::find($data['coupon_id']);
+            $lims_coupon_data->used += 1;
+            $lims_coupon_data->save();
+        }
+
+        // dd($data);
+        $today_date = date('Y-m-d');
+        if (!empty($request->invoice_date))
+            $today_date = $request->invoice_date;
+
+        // $lims_sale_data = Sale::create($data);
+        $invoice_no = DB::table('invoice_master')->latest('InvoiceMasterID')->pluck('InvoiceMasterID')->first();
+        $invoice_no = 'POS-0000' . ++$invoice_no;
+        $lims_customer_data = DB::table('party')->where('PartyID', $data['customer_id'])->first();
+        $remaining_balance = $request->paying_amount -  $request->paid_amount;
+
+        $paying_method = match ($data['paid_by_id']) {
+            '1' => 'Cash',
+            '2' => 'Gift Card',
+            '3' => 'Credit Card',
+            '4' => 'Cheque',
+            '5' => 'Paypal',
+            default => 'Deposit'
+        };
+
+        $invoice_data = array(
+            "InvoiceNo"          => $invoice_no,
+            "ReferenceNo"        => $data['reference_no'],
+            "Date"               => $today_date,  // focus
+            "DueDate"            => $today_date, // focus
+            "PartyID"            => $request->customer_id,
+            "WarehouseID"        => $request->warehouse_id,
+            "WalkinCustomerName" => $lims_customer_data->PartyName,
+            "SupplierID"         => $request->biller_id,
+            "UserID"             => session::get('UserID'),
+            "DescriptionNotes"   => $request->sale_note, // focus
+            "CustomerNotes"      => $request->sale_note, // focus
+            "Tax"                => $request->order_tax,
+            "TaxPer"             => $request->order_tax_rate,
+            "Paid"               => $request->paid_amount,
+            "Balance"            => $remaining_balance,
+            "TotalQty"           => $request->total_qty,
+            "SubTotal"           => $request->total_price,
+            "PaymentMode"        => $paying_method, // focus
+            "DiscountModel"      => $request->discount_model,
+            "DiscountPer"        => round($request->DiscountPer, 2),
+            "DiscountAmount"     => $request->order_discount,
+            "Shipping"           => $request->shipping_cost,
+            "GrandTotal"         => $request->grand_total,
+            "Total"              => $request->total,
+
+        );
+
+        $lims_sale_data = DB::table('invoice_master')->insertGetId($invoice_data);
+
+        //collecting mail data
+        /*
+        $mail_data['email'] = $lims_customer_data->Email;
+        $mail_data['reference_no'] = $lims_sale_data->ReferenceNo;
+        $mail_data['sale_status'] = $lims_sale_data->sale_status;
+        $mail_data['payment_status'] = $lims_sale_data->payment_status;
+        $mail_data['total_qty'] = $lims_sale_data->total_qty;
+        $mail_data['total_price'] = $lims_sale_data->total_price;
+        $mail_data['order_tax'] = $lims_sale_data->order_tax;
+        $mail_data['order_tax_rate'] = $lims_sale_data->order_tax_rate;
+        $mail_data['order_discount'] = $lims_sale_data->order_discount;
+        $mail_data['shipping_cost'] = $lims_sale_data->shipping_cost;
+        $mail_data['grand_total'] = $lims_sale_data->grand_total;
+        $mail_data['paid_amount'] = $lims_sale_data->paid_amount;
+        */
+
+        $product_quantities = $data['qty'];
+        $product_prices = $data['net_unit_price'];
+        $product_taxes = $data['tax']; // focus
+        $product_discounts = $data['discount'];
+        $product_taxa = $data['tax_rate']; // focus
+        $product_disca = $data['discount']; //focus
+        $product_subtotals = $data['subtotal'];
+        $product_pids = $data['product_id'];
+        $product_units = $data['sale_unit'];
+        $product_codes = $data['product_code'];
+        $product_hsns = $request->hsn;
+        $product_serials = $request->serial;
+
+        /* Payment Save */
+        $data['amount']          = $data['paid_amount'];
+        $data['InvoiceMasterID'] = $lims_sale_data;
+        $data['paying_method']   = $paying_method;
+        $this->payment($data);
+        /* Payment Save Ends here. */
+
+        foreach ($product_pids as $key => $pid) {
+            if(preg_match('/RES/', $product_codes[$key])){
+                $dish_type = DishType::findOrFail($pid);            
+
+                $invoice_dish_detail = new InvoiceDishDetail();
+                $invoice_dish_detail->invoice_master_id = $lims_sale_data;
+                $invoice_dish_detail->dish_id = $dish_type->dish_id;
+                $invoice_dish_detail->dish_type_id = $pid;
+                $invoice_dish_detail->quantity = $product_quantities[$key];
+                $invoice_dish_detail->price = $dish_type->price;
+                $invoice_dish_detail->save();
+
+                $dish_items = $dish_type->dish_recipe;
+                foreach($dish_items as $dish_item)
+                {
+                    $item_name = DB::table('item')->where('ItemID', $dish_item->item_id)->pluck('ItemName')->first();
+                    $invoice_det = array (
+                        'InvoiceMasterID' =>  $lims_sale_data, 
+                        'InvoiceNo' => $invoice_no, 
+                        'dish_id' => $dish_type->dish_id,
+                        'dish_type_id' => $pid,
+                        'ItemID' => $dish_item->item_id,
+                        "Description" => $item_name,
+                        'Qty' => $dish_item->base_unit_amount_cooked,
+                        // 'TaxPer' => $request->Tax[$key],
+                        // 'Tax' => $request->TaxVal[$key],
+                        // 'Rate' => $request->Price[$key],
+                        // 'Total' => $request->ItemTotal[$key],
+                    
+                    );
+
+                    $id = DB::table('invoice_detail')->insertGetId($invoice_det);
+                }
+            }
+            else{
+                $item_name = DB::table('item')->where('ItemID', $pid)->pluck('ItemName')->first();
+                $invoice_detail = array(
+                    "InvoiceMasterID" => $lims_sale_data,
+                    "InvoiceNo" => $invoice_no,
+                    "ItemID" => $pid,
+                    "Description" => $item_name,
+                    "PartyID" => $request->customer_id,
+                    "SupplierID" => $request->biller_id,
+                    "Qty" => $product_quantities[$key],
+                    "Rate" => $product_prices[$key],
+                    "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
+                    "Tax" => $product_taxes[$key],
+                    "Total" => floatval(preg_replace('/[^\d.]/', '', $product_subtotals[$key])),
+                );
+
+                $insert_detail = DB::table('invoice_detail')->insert($invoice_detail);
+            }
+
+        }
+
+        if ($data['sale_status'] == 3)
+            $message = 'Sale successfully added to draft';
+        else
+            $message = ' Sale created successfully';
+
+        if ($data['sale_status'] == '1' && $data['print_status'] == '1')
+            return redirect(route('voucher.print', ['id' => $lims_sale_data]))->with('message', $message);
+        elseif ($data['sale_status'] == '1' && $data['print_status'] == '0')
+            return redirect(route('voucher.create'))->with('message', $message);
+        else
+            return redirect()->back()->with('message', $message);
+    }
 
 
 

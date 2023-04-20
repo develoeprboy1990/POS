@@ -541,6 +541,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::get('/create-invoice', [TeqPosController::class, 'createTeqInvoice'])->name('invoice.create');
     Route::get('/create-voucher', [TeqPosController::class, 'createVoucher'])->name('voucher.create');
     Route::post('/save-teq-invoice', [TeqPosController::class, 'storeInvoice']);
+    Route::post('/save-voucher', [TeqPosController::class, 'storeVoucher']);
     Route::get('/edit-teq-invoice/{id}', [TeqPosController::class, 'editTeqInvoice']);
     Route::post('/update-teq-invoice/{id}', [TeqPosController::class, 'update'])->name('teqInvoice.update');
 
@@ -564,6 +565,7 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
 
     Route::get('/show-invoice/{id}', [PosController::class, 'showInvoice'])->name('invoice.show');
     Route::get('/print-invoice/{id}', [PosController::class, 'printInvoice'])->name('invoice.print');
+    Route::get('/print-voucher/{id}', [PosController::class, 'printVoucher'])->name('voucher.print');
 
     Route::get('/invoice-listing', [PosController::class, 'invoiceListing'])->name('invoice.listing');
     // ware house
