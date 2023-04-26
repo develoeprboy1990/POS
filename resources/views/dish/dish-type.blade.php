@@ -289,8 +289,10 @@
                       <thead>
                         <tr>
                           <th scope="col">#</th>
+                          <th scope="col">Code</th>
                           <th scope="col">Dish Type</th>
                           <th scope="col">Price</th>
+                          <th scope="col">Image</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -302,8 +304,10 @@
                         @endphp
                             <tr>
                               <th scope="row">{{$i}}</th>
+                              <td>{{$dish_type->code}}</td>
                               <td>{{ucwords($dish_type->type)}}</td>
                               <td>{{$dish_type->price}}</td>
+                              <td><img src="{{asset('assets/images/dish-types').'/'.$dish_type->image}}" width="50px" height="50px"></td>
                               <td>
                                 <a href="{{route('dish.type',['dish'=>$dish->id,'dish_type_id'=>$dish_type->id])}}"><i class="bx bx-pencil align-middle me-1"></i></a>
                                 @if($dish_type_recipe->isEmpty())
