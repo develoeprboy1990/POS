@@ -160,13 +160,20 @@ class DishController extends Controller
     public function dishType(Dish $dish, $dish_type_id = null)
     {
         $dish_types = DishType::where('dish_id',$dish->id)->get();
-        if($dish_type_id)
+        $code = null;
+        if($dish_type_id){
             $dish_type = $dish_types->firstWhere('id',$dish_type_id);
-        else
+            if($dish_type->code){
+                $code = explode('-', $dish_type->code);
+                $code = $code[1];   
+            }
+        }
+        else{
             $dish_type = $dish_type_id;
+        }
             
 
-        return view('dish.dish-type',compact('dish','dish_types','dish_type'));
+        return view('dish.dish-type',compact('dish','dish_types','dish_type','code'));
     }
 
     public function storeDishType(Request $request, $id)
@@ -176,13 +183,32 @@ class DishController extends Controller
             [
                 'type.required' => 'Dish Type is required',
                 'price.required' => 'Dish Price is required',
+                'code.required' => 'Dish Code is required',
+                'code.integer' => 'Dish Code must be of numeric value',
             ]
         );
         $input = $request->all();
+        $image = $request->file('image');
+        $input['code'] = 'RES-'.$input['code'];
+        $input['image'] = null;
+        if ($image) {
+            $imageName = time().'.'.$image->extension();
+            $destinationPath = public_path('assets/images/dish-types');
+            $image->move($destinationPath, $imageName);
+            $input['image'] = $imageName;
+        }
+
         if($input['dish_type_id']){
             $dish_type = DishType::findOrFail($input['dish_type_id']);
             $dish_type->type = $input['type'];
             $dish_type->price = $input['price'];
+            $dish_type->code = $input['code'];
+            if($input['image']){
+                $file_path = public_path().'/assets/images/dish-types/'.$dish_type->image;
+                unlink($file_path);
+                $dish_type->image = $input['image'];
+            }
+
             $dish_type->save();
         }
         else{

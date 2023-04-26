@@ -237,15 +237,15 @@
                         </ul>
                         <div class="tab-content" id="myTabContent">
                           <div class="tab-pane fade show active" role="tabpanel">
-                            <form action="{{route('dish.type.store',[$dish->id])}}" method="post">
+                            <form action="{{route('dish.type.store',[$dish->id])}}" method="post" enctype="multipart/form-data">
                                     @csrf
                                   <input type="hidden" name="dish_type_id" value="{{@$dish_type->id}}">  
                                   <div class="row mt-4">
-                                      <div class="col-md-4 form-group">
+                                      <div class="col-md-6 form-group">
                                           <label>Dish Type</label>
                                           <input type="text" name="type" class="form-control" value="{{@$dish_type->type}}" placeholder="1/3 , 1/5" required>
                                       </div>
-                                      <div class="col-md-4 form-group">
+                                      <div class="col-md-6 form-group">
                                           <label>Price</label>
                                           <div class="input-group mb-3">
                                               <div class="input-group-prepend">
@@ -254,6 +254,29 @@
                                               <input type="number" class="form-control" name="price" aria-label="Amount (to the nearest dollar)" value="{{@$dish_type->price}}" required>
                                             </div>
                                       </div>
+                                  </div>
+                                  <div class="row mt-4">
+                                      <div class="col-md-6 form-group">
+                                          <label>Code</label>
+                                          <div class="input-group mb-3">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text">RES</span>
+                                              </div>
+                                              <input type="number" name="code" class="form-control" value="{{@$code}}" placeholder="Enter Numeric Code"  required>
+                                            </div>
+                                      </div>
+                                      <div class="col-md-4 form-group">
+                                          <label>Image</label>
+                                          <input type="file" name="image" class="form-control" accept="image/*">
+                                      </div>
+                                      @if(@$dish_type->image)
+                                      <div class="col-md-2 form-group mt-4">
+                                          <img src="{{asset('assets/images/dish-types').'/'.@$dish_type->image}}" width="50px" height="50px">
+                                      </div>
+                                      @endif
+                                      
+                                  </div>
+                                  <div class="row mt-4">
                                       <div class="col-md-4 form-group mt-4">
                                           <button type="submit" class="btn btn-success">{{$dish_type ? 'Update' : 'Save'}}</button>
                                       </div>

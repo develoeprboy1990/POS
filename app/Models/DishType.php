@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DishType extends Model
 {
-    protected $fillable = ['dish_id','type','price','image'];
+    protected $fillable = ['dish_id','type','price','image','code'];
     use HasFactory;
 
     public function getRouteKeyName()
