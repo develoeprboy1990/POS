@@ -267,7 +267,7 @@
                                                 @endif
                                                 <select required id="biller_id" name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                                     @foreach($lims_biller_list as $biller)
-                                                    <option value="{{$biller->id}}">{{$biller->name . ' (' . $biller->company_name . ')'}}</option>
+                                                    <option value="{{$biller->UserID}}">{{$biller->FullName}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

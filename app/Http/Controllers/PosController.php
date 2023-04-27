@@ -10,7 +10,6 @@ use Illuminate\Validation\Rule;
 use NumberToWords\NumberToWords;
 use App\Models\Warehouse;
 use App\Models\Brand;
-use App\Models\Biller;
 use App\Models\Unit;
 use App\Models\PosSetting;
 use App\Models\Tax;
@@ -37,7 +36,7 @@ class PosController extends Controller
     {
         $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->SupplierID);
+        $lims_biller_data = DB::table('user')->where('UserId',$lims_sale_data->UserID)->first();
         $lims_warehouse_data = Warehouse::find($lims_sale_data->WarehouseID);
         $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
         $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->get();
@@ -58,7 +57,8 @@ class PosController extends Controller
         $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->whereNull('dish_type_id')->get();
         $lims_product_dish_data = DB::table('invoice_dish_details')->where('invoice_master_id', $InvoiceMasterID)->get();
-        $lims_biller_data = Biller::find($lims_sale_data->SupplierID);
+        $lims_biller_data = DB::table('user')->where('UserId',$lims_sale_data->UserID)->first();
+
         $lims_warehouse_data = Warehouse::find($lims_sale_data->WarehouseID);
         $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
         $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->get();
@@ -521,130 +521,6 @@ class PosController extends Controller
         return redirect('item-category-list')->with('error', 'Deleted Successfully')->with('class', 'success');
     }
 
-    public function billerList(Request $request)
-    {
-        if ($request->ajax()) {
-            $biller = Biller::where('is_active', true)->get();
-            return Datatables::of($biller)
-                ->addIndexColumn()
-                ->addColumn('biller_img', function ($row) {
-                    if ($row->image)
-                        $biller_img = '<td><img src="'.url('thumbnail', $row->image).'"></td>';
-                    else
-                        $biller_img = '<td><img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="100" width="100"></td>';
-
-                    return $biller_img;
-                })
-                ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0)" class="edit_biller" data-id="' . $row->id . '"><i class="bx bx-pencil align-middle me-1"></i></a> <a href="#" onclick="delete_confirm2(`billerDelete`,' . $row->id . ')"><i class="bx bx-trash  align-middle me-1"></i></a>';
-
-                    return $btn;
-                })
-                ->rawColumns(['biller_img', 'action'])
-                ->make(true);
-        }
-
-        return view('biller_list');
-    }
-
-    public function storeBiller(Request $request)
-    {
-        $this->validate($request, [
-            'company_name' => [
-                'max:255',
-                Rule::unique('billers')->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-            'email' => [
-                'email',
-                'max:255',
-                Rule::unique('billers')->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-            // 'image' => 'image|mimes:jpg,jpeg,png,gif|max:10000',
-        ]);
-
-        $lims_biller_data = $request->except('image');
-        $lims_biller_data['is_active'] = true;
-        $image = $request->file('image');
-        if ($image) {
-
-            $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('/thumbnail');
-            $img = Image::make($image->path());
-            $img->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath.'/'.$imageName);
-       
-            $destinationPath = public_path('assets/images/biller');
-            $image->move($destinationPath, $imageName);
-
-            $lims_biller_data['image'] = $imageName;
-        }
-        Biller::create($lims_biller_data);
-        return redirect('biller-list')->with('error', 'Saved Successfully')->with('class', 'success');
-    }
-
-    public function getBillerData(Request $request)
-    {
-        $lims_biller_data = Biller::where('id', $request->biller_id)->first();
-        return response()->json($lims_biller_data);
-    }
-
-    public function updateBiller(Request $request)
-    {
-        $this->validate($request, [
-            'company_name' => [
-                'max:255',
-                Rule::unique('billers')->ignore($request->biller_id)->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-            'email' => [
-                'email',
-                'max:255',
-                Rule::unique('billers')->ignore($request->biller_id)->where(function ($query) {
-                    return $query->where('is_active', 1);
-                }),
-            ],
-
-            // 'image' => 'image|mimes:jpg,jpeg,png,gif|max:100000',
-        ]);
-
-        $input = $request->except('image');
-        $image = $request->image;
-        if ($image) {
-
-            $imageName = time().'.'.$image->extension();
-            $destinationPath = public_path('/thumbnail');
-            $img = Image::make($image->path());
-            $img->resize(100, 100, function ($constraint) {
-                $constraint->aspectRatio();
-            })->save($destinationPath.'/'.$imageName);
-       
-            $destinationPath = public_path('assets/images/biller');
-            $image->move($destinationPath, $imageName);
-
-            $input['image'] = $imageName;
-
-
-        }
-
-        $lims_biller_data = Biller::findOrFail($request->biller_id);
-        $lims_biller_data->update($input);
-        return redirect('biller-list')->with('error', 'Updated Successfully')->with('class', 'success');
-    }
-
-    public function deleteBiller($id)
-    {
-        $lims_biller_data = Biller::find($id);
-        $lims_biller_data->is_active = false;
-        $lims_biller_data->save();
-        return redirect('biller-list')->with('error', 'Deleted Successfully')->with('class', 'success');
-    }
-
     
     public function currencyList(Request $request)
     {
@@ -776,10 +652,9 @@ class PosController extends Controller
     {
         $lims_customer_list = DB::table('party')->get();
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-        $lims_biller_list = Biller::where('is_active', true)->get();
         $lims_pos_setting_data = PosSetting::latest()->first();
         
-        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_pos_setting_data'));
+        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list','lims_pos_setting_data'));
     }
 
     public function storePosSetting(Request $request)
@@ -797,7 +672,6 @@ class PosController extends Controller
         $pos_setting->id = 1;
         $pos_setting->customer_id = $data['customer_id'];
         $pos_setting->warehouse_id = $data['warehouse_id'];
-        $pos_setting->biller_id = $data['biller_id'];
         $pos_setting->product_number = $data['product_number'];
         $pos_setting->stripe_public_key = $data['stripe_public_key'];
         $pos_setting->stripe_secret_key = $data['stripe_secret_key'];

@@ -100,8 +100,9 @@ Session::put('UserType', $data[0]->UserType);
 Session::put('Currency', $company[0]->Currency);
 Session::put('CompanyName', $company[0]->Name . ' '.$company[0]->Name2);
 
-
-
+if($data[0]->UserType == 'Biller')
+  return redirect('create-voucher');
+else
 return redirect('Dashboard')->with('error','Welcome to '. session::get('CompanyName').' Software')->with('class','success');
 
 }

@@ -310,7 +310,7 @@
                                                         <input type="hidden" name="biller_id_hidden" value="{{$lims_sale_data->SupplierID}}" />
                                                         <select required name="biller_id" class="form-select select2" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                                             @foreach($lims_biller_list as $biller)
-                                                            <option value="{{$biller->id}}" {{$lims_sale_data->SupplierID == $biller->id ? 'selected' : ''}}>{{$biller->name . ' (' . $biller->company_name . ')'}}</option>
+                                                            <option value="{{$biller->UserID}}" {{$lims_sale_data->UserID == $biller->UserID ? 'selected' : ''}}>{{$biller->FullName}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>

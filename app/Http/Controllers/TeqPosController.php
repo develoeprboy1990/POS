@@ -17,7 +17,6 @@ use App\Models\CustomerGroup;
 use App\Models\Sale;
 use App\Models\Warehouse;
 use App\Models\PosSetting;
-use App\Models\Biller;
 use App\Models\Brand;
 use App\Models\Unit;
 use App\Models\Coupon;
@@ -38,7 +37,7 @@ class TeqPosController extends Controller
         $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
         $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
-        $lims_biller_list        = Biller::where('is_active', true)->get();
+        $lims_biller_list        = DB::table('user')->where('UserType','Biller')->get();
         $lims_tax_list           = Tax::where('is_active', true)->get();
         $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
 
@@ -68,7 +67,7 @@ class TeqPosController extends Controller
         $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
         $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
-        $lims_biller_list        = Biller::where('is_active', true)->get();
+        $lims_biller_list        = DB::table('user')->where('UserType','Biller')->get();
         $lims_tax_list           = Tax::where('is_active', true)->get();
         $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
 
@@ -191,8 +190,8 @@ class TeqPosController extends Controller
             "PartyID"            => $request->customer_id,
             "WarehouseID"        => $request->warehouse_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
-            "SupplierID"         => $request->biller_id,
-            "UserID"             => session::get('UserID'),
+            // "SupplierID"         => $request->biller_id,
+            "UserID"             => $request->biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
             "Tax"                => $request->order_tax,
@@ -257,7 +256,7 @@ class TeqPosController extends Controller
                 "ItemID" => $pid,
                 "Description" => $item_name,
                 "PartyID" => $request->customer_id,
-                "SupplierID" => $request->biller_id,
+                // "SupplierID" => $request->biller_id,
                 "Qty" => $prod_qty,
                 "Rate" => $product_prices[$key],
                 "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
@@ -379,8 +378,7 @@ class TeqPosController extends Controller
             "PartyID"            => $request->customer_id,
             "WarehouseID"        => $request->warehouse_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
-            "SupplierID"         => $request->biller_id,
-            "UserID"             => session::get('UserID'),
+            "UserID"             => $request->biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
             "Tax"                => $request->order_tax,
@@ -479,7 +477,7 @@ class TeqPosController extends Controller
                     "ItemID" => $pid,
                     "Description" => $item_name,
                     "PartyID" => $request->customer_id,
-                    "SupplierID" => $request->biller_id,
+                    // "SupplierID" => $request->biller_id,
                     "Qty" => $product_quantities[$key],
                     "Rate" => $product_prices[$key],
                     "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
@@ -512,7 +510,7 @@ class TeqPosController extends Controller
 
         $lims_customer_list = DB::table('party')->where('Active', 'Yes')->get();
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-        $lims_biller_list = Biller::where('is_active', true)->get();
+        $lims_biller_list = DB::table('user')->where('UserType','Biller')->get();
         $lims_tax_list = Tax::where('is_active', true)->get();
         $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
 
@@ -538,8 +536,8 @@ class TeqPosController extends Controller
             "DueDate"            => $today_date, // focus
             "PartyID"            => $request->customer_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
-            "SupplierID"         => $request->biller_id,
-            "UserID"             => session::get('UserID'),
+            // "SupplierID"         => $request->biller_id,
+            "UserID"             => $request->biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
             "Total"              => $request->total,
@@ -581,7 +579,7 @@ class TeqPosController extends Controller
                 "ItemID" => $pid,
                 "Description" => $item_name,
                 "PartyID" => $request->customer_id,
-                "SupplierID" => $request->biller_id,
+                // "SupplierID" => $request->biller_id,
                 "Qty" => $prod_qty,
                 "Rate" => $product_prices[$key],
                 "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),

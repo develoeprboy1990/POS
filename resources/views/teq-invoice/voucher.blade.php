@@ -265,11 +265,17 @@
                                                 @if($lims_pos_setting_data)
                                                 <input type="hidden" name="biller_id_hidden" value="{{$lims_pos_setting_data->biller_id}}">
                                                 @endif
+                                                @if(Session::get('UserType') == 'Biller')
+                                                <select required id="biller_id" name="biller_id" class="form-control">
+                                                    <option value="{{Session::get('UserID')}}" selected>{{Session::get('FullName')}}</option>
+                                                </select>
+                                                @else
                                                 <select required id="biller_id" name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                                     @foreach($lims_biller_list as $biller)
-                                                    <option value="{{$biller->id}}">{{$biller->name . ' (' . $biller->company_name . ')'}}</option>
+                                                    <option value="{{$biller->UserID}}">{{$biller->FullName}}</option>
                                                     @endforeach
                                                 </select>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -609,25 +615,15 @@
                         <div class="container-fluid">
                             <div class="navbar-holder d-flex align-items-center justify-content-between">
                                 <!-- <a id="toggle-btn" href="#" class="menu-btn"><i class="fa fa-bars"> </i></a> -->
+                                @if(Session::get('UserType') == 'Biller')
+                                <a href="#" class="menu-btn"><i class="fa fa-bars"></i></a>
+                                @else
                                 <a href="{{url('invoice-listing')}}" class="menu-btn"><i class="fa fa-bars"></i></a>
+                                @endif
                                 <div class="navbar-header">
 
                                     <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                                         <li class="nav-item"><a id="btnFullscreen" title="Full Screen"><i class="dripicons-expand"></i></a></li>
-                                        <!-- <li class="nav-item"><a class="dropdown-item" href="" title="{{trans('file.POS Setting')}}"><i class="dripicons-gear"></i></a> </li> -->
-                                        <!-- <li class="nav-item">
-                                <a href="" title="{{trans('file.Print Last Reciept')}}"><i class="dripicons-print"></i></a>
-                            </li> -->
-                                        <!-- <li class="nav-item">
-                                <a href="" id="register-details-btn" title="{{trans('file.Cash Register Details')}}"><i class="dripicons-briefcase"></i></a>
-                            </li> -->
-
-                                        <!-- <li class="nav-item">
-                                <a href="" id="today-sale-btn" title="{{trans('file.Today Sale')}}"><i class="dripicons-shopping-bag"></i></a>
-                            </li> -->
-                                        <!-- <li class="nav-item">
-                                <a href="" id="today-profit-btn" title="{{trans('file.Today Profit')}}"><i class="dripicons-graph-line"></i></a>
-                            </li> -->
                                         <li class="nav-item" id="notification-icon">
                                             <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-bell"></i><span class="badge badge-danger notification-number"></span>
                                                 <span class="caret"></span>
@@ -646,9 +642,10 @@
                                 <a class="dropdown-item" href="" target="_blank"><i class="dripicons-information"></i> {{trans('file.Help')}}</a>
                             </li>&nbsp; -->
                                         <li class="nav-item">
-                                            <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-user"></i> <span>Admin</span> <i class="fa fa-angle-down"></i>
+                                            <a rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-item"><i class="dripicons-user"></i> <span>{{Session::get('FullName')}}</span> <i class="fa fa-angle-down"></i>
                                             </a>
                                             <ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">
+                                                @if(Session::get('UserType') !== 'Biller')
                                                 <li>
                                                     <a href="{{url('/UserProfile')}}"><i class="dripicons-user"></i> {{trans('file.profile')}}</a>
                                                 </li>
@@ -661,6 +658,7 @@
                                                 <li>
                                                     <a href="{{url('/ChangePassword')}}"><i class="dripicons-vibrate"></i> Change Password</a>
                                                 </li>
+                                                @endif
                                                 <li>
                                                     <a href="{{URL('/Logout')}}"><i class="dripicons-power"></i>Logout</a>
                                                 </li>

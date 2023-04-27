@@ -102,7 +102,7 @@
             @endif
             <div class="hidden-print">
                 <div class="row">
-                <div class="col-sm-4"><a href="{{URL('/create-invoice')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
+                <div class="col-sm-4"><a href="{{URL('/create-voucher')}}" class="btn btn-info"><i class="fa fa-arrow-left"></i>
                                 {{ trans('file.Back') }}</a></div>
                 <div class="col-sm-4"><button style="margin-right: 260px !important;" onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>
                                 {{ trans('file.Print') }}</button></div>
