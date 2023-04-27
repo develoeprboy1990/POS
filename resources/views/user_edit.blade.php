@@ -77,6 +77,7 @@
      
      <option value="Admin" {{($v_users[0]->UserType == 'Admin' ) ? 'selected=selected':'' }}>Admin</option>
     <option value="User" {{($v_users[0]->UserType == 'User' ) ? 'selected=selected':'' }}>User</option>
+    <option value="Biller" {{($v_users[0]->UserType == 'Biller' ) ? 'selected=selected':'' }}>Biller</option>
       
      
 
