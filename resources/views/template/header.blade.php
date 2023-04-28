@@ -109,12 +109,12 @@ font-size-16 align-middle me-2"></i>Favorite <i class="mdi mdi-chevron-down"></i
     </div>
 
     <!-- /btn-group -->
-      <div class="btn-group ">
+   <!--    <div class="btn-group ">
        <a href="{{route('invoice.create')}}" class="btn btn-outline-primary w-sm">POS</a>
       
-    </div>
+    </div> -->
     <div class="btn-group ">
-       <a href="{{route('voucher.create')}}" class="btn btn-outline-secondary w-sm">New POS</a>
+       <a href="{{route('voucher.create')}}" class="btn btn-outline-primary w-sm">POS</a>
       
     </div>
     

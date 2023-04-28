@@ -142,7 +142,7 @@
                     </p>
                 </div>
                 <p>{{ trans('file.Date') }}: {{ $lims_sale_data->Date }}<br>
-                   Invoice no: {{ $lims_sale_data->ReferenceNo }}<br>
+                   Invoice no: {{ $lims_sale_data->InvoiceNo }}<br>
                     {{ trans('file.customer') }}: {{ $lims_customer_data->PartyName }}<br>
                     {{ trans('Phone number') }}: {{ $lims_customer_data->Phone }}<br>
                     {{ trans('Address') }}: {{ $lims_customer_data->Address }}
@@ -168,6 +168,13 @@
                                 $product_name = $lims_product_data->ItemName;
                                 $product_price = $lims_product_data->SellingPrice;
                                 $product_code = $lims_product_data->ItemCode;
+                                if($lims_product_data->Taxable == 'Yes'){
+                                    $product_tax = @$lims_product_data->Percentage;
+                                    if($product_tax)
+                                        $product_price = $product_price + (($product_tax/100) * $product_price);
+
+                                }
+
                             @endphp
                             <tr>
                                 <td colspan="2">

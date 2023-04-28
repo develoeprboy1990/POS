@@ -11,7 +11,7 @@
                         <h4 class="mb-sm-0 font-size-18">Invoice Listing</h4>
 
                         <div class="page-title-right">
-                            <a href="{{url('/create-invoice')}}" target="_blank" class="btn btn-primary">Create Invoice</a>
+                            <a href="{{url('/create-voucher')}}" target="_blank" class="btn btn-primary">Create Invoice</a>
                         </div>
 
                     </div>

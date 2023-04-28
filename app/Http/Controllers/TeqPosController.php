@@ -182,6 +182,11 @@ class TeqPosController extends Controller
             default => 'Deposit'
         };
 
+        if($request->biller_id)
+            $biller_id = $request->biller_id;
+        else
+            $biller_id = Session::get('UserID'); 
+
         $invoice_data = array(
             "InvoiceNo"          => $invoice_no,
             "ReferenceNo"        => $data['reference_no'],
@@ -190,8 +195,7 @@ class TeqPosController extends Controller
             "PartyID"            => $request->customer_id,
             "WarehouseID"        => $request->warehouse_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
-            // "SupplierID"         => $request->biller_id,
-            "UserID"             => $request->biller_id,
+            "UserID"             => $biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
             "Tax"                => $request->order_tax,
@@ -256,7 +260,6 @@ class TeqPosController extends Controller
                 "ItemID" => $pid,
                 "Description" => $item_name,
                 "PartyID" => $request->customer_id,
-                // "SupplierID" => $request->biller_id,
                 "Qty" => $prod_qty,
                 "Rate" => $product_prices[$key],
                 "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
@@ -370,6 +373,11 @@ class TeqPosController extends Controller
             default => 'Deposit'
         };
 
+        if($request->biller_id)
+            $biller_id = $request->biller_id;
+        else
+            $biller_id = Session::get('UserID');
+
         $invoice_data = array(
             "InvoiceNo"          => $invoice_no,
             "ReferenceNo"        => $data['reference_no'],
@@ -378,7 +386,7 @@ class TeqPosController extends Controller
             "PartyID"            => $request->customer_id,
             "WarehouseID"        => $request->warehouse_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
-            "UserID"             => $request->biller_id,
+            "UserID"             => $biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
             "Tax"                => $request->order_tax,
@@ -477,7 +485,6 @@ class TeqPosController extends Controller
                     "ItemID" => $pid,
                     "Description" => $item_name,
                     "PartyID" => $request->customer_id,
-                    // "SupplierID" => $request->biller_id,
                     "Qty" => $product_quantities[$key],
                     "Rate" => $product_prices[$key],
                     "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
@@ -529,6 +536,11 @@ class TeqPosController extends Controller
         if (!empty($request->invoice_date))
             $today_date = $request->invoice_date;
 
+        if($request->biller_id)
+            $biller_id = $request->biller_id;
+        else
+            $biller_id = Session::get('UserID');
+
         $lims_customer_data = DB::table('party')->where('PartyID', $data['customer_id'])->first();
         $discountAmount = $request->total_discount; //+ $request->order_discount;
         $invoice_data = array(
@@ -536,8 +548,7 @@ class TeqPosController extends Controller
             "DueDate"            => $today_date, // focus
             "PartyID"            => $request->customer_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
-            // "SupplierID"         => $request->biller_id,
-            "UserID"             => $request->biller_id,
+            "UserID"             => $biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
             "CustomerNotes"      => $request->sale_note, // focus
             "Total"              => $request->total,
@@ -579,7 +590,6 @@ class TeqPosController extends Controller
                 "ItemID" => $pid,
                 "Description" => $item_name,
                 "PartyID" => $request->customer_id,
-                // "SupplierID" => $request->biller_id,
                 "Qty" => $prod_qty,
                 "Rate" => $product_prices[$key],
                 "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
