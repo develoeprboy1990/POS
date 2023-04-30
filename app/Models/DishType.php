@@ -25,4 +25,9 @@ class DishType extends Model
         return $this->belongsTo(Dish::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(InvoiceDishDetail::class);
+    }
+
 }

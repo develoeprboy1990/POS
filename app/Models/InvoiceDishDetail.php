@@ -9,4 +9,9 @@ class InvoiceDishDetail extends Model
 {
     protected $fillable = ['invoice_master_id','dish_id','dish_type_id','quantity'];
     use HasFactory;
+
+    public function dish_type()
+    {
+        return $this->belongsTo(DishType::class);
+    }
 }

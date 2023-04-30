@@ -168,7 +168,7 @@ class TeqPosController extends Controller
             $today_date = $request->invoice_date;
 
         // $lims_sale_data = Sale::create($data);
-        $invoice_no = DB::table('invoice_master')->latest('InvoiceMasterID')->pluck('InvoiceMasterID')->first();
+        $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->count();
         $invoice_no = 'POS-0000' . ++$invoice_no;
         $lims_customer_data = DB::table('party')->where('PartyID', $data['customer_id'])->first();
         $remaining_balance = $request->paying_amount -  $request->paid_amount;
@@ -359,7 +359,7 @@ class TeqPosController extends Controller
             $today_date = $request->invoice_date;
 
         // $lims_sale_data = Sale::create($data);
-        $invoice_no = DB::table('invoice_master')->latest('InvoiceMasterID')->pluck('InvoiceMasterID')->first();
+        $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->count();
         $invoice_no = 'POS-0000' . ++$invoice_no;
         $lims_customer_data = DB::table('party')->where('PartyID', $data['customer_id'])->first();
         $remaining_balance = $request->paying_amount -  $request->paid_amount;
@@ -521,17 +521,18 @@ class TeqPosController extends Controller
         $lims_tax_list = Tax::where('is_active', true)->get();
         $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
 
-        $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
-        return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data'));
+        $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->whereNull('dish_type_id')->get();
+        $dish_invoices = InvoiceDishDetail::where('invoice_master_id',$InvoiceMasterID)->get();
+        return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','dish_invoices'));
     }
 
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $invoice_master_id)
     {
         $data = $request->all();
         $remaining_balance = $data['grand_total'] - $data['paid_amount'];
-        $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $id)->first();
+        $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $invoice_master_id)->first();
         $today_date = date('Y-m-d');
         if (!empty($request->invoice_date))
             $today_date = $request->invoice_date;
@@ -564,8 +565,10 @@ class TeqPosController extends Controller
             "GrandTotal"         => $request->grand_total,
         );
 
-        $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID', $id)->delete();
-        $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $id)->update($invoice_data);
+        $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID', $invoice_master_id)->delete();
+        $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id', $invoice_master_id)->delete();
+        $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $invoice_master_id)->update($invoice_data);
+        $invoice_no = DB::table('invoice_master')->where('InvoiceMasterID', $invoice_master_id)->pluck('InvoiceNo')->first();
 
         $product_quantities = $data['qty'];
         $product_prices     = $data['net_unit_price'];
@@ -576,28 +579,65 @@ class TeqPosController extends Controller
         $product_subtotals  = $data['subtotal'];
         $product_pids       = $data['product_id'];
         $product_units      = $data['sale_unit'];
+        $product_codes      = $data['product_code'];
         $product_hsns       = $request->hsn;
         $product_serials    = $request->serial;
-        $data['InvoiceMasterID'] = $id;
+        $data['InvoiceMasterID'] = $invoice_master_id;
 
 
         foreach ($product_pids as $key => $pid) {
-            $item_name = DB::table('item')->where('ItemID', $pid)->pluck('ItemName')->first();
-            $prod_qty = $product_quantities[$key];
-            $invoice_detail = array(
-                "InvoiceMasterID" => $invoice_master->InvoiceMasterID,
-                "InvoiceNo" => $invoice_master->InvoiceNo,
-                "ItemID" => $pid,
-                "Description" => $item_name,
-                "PartyID" => $request->customer_id,
-                "Qty" => $prod_qty,
-                "Rate" => $product_prices[$key],
-                "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
-                "Tax" => $product_taxes[$key],
-                "Total" => floatval(preg_replace('/[^\d.]/', '', $product_subtotals[$key])),
-            );
+            if(preg_match('/RES/', $product_codes[$key])){
+                $dish_type = DishType::findOrFail($pid);            
 
-            $insert_detail = DB::table('invoice_detail')->insert($invoice_detail);
+                $invoice_dish_detail = new InvoiceDishDetail();
+                $invoice_dish_detail->invoice_master_id = $invoice_master_id;
+                $invoice_dish_detail->dish_id = $dish_type->dish_id;
+                $invoice_dish_detail->dish_type_id = $pid;
+                $invoice_dish_detail->quantity = $product_quantities[$key];
+                $invoice_dish_detail->price = $dish_type->price;
+                $invoice_dish_detail->save();
+
+                $dish_items = $dish_type->dish_recipe;
+                foreach($dish_items as $dish_item)
+                {
+                    $item_name = DB::table('item')->where('ItemID', $dish_item->item_id)->pluck('ItemName')->first();
+                    $invoice_det = array (
+                        'InvoiceMasterID' =>  $invoice_master_id, 
+                        'InvoiceNo' => $invoice_no, 
+                        'dish_id' => $dish_type->dish_id,
+                        'dish_type_id' => $pid,
+                        'ItemID' => $dish_item->item_id,
+                        "Description" => $item_name,
+                        'Qty' => $dish_item->base_unit_amount_cooked,
+                        // 'TaxPer' => $request->Tax[$key],
+                        // 'Tax' => $request->TaxVal[$key],
+                        // 'Rate' => $request->Price[$key],
+                        // 'Total' => $request->ItemTotal[$key],
+                    
+                    );
+
+                    $id = DB::table('invoice_detail')->insertGetId($invoice_det);
+                }
+            }
+            else{
+
+                $item_name = DB::table('item')->where('ItemID', $pid)->pluck('ItemName')->first();
+                $prod_qty = $product_quantities[$key];
+                $invoice_detail = array(
+                    "InvoiceMasterID" => $invoice_master->InvoiceMasterID,
+                    "InvoiceNo" => $invoice_master->InvoiceNo,
+                    "ItemID" => $pid,
+                    "Description" => $item_name,
+                    "PartyID" => $request->customer_id,
+                    "Qty" => $prod_qty,
+                    "Rate" => $product_prices[$key],
+                    "TaxPer" => floatval(preg_replace('/[^\d.]/', '', $product_taxa[$key])),
+                    "Tax" => $product_taxes[$key],
+                    "Total" => floatval(preg_replace('/[^\d.]/', '', $product_subtotals[$key])),
+                );
+
+                $insert_detail = DB::table('invoice_detail')->insert($invoice_detail);
+            }
 
         }
 

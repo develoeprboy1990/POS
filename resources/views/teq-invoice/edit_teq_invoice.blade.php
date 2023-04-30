@@ -413,17 +413,6 @@
                                                                     <td>{{$product_data->ItemName}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button> <input type="hidden" class="product-type" value="{{$product_data->ItemType}}" /></td>
                                                                     <td>{{$product_data->ItemCode}}</td>
                                                                     <td><input type="number" class="form-control qty" name="qty[]" value="{{$product_sale->Qty}}" step="any" required /></td>
-                                                                    @if($product_batch_data)
-                                                                    <!-- <td>
-                                                                        <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="{{$product_sale->product_batch_id}}">
-                                                                        <input type="text" class="form-control batch-no" name="batch_no[]" value="{{$product_batch_data->batch_no}}" required />
-                                                                    </td> -->
-                                                                    @else
-                                                                    <!--  <td>
-                                                                      <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="">
-                                                                      <input type="text" class="form-control batch-no" name="batch_no[]" value="" disabled />
-                                                                  </td> -->
-                                                                    @endif
                                                                     <td class="net_unit_price">{{ number_format((float)$product_sale->Rate, 2, '.', '') }} </td>
                                                                     <td class="discount">{{ number_format((float)$product_sale->Discount, 2, '.', '') }}</td>
                                                                     <!-- <td class="tax">{{ number_format((float)$product_sale->Tax, 2, '.', '') }}</td> -->
@@ -450,6 +439,61 @@
                                                                     <input type="hidden" class="tax-method" value="{{$product_data->TaxMethod}}" />
                                                                     <input type="hidden" class="tax-value" name="tax[]" value="{{$product_sale->Tax}}" />
                                                                     <input type="hidden" class="subtotal-value" name="subtotal[]" value="{{$product_sale->Total}}" />
+                                                                </tr>
+                                                                @endforeach
+
+                                                                @foreach($dish_invoices as $dish_invoice)
+                                                                <tr>
+                                                                    <?php
+                                                                    $product_data = $dish_invoice->dish_type;
+                                                                    $product_variant_id = null;
+                                                                    $product_price = $product_data->price;
+
+                                                                    $tax = 0;
+                                                                    $unit_name = array();
+                                                                    $unit_operator = array();
+                                                                    $unit_operation_value = array();
+                                                                    $unit_name[] = 'n/a' . ',';
+                                                                    $unit_operator[] = 'n/a' . ',';
+                                                                    $unit_operation_value[] = 'n/a' . ',';
+                                                                    $temp_unit_name = $unit_name = implode(",", $unit_name) . ',';
+
+                                                                    $temp_unit_operator = $unit_operator = implode(",", $unit_operator) . ',';
+
+                                                                    $temp_unit_operation_value = $unit_operation_value =  implode(",", $unit_operation_value) . ',';
+
+                                                                    $product_batch_id = null;
+                                                                    $product_batch_data = 0; 
+                                                                    $total = $dish_invoice->quantity *  $dish_invoice->price;
+                                                                    ?>
+                                                                    <td>{{$product_data->type}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button> <input type="hidden" class="product-type" value="resturent" /></td>
+                                                                    <td>{{$product_data->code}}</td>
+                                                                    <td><input type="number" class="form-control qty" name="qty[]" value="{{$dish_invoice->quantity}}" step="any" required /></td>
+                                                                    <td class="net_unit_price">{{ number_format((float)$dish_invoice->price, 2, '.', '') }} </td>
+                                                                    <td class="discount">0.00</td>
+                                                                    <td class="sub-total">{{ number_format((float)$total, 2, '.', '') }}</td>
+                                                                    <td>
+                                                                        <!-- <button type="button" class="ibtnDel btn btn-md btn-danger"><i class="fa fa-trash"></i></button> -->
+                                                                        <a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a>
+                                                                    </td>
+                                                                    <input type="hidden" class="product-code" name="product_code[]" value="{{$product_data->code}}" />
+                                                                    <input type="hidden" class="product-id" name="product_id[]" value="{{$product_data->id}}" />
+                                                                    <input type="hidden" name="product_variant_id[]" value="{{$product_variant_id}}" />
+                                                                    <input type="hidden" class="product-price" name="product_price[]" value="{{$product_price}}" />
+                                                                    <input type="hidden" class="sale-unit" name="sale_unit[]" value="{{$unit_name}}" />
+                                                                    <input type="hidden" class="sale-unit-operator" value="{{$unit_operator}}" />
+                                                                    <input type="hidden" class="sale-unit-operation-value" value="{{$unit_operation_value}}" />
+                                                                    <input type="hidden" class="net_unit_price" name="net_unit_price[]" value="{{$dish_invoice->price}}" />
+                                                                    <input type="hidden" class="discount-value" name="discount[]" value="0" />
+                                                                    <input type="hidden" class="tax-rate" name="tax_rate[]" value="0" />
+                                                                    @if($tax)
+                                                                    <input type="hidden" class="tax-name" value="{{$tax->name}}" />
+                                                                    @else
+                                                                    <input type="hidden" class="tax-name" value="No Tax" />
+                                                                    @endif
+                                                                    <input type="hidden" class="tax-method" value="0" />
+                                                                    <input type="hidden" class="tax-value" name="tax[]" value="0" />
+                                                                    <input type="hidden" class="subtotal-value" name="subtotal[]" value="{{$total}}" />
                                                                 </tr>
                                                                 @endforeach
                                                             </tbody>
