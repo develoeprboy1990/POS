@@ -432,7 +432,7 @@
                 barcode_image.push($('table.order-list tbody tr:nth-child(' + (i + 1) + ')').data('imagedata'));
             }
             var htmltext = '<table class="barcodelist" style="width:378px;" cellpadding="5px" cellspacing="10px">';
-            $.each(qty, function(index){
+           /* $.each(qty, function(index){
                 i = 0;
                 while(i < qty[index]){
                     if(i % 2 == 0)
@@ -447,7 +447,7 @@
                         htmltext +='</tr>';
                     i++;
                 }
-            });
+            });*/
             $.each(qty, function(index){
                 i = 0;
                 while(i < qty[index]) {
@@ -482,9 +482,11 @@
                     }
                     else if($('input[name="price"]').is(":checked")) {
                         if(currency_position[index] == 'prefix')
-                            htmltext += 'Price: '+currency[index]+' '+price[index];
+                            //htmltext += 'Price: '+currency[index]+' '+price[index];
+                            htmltext += 'Price: '+price[index];
                         else
-                            htmltext += 'Price: '+price[index]+' '+currency[index];
+                            //htmltext += 'Price: '+price[index]+' '+currency[index];
+                            htmltext += 'Price: '+price[index];
                     }
                     htmltext +='</td>';
                     i++;
