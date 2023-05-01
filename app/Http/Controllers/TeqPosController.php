@@ -523,7 +523,8 @@ class TeqPosController extends Controller
 
         $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->whereNull('dish_type_id')->get();
         $dish_invoices = InvoiceDishDetail::where('invoice_master_id',$InvoiceMasterID)->get();
-        return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','dish_invoices'));
+        $biller = DB::table('user')->where('UserID',$lims_sale_data->UserID)->first();
+        return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','dish_invoices','biller'));
     }
 
 

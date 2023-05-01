@@ -304,15 +304,17 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-6 mt-2">
                                                     <div class="form-group">
                                                         <label>{{trans('file.Biller')}} *</label>
                                                         <input type="hidden" name="biller_id_hidden" value="{{$lims_sale_data->SupplierID}}" />
-                                                        <select required name="biller_id" class="form-select select2" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
+                                                        <input type="hidden" name="biller_id" value="{{$lims_sale_data->UserID}}" />
+                                                        <p><strong>{{ $biller ? $biller->FullName : Session::get('FullName') }}</strong></p>
+                                                        <!-- <select required name="biller_id" class="form-select select2" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
                                                             @foreach($lims_biller_list as $biller)
                                                             <option value="{{$biller->UserID}}" {{$lims_sale_data->UserID == $biller->UserID ? 'selected' : ''}}>{{$biller->FullName}}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </select> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -375,32 +377,30 @@
                                                                     $unit_name = array();
                                                                     $unit_operator = array();
                                                                     $unit_operation_value = array();
-                                                                    if ($product_data->ItemType == 'standard') { //added by usman
-                                                                        // $units = DB::table('units')->where('base_unit', $product_data->unit_id)->orWhere('id', $product_data->unit_id)->get();
-                                                                        $units = DB::table('units')->where('id', 1)->get(); //added by usman
-
-                                                                        foreach ($units as $unit) {
-                                                                            $sale_unit_id = 1; //added by usman
-                                                                            if ($sale_unit_id == $unit->id) {
-                                                                                array_unshift($unit_name, $unit->unit_name);
-                                                                                array_unshift($unit_operator, $unit->operator);
-                                                                                array_unshift($unit_operation_value, $unit->operation_value);
-                                                                            } else {
-                                                                                $unit_name[]  = $unit->unit_name;
-                                                                                $unit_operator[] = $unit->operator;
-                                                                                $unit_operation_value[] = $unit->operation_value;
-                                                                            }
-                                                                        }
-                                                                        if (@$unit_operator[0] == '*') {
-                                                                            @$product_price = $product_price / $unit_operation_value[0];
-                                                                        } elseif (@$unit_operator[0] == '/') {
-                                                                            $product_price = $product_price * $unit_operation_value[0];
-                                                                        }
-                                                                    } else {
+                                                                    // if ($product_data->ItemType == 'standard') { 
+                                                                    //     $units = DB::table('units')->where('id', 1)->get();
+                                                                    //     foreach ($units as $unit) {
+                                                                    //         $sale_unit_id = 1; //added by usman
+                                                                    //         if ($sale_unit_id == $unit->id) {
+                                                                    //             array_unshift($unit_name, $unit->unit_name);
+                                                                    //             array_unshift($unit_operator, $unit->operator);
+                                                                    //             array_unshift($unit_operation_value, $unit->operation_value);
+                                                                    //         } else {
+                                                                    //             $unit_name[]  = $unit->unit_name;
+                                                                    //             $unit_operator[] = $unit->operator;
+                                                                    //             $unit_operation_value[] = $unit->operation_value;
+                                                                    //         }
+                                                                    //     }
+                                                                    //     if (@$unit_operator[0] == '*') {
+                                                                    //         @$product_price = $product_price / $unit_operation_value[0];
+                                                                    //     } elseif (@$unit_operator[0] == '/') {
+                                                                    //         $product_price = $product_price * $unit_operation_value[0];
+                                                                    //     }
+                                                                    // } else {
                                                                         $unit_name[] = 'n/a' . ',';
                                                                         $unit_operator[] = 'n/a' . ',';
                                                                         $unit_operation_value[] = 'n/a' . ',';
-                                                                    }
+                                                                    // }
                                                                     $temp_unit_name = $unit_name = implode(",", $unit_name) . ',';
 
                                                                     $temp_unit_operator = $unit_operator = implode(",", $unit_operator) . ',';
