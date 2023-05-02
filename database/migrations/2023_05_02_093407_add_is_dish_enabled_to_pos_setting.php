@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('pos_setting', function (Blueprint $table) {
-            $table->string('is_dish_enabled')->default(1);
+            $table->string('is_dish_enabled')->default(1)->after('stripe_secret_key');
         });
     }
 
