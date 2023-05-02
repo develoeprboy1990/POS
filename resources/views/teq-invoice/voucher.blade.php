@@ -311,7 +311,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="col-sm-4">{{trans('file.product')}}</th>
-                                                        <th class="col-sm-1">{{trans('No')}}</th>
+                                                        <!-- <th class="col-sm-1">{{trans('No')}}</th> -->
                                                         <th class="col-sm-2">{{trans('file.Price')}}</th>
                                                         <th class="col-sm-2">{{trans('file.Quantity')}}</th>
                                                         <th class="col-sm-3">{{trans('file.Subtotal')}}</th>
@@ -741,9 +741,11 @@
                     </div>
                 </div>
                 <div class="row">
+                    @if($lims_pos_setting_data->is_dish_enabled == 1)
                     <div class="col-md-3">
                         <button class="btn btn-block btn-warning" id="dish-filter">{{trans('file.Dish')}}</button>
                     </div>
+                    @endif
                     <div class="col-md-3">
                         <button class="btn btn-block btn-primary" id="category-filter">{{trans('file.category')}}</button>
                     </div>

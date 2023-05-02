@@ -310,3 +310,8 @@ php artisan migrate --path=database/migrations/2023_03_14_172529_add_quantity_to
 
 
 php artisan migrate --path=database/migrations/2023_03_21_073307_add_price_to_invoice_dish_details.php
+
+==================
+Date: 2-5-2023
+php artisan migrate --path=database/migrations/2023_05_02_093407_add_is_dish_enabled_to_pos_setting.php
+==================

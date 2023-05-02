@@ -585,6 +585,10 @@ class TeqPosController extends Controller
         $product_serials    = $request->serial;
         $data['InvoiceMasterID'] = $invoice_master_id;
 
+        /* Payment Update */
+        $this->payment($data,true);
+        /* Payment Update Ends here. */
+
 
         foreach ($product_pids as $key => $pid) {
             if(preg_match('/RES/', $product_codes[$key])){
@@ -682,31 +686,37 @@ class TeqPosController extends Controller
 
     protected function payment($data, $updateInvoice = false)
     {
-        $paying_amount  = $data['paying_amount'];
-        $amount         = $data['amount'];
-        $payment_note   = $data['payment_note'];
-        $data['payment_reference'] = 'spr-' . date("Ymd") . '-' . date("his");
+        $paying_amount  = @$data['paying_amount'];
+        $amount         = @$data['amount'];
+        $payment_note   = @$data['payment_note'];
+        @$data['payment_reference'] = 'spr-' . date("Ymd") . '-' . date("his");
         if ($updateInvoice) {
-            $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['InvoiceMasterID'])->first();
-            $paid           = $lims_sale_data->Paid + $amount;
-            $grandTotal     = $lims_sale_data->GrandTotal;
-            DB::table('invoice_master')->where('InvoiceMasterID', $data['InvoiceMasterID'])->update([
-                'Balance' => $grandTotal - $paid,
-                'Paid' => $paid
+            // $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['InvoiceMasterID'])->first();
+            // $paid           = $lims_sale_data->Paid + $amount;
+            // $grandTotal     = $lims_sale_data->GrandTotal;
+            // DB::table('invoice_master')->where('InvoiceMasterID', $data['InvoiceMasterID'])->update([
+            //     'Balance' => $grandTotal - $paid,
+            //     'Paid' => $paid
+            // ]);
+            $paid_amount = $data['paid_amount'];
+            $payment = Payment::where('InvoiceMasterID', $data['InvoiceMasterID'])->orderBy('paymentID','DESC')->update([
+                'amount' => $paid_amount
+            ]);
+        }
+        else{
+            $UserID  = session::get('UserID');
+            $payment = Payment::create([
+                "PaymentReference" => $data['payment_reference'],
+                "InvoiceMasterID"  => $data['InvoiceMasterID'],
+                "PartyID"          => 1,
+                "UserID"           => $UserID,
+                "Amount"           => $amount,
+                "Change"           => $paying_amount - $amount,
+                "PayingMethod"     => $data['paying_method'],
+                "PaymentNote"      => $payment_note
             ]);
         }
 
-        $UserID  = session::get('UserID');
-        $payment = Payment::create([
-            "PaymentReference" => $data['payment_reference'],
-            "InvoiceMasterID"  => $data['InvoiceMasterID'],
-            "PartyID"          => 1,
-            "UserID"           => $UserID,
-            "Amount"           => $amount,
-            "Change"           => $paying_amount - $amount,
-            "PayingMethod"     => $data['paying_method'],
-            "PaymentNote"      => $payment_note
-        ]);
         return $payment;
     }
 

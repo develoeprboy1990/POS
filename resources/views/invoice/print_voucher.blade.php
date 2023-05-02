@@ -294,16 +294,14 @@
                 </table>
                 <table>
                     <tbody>
-                        @foreach ($lims_payment_data as $payment_data)
-                            <tr style="background-color:#ddd;">
-                                <td style="padding: 5px;width:30%">{{ trans('file.Paid By') }}:
-                                    {{ $payment_data->PayingMethod }}</td>
-                                <td style="padding: 5px;width:40%">Paid amount:
-                                    {{ number_format((float) $payment_data->Amount, 2, '.', '') }}</td>
-                                <td style="padding: 5px;width:30%">{{ trans('file.Change') }}:
-                                    {{ number_format((float) $payment_data->Change, 2, '.', '') }}</td>
-                            </tr>
-                        @endforeach
+                        <tr style="background-color:#ddd;">
+                            <td style="padding: 5px;width:30%">{{ trans('file.Paid By') }}:
+                                {{ $lims_payment_data->PayingMethod }}</td>
+                            <td style="padding: 5px;width:40%">Paid amount:
+                                {{ number_format((float) $lims_payment_data->Amount, 2, '.', '') }}</td>
+                            <td style="padding: 5px;width:30%">{{ trans('file.Change') }}:
+                                {{ number_format((float) $lims_payment_data->Change, 2, '.', '') }}</td>
+                        </tr>
                         <!--<tr>-->
                         <!--    <td class="centered" colspan="5">-->
                         <!--        {{ trans('file.Thank you for shopping with us. Please come again') }}</td>-->

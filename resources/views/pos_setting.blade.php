@@ -79,6 +79,13 @@
                                     <input type="text" name="paypal_signature" class="form-control" value="{{env('PAYPAL_SANDBOX_API_SECRET')}}" />
                                 </div>
                                 <div class="form-group">
+                                    <label>Enable/Disable Dish</label>
+                                    <select class="form-control form-select" name="is_dish_enabled">
+                                        <option value="1" {{$lims_pos_setting_data->is_dish_enabled == 1 ? 'selected' : ''}}>Enable</option>
+                                        <option value="0" {{$lims_pos_setting_data->is_dish_enabled == 0 ? 'selected' : ''}}>Disable</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mt-3">
                                     <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
                                 </div>
                             </div>

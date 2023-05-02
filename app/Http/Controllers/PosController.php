@@ -61,7 +61,8 @@ class PosController extends Controller
 
         $lims_warehouse_data = Warehouse::find($lims_sale_data->WarehouseID);
         $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
-        $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->get();
+        $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->orderBy('paymentID','DESC')->first();
+        // dd($lims_payment_data);
 
         $company = DB::table('company')->first();
 
@@ -90,7 +91,7 @@ class PosController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown"><a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal font-size-18"></i></a><div class="dropdown-menu dropdown-menu-end">';
-                    $btn .= '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="dropdown-item" target="_blank">Edit Invoice</a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">View Invoice</a><a href="' . route('invoice.print', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">Print Invoice</a><button type="button" class="add-payment dropdown-item" data-id = "'.$row->InvoiceMasterID.'" data-bs-toggle="modal" data-bs-target="#add-payment">'.trans('file.Add Payment').'</button>';
+                    $btn .= '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="dropdown-item" target="_blank">Edit Invoice</a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">View Invoice</a><a href="' . route('voucher.print', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">Print Invoice</a><button type="button" class="add-payment dropdown-item" data-id = "'.$row->InvoiceMasterID.'" data-bs-toggle="modal" data-bs-target="#add-payment">'.trans('file.Add Payment').'</button>';
                     $btn .= ' </div></div>';
                     return $btn;
                 })
@@ -354,7 +355,7 @@ class PosController extends Controller
         $this->validate($request, [
             'base_unit' => [
                 'max:255',
-                    Rule::unique('units')->where(function ($query) {
+                    Rule::unique('units')->ignore($request->unit_id)->where(function ($query) {
                     return $query->where('status', 1);
                 }),
             ]
@@ -675,6 +676,7 @@ class PosController extends Controller
         $pos_setting->product_number = $data['product_number'];
         $pos_setting->stripe_public_key = $data['stripe_public_key'];
         $pos_setting->stripe_secret_key = $data['stripe_secret_key'];
+        $pos_setting->is_dish_enabled = $data['is_dish_enabled'];
         if(!isset($data['keybord_active']))
             $pos_setting->keybord_active = false;
         else
