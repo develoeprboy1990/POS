@@ -803,7 +803,7 @@ class TeqPosController extends Controller
             ->select('v_inventory.*', 'item.*')
             ->get();
 
-        $dish_type_codes = DishType::pluck('code')->toArray();
+        $dish_type_codes = DishType::pluck('type','code')->toArray();
 
         $product_code  = [];
         $product_name  = [];
@@ -831,8 +831,9 @@ class TeqPosController extends Controller
             $product_batch_id[] = null;
         }
 
-        foreach ($dish_type_codes as $code) {
+        foreach ($dish_type_codes as $code => $name) {
             $product_code[]    =  $code;
+            $product_name[]    =  $name;
         }
 
      
