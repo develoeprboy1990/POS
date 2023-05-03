@@ -198,12 +198,12 @@
         
         <div class="col-md-6">
           
-           <div class="mb-3 row">
+                <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label  text-danger" for="first-name">Selling Price</label>
+                    <label class="col-form-label  text-danger" for="first-name">Cost Price</label>
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" id="first-name" class="form-control" name="SellingPrice"  value="{{$item[0]->SellingPrice}}">
+                    <input type="text" id="first-name" class="form-control" name="CostPrice" value="{{$item[0]->CostPrice}}" >
                   </div>
                 </div>
 
@@ -212,7 +212,7 @@
 
      <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label  " for="first-name">Account</label>
+                    <label class="col-form-label  " for="first-name">Cost Account</label>
                   </div>
                   <div class="col-sm-6">
                     <select name="CostChartofAccountID"  class="select2 form-select">
@@ -258,16 +258,16 @@
 
           <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label  text-danger" for="first-name">Cost Price</label>
+                    <label class="col-form-label  text-danger" for="first-name">Selling Price</label>
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" id="first-name" class="form-control" name="CostPrice" value="{{$item[0]->CostPrice}}" >
+                    <input type="text" id="first-name" class="form-control" name="SellingPrice"  value="{{$item[0]->SellingPrice}}">
                   </div>
-                </div>
+                </div>          
 
             <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label " for="first-name">Account</label>
+                    <label class="col-form-label " for="first-name">Selling Account</label>
                   </div>
                   <div class="col-sm-6">
                     <select name="SellingChartofAccountID"  class="form-select select2">

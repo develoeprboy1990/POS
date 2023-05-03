@@ -100,17 +100,13 @@
                   </div>
                 </div>
 
+                
                 <div class="mb-3 row">
                   <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Units</label>
+                    <label class="col-form-label fw-bold" for="first-name">Item Code</label>
                   </div>
                   <div class="col-sm-9">
-                    <select name="unit_id" id="unit_id" class="form-select">
-                       <option value="">Select</option>
-                 @foreach($units as $unit)
-                 <option value="{{$unit->id}}">{{$unit->base_unit}}</option>
-                 @endforeach
-                      </select>
+                    <input type="text" id="item_code" class="form-control" name="ItemCode" placeholder="Item Code">
                   </div>
                 </div>
 
@@ -137,15 +133,6 @@
                   </div>
                 </div>
 
-                <div class="mb-3 row">
-                  <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Featured</label>
-                  </div>
-                  <div class="col-sm-9 mt-2">
-                    <input type="checkbox" value="1" name="isFeatured">
-                    <label for="vehicle2"> Featured</label>
-                  </div>
-                </div>
 
               </div>
 
@@ -153,22 +140,23 @@
               <div class="col-md-6">
                 <div class="mb-3 mt-5 row">
                   <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Item Image</label>
+                    <label class="col-form-label fw-bold" for="first-name">Image</label>
                   </div>
                   <div class="col-sm-9">
                     <input type="file" name="image" class="form-control" accept="image/*">
                   </div>
                 </div>
+                
                 <div class="mb-3 row">
                   <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Category</label>
+                    <label class="col-form-label fw-bold" for="first-name">Units</label>
                   </div>
                   <div class="col-sm-9">
-                    <select name="item_category_id" id="item_category_id" class="form-select">
-                       <option value="">Select Item Category</option>
-                       @foreach($item_categories as $category)
-                        <option value="{{$category->ItemCategoryID}}">{{$category->title}}</option>
-                        @endforeach
+                    <select name="unit_id" id="unit_id" class="form-select">
+                       <option value="">Select</option>
+                 @foreach($units as $unit)
+                 <option value="{{$unit->id}}">{{$unit->base_unit}}</option>
+                 @endforeach
                       </select>
                   </div>
                 </div>
@@ -186,6 +174,23 @@
                       </select>
                   </div>
                 </div> -->
+                
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Category</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select name="item_category_id" id="item_category_id" class="form-select">
+                       <option value="">Select Item Category</option>
+                       @foreach($item_categories as $category)
+                        <option value="{{$category->ItemCategoryID}}">{{$category->title}}</option>
+                        @endforeach
+                      </select>
+                  </div>
+                </div>
+                
+
+                
                 <div class="mb-3 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Brand</label>
@@ -199,12 +204,25 @@
                       </select>
                   </div>
                 </div>
+
+                
+
+
+              </div>
+        </div>
+         
+
+      <div class="row mt-5">
+        
+        <div class="col-md-6">
+          
+           
                 <div class="mb-3 row">
-                  <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Item Code</label>
+                  <div class="col-sm-3">
+                    <label class="col-form-label  text-danger" for="first-name">Cost Price</label>
                   </div>
-                  <div class="col-sm-9">
-                    <input type="text" id="item_code" class="form-control" name="ItemCode" placeholder="Item Code">
+                  <div class="col-sm-6">
+                    <input type="text" id="first-name" class="form-control" name="CostPrice" value="{{$item[0]->CostPrice}}" >
                   </div>
                 </div>
 
@@ -219,30 +237,9 @@
                 </div>
 
 
-                
-
-
-              </div>
-        </div>
-         
-
-      <div class="row mt-5">
-        
-        <div class="col-md-6">
-          
-           <div class="mb-3 row">
-                  <div class="col-sm-3">
-                    <label class="col-form-label  text-danger" for="first-name">Selling Price</label>
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="text" id="first-name" class="form-control" name="SellingPrice" value="{{$item[0]->CostPrice}}" >
-                  </div>
-                </div>
-
-
      <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label  " for="first-name">Account</label>
+                    <label class="col-form-label  " for="first-name">Cost Account</label>
                   </div>
                   <div class="col-sm-6">
                     <select name="CostChartofAccountID"  class="select2 form-select">
@@ -255,7 +252,7 @@
                  
               <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label  " for="first-name">Remarks</label>
+                    <label class="col-form-label  " for="first-name">Cost Remarks</label>
                   </div>
                   <div class="col-sm-6">
                    <textarea name="CostDescription" id="" class="form-control" cols="43" rows="3"></textarea>
@@ -270,16 +267,27 @@
 
           <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label  text-danger" for="first-name">Cost Price</label>
+                    <label class="col-form-label  text-danger" for="first-name">Selling Price</label>
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" id="first-name" class="form-control" name="CostPrice" value="{{$item[0]->CostPrice}}" >
+                    <input type="text" id="first-name" class="form-control" name="SellingPrice" value="{{$item[0]->CostPrice}}" >
+                  </div>
+                </div>
+          
+
+            <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Featured</label>
+                  </div>
+                  <div class="col-sm-9 mt-2">
+                    <input type="checkbox" value="1" name="isFeatured">
+                    <label for="vehicle2"> Featured</label>
                   </div>
                 </div>
 
             <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label " for="first-name">Account</label>
+                    <label class="col-form-label " for="first-name">Selling Account</label>
                   </div>
                   <div class="col-sm-6">
                     <select name="SellingChartofAccountID"  class="form-select select2">
@@ -293,7 +301,7 @@
  
         <div class="mb-3 row">
                   <div class="col-sm-3">
-                    <label class="col-form-label " for="first-name">Remarks</label>
+                    <label class="col-form-label " for="first-name">Selling Remarks</label>
                   </div>
                   <div class="col-sm-6">
                    <textarea name="SellingDescription" id="" class="form-control" cols="43" rows="3"></textarea>
@@ -344,7 +352,7 @@
  <td class="col-md-">{{$key+1}}</td>
  <td class="col-md-1">{{$value->ItemType}}</td>
  <td class="col-md-7">{{$value->ItemName}}</td>
- <td class="col-md-2">{{$value->UnitName}}</td>
+ <td class="col-md-2">{{$value->unit ? $value->unit->base_unit : 'N/A'}}</td>
  <td class="col-md-2">{{$value->SellingPrice}}</td>
  <td class="col-md-1">{{$value->Taxable}}</td>
  <td class="col-md-1">{{$value->Percentage}}</td>

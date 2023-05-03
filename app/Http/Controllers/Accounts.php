@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Warehouse;
 use App\Models\Unit;
+use App\Models\Item;
 // for excel export
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -1710,7 +1711,7 @@ public  function Item()
 ////////////////////////////END SCRIPT ////////////////////////////////////////////////
 session::put('menu','Item');
 $pagetitle='Item';
-$item = DB::table('item')->get();
+$item = Item::get();
 
 $units = Unit::get();
 $lims_warehouse_list = Warehouse::where('is_active', true)->get();
