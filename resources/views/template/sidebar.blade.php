@@ -96,7 +96,7 @@
                         <li><a href="{{URL('/unit-list')}}" key="t-products">Unit</a></li>
                         <li><a href="{{URL('/tax-list')}}" key="t-products">Tax</a></li>
                         <li><a href="{{URL('/currency-list')}}" key="t-products">Currency</a></li>
-                        <li><a href="{{URL('/print-barcode')}}" key="t-products">Print Barcode</a></li>
+                        <li><a href="{{URL('/print-barcodes')}}" key="t-products">Print Barcode</a></li>
                         <li><a href="{{URL('/pos-setting')}}" key="t-products">POS Setting</a></li>
 
                      
