@@ -41,7 +41,7 @@ margin-right: 0px !important;
             {{csrf_field()}}
             
             <input type="hidden" name="InvoiceNo" value="{{session::get('VHNO')}}">
-            <input type="file" name="filenames[]" multiple="" class="form-control form-control-sm" style="width: 75%;">
+            <input type="file" name="filenames[]" multiple="" class="form-control form-control-sm" accept="application/pdf, application/vnd.ms-excel" style="width: 75%;">
 
 
             <div>

@@ -278,15 +278,17 @@
                                                 @endif
                                             </div>
                                         </div>
+                                        @if($lims_pos_setting_data->is_dish_enabled == 1)
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <select required id="biller_id" name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
+                                                <select id="dish_table_id" name="dish_table_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Take Away...">
                                                     @foreach($dish_tables as $dish_table)
                                                     <option value="{{$dish_table->id}}">{{$dish_table->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
+                                        @endif
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 @if($lims_pos_setting_data)

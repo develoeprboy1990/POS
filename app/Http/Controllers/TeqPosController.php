@@ -187,7 +187,7 @@ class TeqPosController extends Controller
         if($request->biller_id)
             $biller_id = $request->biller_id;
         else
-            $biller_id = Session::get('UserID'); 
+            $biller_id = Session::get('UserID');
 
         $invoice_data = array(
             "InvoiceNo"          => $invoice_no,
@@ -196,6 +196,7 @@ class TeqPosController extends Controller
             "DueDate"            => $today_date, // focus
             "PartyID"            => $request->customer_id,
             "WarehouseID"        => $request->warehouse_id,
+            "DishTableID"        => $request->dish_table_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
             "UserID"             => $biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
@@ -387,6 +388,7 @@ class TeqPosController extends Controller
             "DueDate"            => $today_date, // focus
             "PartyID"            => $request->customer_id,
             "WarehouseID"        => $request->warehouse_id,
+            "DishTableID"        => $request->dish_table_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
             "UserID"             => $biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus
@@ -522,11 +524,13 @@ class TeqPosController extends Controller
         $lims_biller_list = DB::table('user')->where('UserType','Biller')->get();
         $lims_tax_list = Tax::where('is_active', true)->get();
         $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
+        $lims_pos_setting_data = PosSetting::latest()->first();
 
         $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->whereNull('dish_type_id')->get();
         $dish_invoices = InvoiceDishDetail::where('invoice_master_id',$InvoiceMasterID)->get();
+        $dish_tables = DishTable::orderBy('id')->get();
         $biller = DB::table('user')->where('UserID',$lims_sale_data->UserID)->first();
-        return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','dish_invoices','biller'));
+        return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','dish_invoices','biller','lims_pos_setting_data','dish_tables'));
     }
 
 
@@ -551,6 +555,7 @@ class TeqPosController extends Controller
             "Date"               => $today_date,  // focus
             "DueDate"            => $today_date, // focus
             "PartyID"            => $request->customer_id,
+            "DishTableID"            => $request->dish_table_id,
             "WalkinCustomerName" => $lims_customer_data->PartyName,
             "UserID"             => $biller_id,
             "DescriptionNotes"   => $request->sale_note, // focus

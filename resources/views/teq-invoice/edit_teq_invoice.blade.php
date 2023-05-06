@@ -334,6 +334,19 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row mt-3">
+                                                @if($lims_pos_setting_data->is_dish_enabled == 1)
+                                                    <div class="col-md-6">
+                                                        <label>Select Table</label>
+                                                        <select id="dish_table_id" name="dish_table_id" class="form-select select2" data-live-search="true" data-live-search-style="begins" title="Take Away...">
+                                                            @foreach($dish_tables as $dish_table)
+                                                            <option value="{{$dish_table->id}}" {{$lims_sale_data->DishTableID == $dish_table->id ? 'selected' : ''}}>{{$dish_table->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            
                                             <div class="row mt-5">
                                                 <div class="col-md-12">
                                                     <h5>{{trans('file.Order Table')}} *</h5>

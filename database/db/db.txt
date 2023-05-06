@@ -315,3 +315,12 @@ php artisan migrate --path=database/migrations/2023_03_21_073307_add_price_to_in
 Date: 2-5-2023
 php artisan migrate --path=database/migrations/2023_05_02_093407_add_is_dish_enabled_to_pos_setting.php
 ==================
+Date: 6-5-2023
+
+ALTER TABLE `item` CHANGE `ItemCode` `ItemCode` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `party` CHANGE `PartyName` `PartyName` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `estimate_master` CHANGE `EstimateMasterID` `EstimateMasterID` INT NOT NULL AUTO_INCREMENT;
+
+===================
