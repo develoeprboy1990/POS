@@ -19,6 +19,7 @@ use DNS1D;
 use DNS2D;
 use Keygen;
 use Image;
+use PDF;
 
 class PosController extends Controller
 {
@@ -758,6 +759,43 @@ class PosController extends Controller
         // $lims_product_list_with_variant = $this->productWithVariant();
         $lims_product_list_without_variant = DB::table('item')->where([['IsActive', true],['ItemType', 'standard']])->select('ItemID', 'ItemName', 'ItemCode')->get();
         return view('print_barcode', compact('lims_product_list_without_variant'));
+    }
+
+    public function printBarcodes()
+    {
+        // $lims_product_list_without_variant = $this->productWithoutVariant();
+        // $lims_product_list_with_variant = $this->productWithVariant();
+        $lims_product_list_without_variant = DB::table('item')->where([['IsActive', true],['ItemType', 'Goods']])->select('ItemID', 'ItemName', 'ItemCode')->get();
+        return view('print_barcodes', compact('lims_product_list_without_variant'));
+    }
+    public function limsStickerSearch(Request $request)
+    {
+        foreach ($request['code'] as $key => $product) {
+            $data = array(
+            "qty" => $request['qty'][$key],
+            "itemid" => $product, 
+        );
+             $sticker = DB::table('sticker')->insert($data);
+        }
+
+        return response()->json(['url'=>url('products/lims_sticker_print')]);
+        
+
+
+       // return $product;
+    }
+
+    public function limsStickerPrint()
+    {
+
+        $stickerxy = DB::table('v_sticker')->get();
+        $pdf = PDF::loadView('printbarcodedata',compact('stickerxy'));
+
+        $customPaper = array(0,0,151 ,116);
+        $pdf->set_paper($customPaper);
+
+        DB::table('sticker')->truncate();
+        return $pdf->stream();
     }
 
     // public function productWithoutVariant()

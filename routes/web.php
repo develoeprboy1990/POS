@@ -662,7 +662,12 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::get('/print-barcode', [PosController::class, 'printBarcode']);
     Route::get('products/lims_product_search', [PosController::class, 'limsProductSearch'])->name('product.search');
 
-   Route::get('/test-list', [PosController::class, 'testList']);
+    Route::get('/print-barcodes', [PosController::class, 'printBarcodes']);
+    Route::get('products/lims_sticer_search', [PosController::class, 'limsStickerSearch'])->name('sticker.search');
+    Route::get('products/lims_sticker_print', [PosController::class, 'limsStickerPrint'])->name('sticker.print');
+    
+
+   Route::get('/test-list', [PosController::class, 'limsStickerSearch']);
     
 
 

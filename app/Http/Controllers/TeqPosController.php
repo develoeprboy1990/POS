@@ -26,6 +26,7 @@ use App\Models\InvoiceDishDetail;
 use App\Models\Payment;
 use App\Models\Dish;
 use App\Models\DishType;
+use App\Models\DishTable;
 /* use Keygen\Keygen;
 use DNS1D;
 use DNS2D; */
@@ -90,7 +91,8 @@ class TeqPosController extends Controller
         $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->count();
         $invoice_no = 'POS-0000' . ++$invoice_no;
         $dishes = Dish::where('status',1)->get();
-        return view('teq-invoice.voucher', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no','dishes'));
+        $dish_tables = DishTable::orderBy('id')->get();
+        return view('teq-invoice.voucher', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no','dishes','dish_tables'));
     }
 
     public function storeInvoice(Request $request)
