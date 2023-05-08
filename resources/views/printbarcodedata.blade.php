@@ -33,7 +33,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="font-size: 10px;">{{ $value2->code }} <span style="margin-left: 50%;">Rs: {{$value2->price}}</span></td>
+                <td style="font-size: 10px;">{{ $value2->code }} <span style="float: right;">Rs: {{$value2->price}}</span></td>
             </tr>
         </table>
         @endfor
