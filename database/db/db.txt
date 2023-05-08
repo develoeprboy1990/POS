@@ -317,10 +317,27 @@ php artisan migrate --path=database/migrations/2023_05_02_093407_add_is_dish_ena
 ==================
 Date: 6-5-2023
 
+
+CREATE TABLE `sticker` (
+  `stickerid` int NOT NULL,
+  `itemid` int DEFAULT NULL,
+  `qty` int DEFAULT NULL,
+  `edate` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE `sticker`  ADD PRIMARY KEY (`stickerid`);
+ALTER TABLE `sticker`  MODIFY `stickerid` int NOT NULL AUTO_INCREMENT;
+
+
+DROP TABLE IF EXISTS `v_sticker`;
+
+CREATE OR Replace VIEW `v_sticker`  AS SELECT sum(`sticker`.`qty`) AS `qty`, `item`.`ItemName` AS `name`, `item`.`SellingPrice` AS `price`, `item`.`ItemID` AS `code` FROM (`sticker` join `item` on((`sticker`.`itemid` = `item`.`ItemID`))) GROUP BY `sticker`.`itemid`, `item`.`ItemName`, `item`.`SellingPrice`, `item`.`ItemID`  ;
+
 ALTER TABLE `item` CHANGE `ItemCode` `ItemCode` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
 ALTER TABLE `party` CHANGE `PartyName` `PartyName` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
 ALTER TABLE `estimate_master` CHANGE `EstimateMasterID` `EstimateMasterID` INT NOT NULL AUTO_INCREMENT;
+
 
 ===================
