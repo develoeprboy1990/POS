@@ -789,9 +789,11 @@ class PosController extends Controller
     {
 
         $stickerxy = DB::table('v_sticker')->get();
-        $pdf = PDF::loadView('printbarcodedata',compact('stickerxy'));
+        // dd($stickerxy);
+        $companyName = Session::get('CompanyName');
+        $pdf = PDF::loadView('printbarcodedata',compact('stickerxy','companyName'));
 
-        $customPaper = array(0,0,151 ,116);
+        $customPaper = array(0,0,130,130);
         $pdf->set_paper($customPaper);
 
         DB::table('sticker')->truncate();
