@@ -84,7 +84,7 @@
                  </div>
 
                  <div class="form-check form-check-inline pt-2">
-                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="resturent" {{ old('ItemType') == 'resturent' ? 'checked' : '' }}>
+                   <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="Restaurant" {{ old('ItemType') == 'Restaurant' ? 'checked' : '' }}>
                    <label class="form-check-label" for="inlineRadio1">Restaurant</label>
                  </div>
                   </div>
@@ -257,7 +257,16 @@
                   <div class="col-sm-6">
                    <textarea name="CostDescription" id="" class="form-control" cols="43" rows="3"></textarea>
                   </div>
-                </div>   
+                </div> 
+
+               <div class="mb-3 row">
+                  <div class="col-sm-3">
+                    <label class="col-form-label" for="stock-qty">Stock Quantity</label>
+                  </div>
+                  <div class="col-sm-6">
+                   <input type="number" id="stockQty" class="form-control" name="stockQty" value="0" >
+                  </div>
+                </div>    
                 
                  
                          

@@ -267,7 +267,7 @@ class DishController extends Controller
         }
 
 
-        $kitchen_items = Item::where('ItemType','resturent')->get();
+        $kitchen_items = Item::where('ItemType','Restaurant')->get();
         $dish_recipes = [];
         foreach($dish_types as $dish_type)
         {

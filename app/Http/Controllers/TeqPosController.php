@@ -40,7 +40,7 @@ class TeqPosController extends Controller
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
         $lims_biller_list        = DB::table('user')->where('UserType','Biller')->get();
         $lims_tax_list           = Tax::where('is_active', true)->get();
-        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
+        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'Restaurant')->get();
 
         foreach ($lims_product_list as $key => $product) {
             $images = explode(",", $product->image);
@@ -70,7 +70,7 @@ class TeqPosController extends Controller
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
         $lims_biller_list        = DB::table('user')->where('UserType','Biller')->get();
         $lims_tax_list           = Tax::where('is_active', true)->get();
-        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'resturent')->get();
+        $lims_product_list       = DB::table('item')->selectRaw('ItemID AS id,ItemName as name,ItemCode AS code,ItemImage AS image')->where('isActive',1)->where('IsFeatured',1)->where('ItemType', '!=', 'Restaurant')->get();
 
         foreach ($lims_product_list as $key => $product) {
             $images = explode(",", $product->image);
@@ -933,7 +933,7 @@ class TeqPosController extends Controller
         $lims_product_list = DB::table('item')->where([
             ['IsActive', true],
             ['IsFeatured', true],
-            ['ItemType','!=','resturent']
+            ['ItemType','!=','Restaurant']
         ])->select('item.ItemID', 'item.ItemName', 'item.ItemCode', 'item.ItemImage')->get();
 
         $index = 0;

@@ -479,7 +479,7 @@
                                                                     $product_batch_data = 0; 
                                                                     $total = $dish_invoice->quantity *  $dish_invoice->price;
                                                                     ?>
-                                                                    <td>{{$product_data->type}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button> <input type="hidden" class="product-type" value="resturent" /></td>
+                                                                    <td>{{$product_data->type}} <button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button> <input type="hidden" class="product-type" value="Restaurant" /></td>
                                                                     <td>{{$product_data->code}}</td>
                                                                     <td><input type="number" class="form-control qty" name="qty[]" value="{{$dish_invoice->quantity}}" step="any" required /></td>
                                                                     <td class="net_unit_price">{{ number_format((float)$dish_invoice->price, 2, '.', '') }} </td>

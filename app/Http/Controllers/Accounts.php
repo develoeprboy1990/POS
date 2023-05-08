@@ -1786,6 +1786,10 @@ $data = array(
 
 $id= DB::table('item')->insertGetId($data);
 
+// if($request->stockQty > 0){
+  
+// }
+
 return redirect ('Item')->with('error', 'Save Successfully.')->with('class','success');
 }
 public  function ItemEdit($id)
