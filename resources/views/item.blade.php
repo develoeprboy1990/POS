@@ -259,14 +259,14 @@
                   </div>
                 </div> 
 
-               <div class="mb-3 row">
+               <!-- <div class="mb-3 row">
                   <div class="col-sm-3">
                     <label class="col-form-label" for="stock-qty">Stock Quantity</label>
                   </div>
                   <div class="col-sm-6">
                    <input type="number" id="stockQty" class="form-control" name="stockQty" value="0" >
                   </div>
-                </div>    
+                </div>  -->   
                 
                  
                          
