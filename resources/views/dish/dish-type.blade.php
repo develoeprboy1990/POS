@@ -228,9 +228,9 @@
                           <li class="nav-item" role="presentation">
                             <a class="nav-link active" href="{{route('dish.type',[$dish->id])}}">Dish Types</a>
                           </li>
-                          <li class="nav-item" role="presentation">
+                          <!-- <li class="nav-item" role="presentation">
                             <a class="nav-link" href="{{route('dish.image',[$dish->id])}}">Dish Images</a>
-                          </li>
+                          </li> -->
                           <li class="nav-item" role="presentation">
                             <a class="nav-link" href="{{route('dish.recipe',[$dish->id])}}">Dish Recipe</a>
                           </li>

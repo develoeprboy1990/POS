@@ -177,9 +177,12 @@
 
                             @endphp
                             <tr>
-                                <td colspan="2">
+                                <td colspan="6" style="text-align:left">
                                     {{ $product_name }}
                                     <br>{{ $product_sale_data->Qty }} x {{ $product_price }}
+
+                                </td>
+                                <td style="text-align:right">{{ $product_sale_data->Qty * $product_price }}
 
                                 </td>
                                
@@ -193,9 +196,12 @@
                                     $product_code = $lims_product_data->code;
                                 @endphp
                             <tr>
-                                <td colspan="2">
+                                <td colspan="6" style="text-align:left">
                                     {{ $product_name }}
                                     <br>{{ $product_sale_data->quantity }} x {{ $product_price }}
+
+                                </td>
+                                <td style="text-align:right">{{ $product_sale_data->quantity * $product_price }}
 
                                 </td>
                                

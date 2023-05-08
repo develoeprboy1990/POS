@@ -85,7 +85,7 @@
 
                  <div class="form-check form-check-inline pt-2">
                    <input class="form-check-input" type="radio" name="ItemType" id="inlineRadio1" value="resturent" {{ old('ItemType') == 'resturent' ? 'checked' : '' }}>
-                   <label class="form-check-label" for="inlineRadio1">Resturent</label>
+                   <label class="form-check-label" for="inlineRadio1">Restaurant</label>
                  </div>
                   </div>
                 </div>

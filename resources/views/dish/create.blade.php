@@ -232,9 +232,9 @@
                           <li class="nav-item disabled" role="presentation">
                             <button class="nav-link" id="price-tab" data-bs-toggle="tab" data-bs-target="#price" type="button" role="tab" aria-controls="price" aria-selected="false">Dish Types</button>
                           </li>
-                          <li class="nav-item disabled" role="presentation">
+                          <!-- <li class="nav-item disabled" role="presentation">
                             <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="images" aria-selected="false">Dish Images</button>
-                          </li>
+                          </li> -->
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="name" role="tabpanel" aria-labelledby="name-tab">
