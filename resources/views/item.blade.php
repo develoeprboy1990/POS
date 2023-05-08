@@ -346,6 +346,7 @@
         <table class="table table-striped  table-sm  m-0" id="student_table">
 <thead><tr>
 <th scope="col">S.No</th>
+<th scope="col">Item Code</th>
 <th scope="col">Type</th>
 <th scope="col">Name</th>
 <th scope="col">Unit</th>
@@ -359,6 +360,7 @@
 @foreach ($item as $key =>$value)
  <tr>
  <td class="col-md-">{{$key+1}}</td>
+ <td class="col-md-1">{{$value->ItemCode}}</td>
  <td class="col-md-1">{{$value->ItemType}}</td>
  <td class="col-md-7">{{$value->ItemName}}</td>
  <td class="col-md-2">{{$value->unit ? $value->unit->base_unit : 'N/A'}}</td>
