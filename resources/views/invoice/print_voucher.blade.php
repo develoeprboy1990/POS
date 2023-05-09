@@ -286,11 +286,11 @@
                         </tr>
                         <tr>
                             @if (@$general_setting->currency_position == 'prefix')
-                                <th class="centered" colspan="6">{{ trans('file.In Words') }}:
+                                <th class="centered" colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:
                                     <span>{{ config('currency') }}</span>
                                     <span>{{ str_replace('-', ' ', $numberInWords) }}</span></th>
                             @else
-                                <th class="centered" colspan="6">{{ trans('file.In Words') }}:
+                                <th class="centered" colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:
                                     <span>{{ str_replace('-', ' ', $numberInWords) }}</span>
                                     <span>{{ config('currency') }}</span></th>
                             @endif
