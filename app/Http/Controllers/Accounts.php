@@ -1787,7 +1787,7 @@ $data = array(
 
 $itemId = DB::table('item')->insertGetId($data);
 
-// code to add newly created item in stock
+// code to add newly created item in stockd
 $quantity = trim($request->stockQty);
 if($quantity > 0){
    $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','BILL%')->count();
