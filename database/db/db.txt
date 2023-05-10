@@ -341,3 +341,12 @@ ALTER TABLE `estimate_master` CHANGE `EstimateMasterID` `EstimateMasterID` INT N
 
 
 ===================
+date: 10-5-2023
+
+php artisan migrate --path=database/migrations/2023_05_10_093958_add_supplier_id_to_pos_setting.php
+
+UPDATE `pos_setting` SET `supplier_id` = '1' WHERE `pos_setting`.`id` = 1;
+
+ALTER TABLE `invoice_detail` CHANGE `Total` `Total` DOUBLE(10,2) NULL DEFAULT NULL;
+
+=================

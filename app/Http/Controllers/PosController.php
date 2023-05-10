@@ -654,9 +654,10 @@ class PosController extends Controller
     {
         $lims_customer_list = DB::table('party')->get();
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
+        $lims_supplier_list = DB::table('supplier')->get();
         $lims_pos_setting_data = PosSetting::latest()->first();
         
-        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list','lims_pos_setting_data'));
+        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list','lims_pos_setting_data','lims_supplier_list'));
     }
 
     public function storePosSetting(Request $request)
@@ -674,6 +675,7 @@ class PosController extends Controller
         $pos_setting->id = 1;
         $pos_setting->customer_id = $data['customer_id'];
         $pos_setting->warehouse_id = $data['warehouse_id'];
+        $pos_setting->supplier_id = $data['supplier_id'];
         $pos_setting->product_number = $data['product_number'];
         $pos_setting->stripe_public_key = $data['stripe_public_key'];
         $pos_setting->stripe_secret_key = $data['stripe_secret_key'];
