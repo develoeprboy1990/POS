@@ -413,7 +413,8 @@
             type: 'GET',
             url: 'products/lims_sticer_search',
             data: {
-                code:code,qty:qty
+                code:code,
+                qty:qty
             },
             success: function(data) {
 

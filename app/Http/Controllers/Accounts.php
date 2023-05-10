@@ -1717,9 +1717,10 @@ $units = Unit::get();
 $lims_warehouse_list = Warehouse::where('is_active', true)->get();
 $item_categories = DB::table('item_category')->get();
 $lims_brand_all = Brand::where('is_active', true)->get();
+$supplier = DB::table('supplier')->get();
 
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
-return view ('item',compact('pagetitle','item','chartofaccount','units','lims_warehouse_list','item_categories','lims_brand_all'));
+return view ('item',compact('pagetitle','item','chartofaccount','units','lims_warehouse_list','item_categories','lims_brand_all','supplier'));
 }
 
 
@@ -1768,7 +1769,7 @@ $data = array(
 'UnitID' => $request->input('unit_id'),
 'ItemCategoryID' => $request->input('item_category_id'),
 'BrandID' => $request->input('brand_id'),
-// 'WarehouseID' => $request->input('warehouse_id'),
+'WarehouseID' => $request->input('warehouse_id'),
 'ItemCode' => $request->input('ItemCode'),
 'ItemName' => $request->input('ItemName'),
 'ItemImage' => $imageName,
@@ -1784,11 +1785,59 @@ $data = array(
 
 
 
-$id= DB::table('item')->insertGetId($data);
+$itemId = DB::table('item')->insertGetId($data);
 
-// if($request->stockQty > 0){
+// code to add newly created item in stockd
+$quantity = trim($request->stockQty);
+if($quantity > 0){
+   $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','BILL%')->count();
+   $invoice_no = 'BILL-0000' . ++$invoice_no;
+   $today_date = date('Y-m-d');
+   $reference_no = date("his");
+   $price = trim($request->SellingPrice); // whether to store cost or selling price
+   $subTotal = $price * $quantity;
+   $invoice_mst = array(
+              'InvoiceNo' => $invoice_no, 
+              'Date' => $today_date, 
+              'DueDate' => $today_date, 
+              'SupplierID' => $request->SupplierID, 
+              'WarehouseID' => $request->warehouse_id, 
+              'WalkinCustomerName' => 'Walkin Customer', 
+              'ReferenceNo' => $reference_no, 
+              'PaymentMode' => 'Cash',  
+              'SubTotal' => $subTotal, 
+              'DiscountPer' => 0, 
+              'DiscountAmount' => 0, 
+              'Total' => $subTotal, 
+              'TotalQty' => $subTotal, 
+              'TaxPer' => 0, 
+              'Tax' => 0, 
+              'Shipping' => 0, 
+              'GrandTotal' => $quantity, 
+              'Paid' => $subTotal, 
+              'Balance' => 0,              
+              'UserID' => session::get('UserID'), 
+      );
+
+      $invoiceMasterID= DB::table('invoice_master')->insertGetId($invoice_mst);
+
+      $invoice_det = array (
+        'InvoiceMasterID' =>  $invoiceMasterID, 
+        'InvoiceNo' => $invoice_no, 
+        'ItemID' => $itemId,
+        'SupplierID' => $request->input('SupplierID'), 
+        'Qty' => $quantity,
+        'Description' => $request->ItemName,
+        'TaxPer' => 0,
+        'Tax' => 0,
+        'Rate' => $price,
+        'Total' => $subTotal,
+        
+    );
   
-// }
+    DB::table('invoice_detail')->insertGetId($invoice_det);
+  
+}
 
 return redirect ('Item')->with('error', 'Save Successfully.')->with('class','success');
 }

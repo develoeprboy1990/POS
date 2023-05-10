@@ -133,6 +133,29 @@
                   </div>
                 </div>
 
+                <div class="mb-3 row">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="stock-qty">Stock Quantity</label>
+                  </div>
+                  <div class="col-sm-9">
+                   <input type="number" id="stockQty" class="form-control" name="stockQty" value="0" >
+                  </div>
+                </div>
+
+                <div class="mb-3 row d-none" id="supplier-div">
+                    <div class="col-sm-2">
+                        <label class="col-form-label fw-bold" for="supplier">Supplier</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <select name="SupplierID" id="SupplierID" class="form-select">
+                            <option value="">Select Supplier</option>
+                            @foreach ($supplier as $key => $value)
+                                <option value="{{$value->SupplierID}}">{{$value->SupplierName}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div> 
+
 
               </div>
 
@@ -161,19 +184,6 @@
                   </div>
                 </div>
                 
-                <!-- <div class="mb-3 row">
-                  <div class="col-sm-2">
-                    <label class="col-form-label fw-bold" for="first-name">Warehouse</label>
-                  </div>
-                  <div class="col-sm-9">
-                    <select name="warehouse_id" id="warehouse_id" class="form-select">
-                       <option value="">Select Warehouse</option>
-                       @foreach($lims_warehouse_list as $warehouse)
-                        <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
-                        @endforeach
-                      </select>
-                  </div>
-                </div> -->
                 
                 <div class="mb-3 row">
                   <div class="col-sm-2">
@@ -200,6 +210,20 @@
                        <option value="">Select Brand</option>
                        @foreach($lims_brand_all as $brand)
                         <option value="{{$brand->id}}">{{$brand->title}}</option>
+                        @endforeach
+                      </select>
+                  </div>
+                </div>
+
+                <div class="mb-3 row d-none" id="warehouse-div">
+                  <div class="col-sm-2">
+                    <label class="col-form-label fw-bold" for="first-name">Warehouse</label>
+                  </div>
+                  <div class="col-sm-9">
+                    <select name="warehouse_id" id="warehouse_id" class="form-select">
+                       <option value="">Select Warehouse</option>
+                       @foreach($lims_warehouse_list as $warehouse)
+                        <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
                         @endforeach
                       </select>
                   </div>
@@ -258,18 +282,7 @@
                    <textarea name="CostDescription" id="" class="form-control" cols="43" rows="3"></textarea>
                   </div>
                 </div> 
-
-               <div class="mb-3 row">
-                  <div class="col-sm-3">
-                    <label class="col-form-label" for="stock-qty">Stock Quantity</label>
-                  </div>
-                  <div class="col-sm-6">
-                   <input type="number" id="stockQty" class="form-control" name="stockQty" value="0" >
-                  </div>
-                </div>    
-                
-                 
-                         
+     
 
         </div>
         <div class="col-md-6"> 
@@ -316,9 +329,6 @@
                    <textarea name="SellingDescription" id="" class="form-control" cols="43" rows="3"></textarea>
                   </div>
                 </div>      
-
-
-              </div>
 
 
       </div>
@@ -439,6 +449,18 @@
 
   
 
+});
+
+$('#stockQty').keyup(function() {
+    var qty = $(this).val();
+    if(qty > 0){
+      $('#warehouse-div').removeClass("d-none");
+      $('#supplier-div').removeClass("d-none");
+    }
+    else{
+      $('#warehouse-div').addClass("d-none");
+      $('#supplier-div').addClass("d-none");
+    }
 });
 
 
