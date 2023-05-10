@@ -1,0 +1,210 @@
+@extends('tmp')
+@section('title', $pagetitle)
+
+@section('page-styles')
+<style>
+    .invalid-feedback {
+        display: block !important;
+    }
+</style>
+@endsection
+@section('content')
+<div class="main-content">
+
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="card-header">
+                <h2>Transfer Items From One Warehouse To Another Warehouse</h2>
+            </div>
+            <form action="{{route('warehouse.stock-warehouse-transfer')}}" method="post" name="form1" id="form1">
+                @csrf
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="alert alert-primary" role="alert">
+                                <strong>Transfer</strong> Select warehose carefully.
+                            </div>
+
+                            <div class="alert alert-danger" role="alert" style="display:none">
+                                <strong>Oh snap!</strong> Change a few things up and try submitting again.
+                            </div>
+                            <div class="alert alert-success" role="alert" style="display:none">
+                                <strong>Success !</strong> Selected item has been transfered to warehouse.
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="mb-1">
+                                    <label for="basicpill-firstname-input">From Ware House</label>
+                                    <select name="from_warehouse_id" id="from_warehouse_id" class="select2 form-select my_class" onchange="getValue(this);" data-id='shah'>
+                                        <option value="">All WareHouses</option>
+                                        @foreach ($warehouses as $key => $value)
+                                        <option value="{{$value->id}}">{{$value->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="hidden" name="warehouseid" id="warehouseid" value="">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-1">
+                                    <label for="basicpill-firstname-input">To Ware House</label>
+                                    <select name="to_warehouse_id" id="to_warehouse_id" class="select2 form-select my_class" id="select2-basic">
+                                        <option value="">All WareHouses</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row products">
+
+                            <div class="mb-3 row">
+                                <div class="col-sm-4">
+                                    <div class="mb-1">
+                                        <label for="ItemID">Products in the selected warehouse</label>
+                                        <select name="ItemID" id="ItemID" class="select2 form-select my_class" onchange="getProductValue(this);">
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="qty">Enter Quantity</label>
+                                    <input type="number" id="qty" class="form-control" name="qty" placeholder="Enter Quantity" min="1" max="3">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer bg-light">
+                        <button type="submit" class="btn btn-success w-lg float-right" id="submit">Transfer Products</button>
+
+                        <button type="reset" class="btn btn-secondary w-lg float-right" id="submit">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+<!-- END: Content-->
+
+
+@endsection
+
+
+@section('page-scripts')
+
+<script>
+    $(document).ready(function() {
+        $('#from_warehouse_id').on('change', function() {
+            alert($(this).val());
+        });
+    });
+
+    function getValue(option) {
+        var warehouseId = option.value;
+        $('#warehouseid').val(warehouseId);
+        let url = "{{route('warehouse.fetchwarehouses',':warehouseId')}}";
+        route = url.replace(':warehouseId', warehouseId);
+        $.ajax({
+            url: route,
+            type: "GET",
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            beforeSend: function() {}
+        }).done(function(response) {
+            var html = '<option vale="">Please Select Warehouse</option>';
+            $.each(response['warehouses'], function(key, value) {
+                html += '<option value="' + value.id + '">' + value.name + '</option>';
+
+            });
+            $('#to_warehouse_id').html(html);
+            if (response['products'].length !== 0) {
+
+                var product = '<option vale="">Please Chose Item</option>';
+                $.each(response['products'], function(key, value) {
+                    product += '<option value="' + value.ItemID + '">' + value.ItemName + '</option>';
+
+                });
+            } else {
+
+                var product = '<option vale="">No Items Found.</option>';
+            }
+            $('#ItemID').html(product);
+
+        }); // DONE ENDS HERE
+    }
+
+    function getProductValue(option) {
+        var product_id = option.value;
+        var warehouseid = $('#warehouseid').val();
+        let url = "{{route('warehouse.checkqty',[':warehouseid',':product_id'])}}";
+        route = url.replace(':warehouseid', warehouseid);
+        route = route.replace(':product_id', product_id);
+        $.ajax({
+            url: route,
+            type: "GET",
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            beforeSend: function() {}
+        }).done(function(response) {
+            $('#qty').val(response.qty);
+            // Set the maximum value to 20
+            $("#qty").attr("max", response.qty);
+        }); // DONE ENDS HERE
+    }
+
+    $('#form1').submit(function(event) {
+        // Stop form from submitting normally
+        event.preventDefault();
+        // Get form data
+        // var formData = $(this).serialize();
+        let formData = new FormData(this);
+        let url = "{{route('warehouse.stock-warehouse-transfer')}}";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $("#submit").attr('disabled', true);
+            },
+            success: function(response) {
+                $("#submit").attr('disabled', false);
+                $('.alert-danger').hide();
+                if (response) {
+                    $('.alert-success').show();
+                    $("#form1").reset();
+                    $(':input', '#form1')
+                        .not(':button, :submit, :reset, :hidden')
+                        .val('')
+                        .removeAttr('checked')
+                        .removeAttr('selected');
+                }
+                // Handle success response
+            }
+        }).fail(function(jqXHR, textStatus) {
+            $("#submit").attr('disabled', false);
+            var alert_danger = '';
+            $.each(jqXHR.responseJSON.errors, function(field_name, error) {
+              // $(document).find('[name=' + field_name + ']').after('<div class="invalid-feedback">' + error + '</div>');
+                alert_danger += error + '<br/>';
+            });
+            $('.alert-danger').show();
+            $('.alert-danger').html(alert_danger);
+            // console.log(jqXHR);
+            //onsole.log(textStatus);
+
+            //showing validation errors here? and how to show?
+        });
+    });
+</script>
+
+@endsection
