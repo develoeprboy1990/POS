@@ -196,7 +196,7 @@ class PosController extends Controller
 
     public function stockWarehouseTransfer()
     {
-        $warehouses = Warehouse::get();
+        $warehouses = Warehouse::where('is_active','1')->get();
         $pagetitle = 'Stock Warehouse Transfer';
         return view('warehouse.stockwarehousetransfer', compact('pagetitle', 'warehouses'));
     }
@@ -204,7 +204,7 @@ class PosController extends Controller
     public function fetchWareHouses(Request $request, $id)
     {
         if ($request->ajax()) {
-            $warehouses = Warehouse::select('id', 'name')->where('id', '<>', $id)->get();
+            $warehouses = Warehouse::select('id', 'name')->where('is_active','1')->where('id', '<>', $id)->get();
             $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $id)->where('IsActive', true)->get();
             $data['warehouses'] = $warehouses;
             $data['products']   = $products;
