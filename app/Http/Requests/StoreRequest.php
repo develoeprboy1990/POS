@@ -24,10 +24,10 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'ItemID'         => ['required'],
-            'to_warehouse_id'    => 'required|string',
-            'from_warehouse_id'  => 'required|string',
-            'qty'=>'required'
+            'from_warehouse_id' => 'required|numeric|min:1',
+            'to_warehouse_id'   => 'required|numeric|min:1',
+            'ItemID'            => 'required|numeric|min:1',
+            'qty'               => 'required|numeric|min:1'
         ];
     }
 
@@ -39,10 +39,16 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'ItemID.required' => 'Please select item.',
-            'from_warehouse_id.required' => 'Please select target warehouse',
-            'to_warehouse_id.required' => 'Please select destination warehouse.',
-            'qty.required' => 'Please enter quantity.',
+            'from_warehouse_id.required' => 'Please select from warehouse',
+            'to_warehouse_id.required'   => 'Please select to warehouse.',
+            'ItemID.required'            => 'Please select item.',
+            'qty.required'               => 'Please enter quantity.', 
+            
+            'from_warehouse_id.numeric' => 'Please select from warehouse',
+            'to_warehouse_id.numeric'   => 'Please select to warehouse.',
+            'ItemID.numeric'            => 'Please select one item.',
+            'qty.numeric'               => 'Please enter minimum one quantity.',
+            
         ];
     }
 }

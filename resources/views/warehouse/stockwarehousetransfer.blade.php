@@ -6,10 +6,53 @@
     .invalid-feedback {
         display: block !important;
     }
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+        height: 100%;
+        display: none;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .cv-spinner {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px #ddd solid;
+        border-top: 4px #2e93e6 solid;
+        border-radius: 50%;
+        animation: sp-anime 0.8s infinite linear;
+    }
+
+    @keyframes sp-anime {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .is-hide {
+        display: none;
+    }
 </style>
 @endsection
 @section('content')
+<div id="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
 <div class="main-content">
+
+
 
     <div class="page-content">
         <div class="container-fluid">
@@ -99,8 +142,12 @@
 
 <script>
     $(document).ready(function() {
-        $('#from_warehouse_id').on('change', function() {
-            alert($(this).val());
+        $(document).ajaxSend(function() {
+            $("#overlay").fadeIn(300);
+        });
+
+        $(document).ajaxComplete(function() {
+            $("#overlay").fadeOut(300);
         });
     });
 
@@ -117,6 +164,7 @@
             contentType: false,
             beforeSend: function() {}
         }).done(function(response) {
+
             var html = '<option vale="">Please Select Warehouse</option>';
             $.each(response['warehouses'], function(key, value) {
                 html += '<option value="' + value.id + '">' + value.name + '</option>';
@@ -180,6 +228,7 @@
                 $("#submit").attr('disabled', false);
                 $('.alert-danger').hide();
                 if (response) {
+                    $("#overlay").fadeOut(300);
                     $('.alert-success').show();
                     $("#form1").reset();
                     $(':input', '#form1')
@@ -194,7 +243,7 @@
             $("#submit").attr('disabled', false);
             var alert_danger = '';
             $.each(jqXHR.responseJSON.errors, function(field_name, error) {
-              // $(document).find('[name=' + field_name + ']').after('<div class="invalid-feedback">' + error + '</div>');
+                // $(document).find('[name=' + field_name + ']').after('<div class="invalid-feedback">' + error + '</div>');
                 alert_danger += error + '<br/>';
             });
             $('.alert-danger').show();
@@ -204,6 +253,9 @@
 
             //showing validation errors here? and how to show?
         });
+
+
+
     });
 </script>
 
