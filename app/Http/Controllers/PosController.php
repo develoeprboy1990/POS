@@ -15,6 +15,9 @@ use App\Models\PosSetting;
 use App\Models\Tax;
 use App\Models\Payment;
 use App\Models\Currency;
+
+use App\Models\Product_Warehouse;
+use App\Http\Requests\StoreRequest;
 use DNS1D;
 use DNS2D;
 use Keygen;
@@ -37,7 +40,7 @@ class PosController extends Controller
     {
         $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
-        $lims_biller_data = DB::table('user')->where('UserId',$lims_sale_data->UserID)->first();
+        $lims_biller_data = DB::table('user')->where('UserId', $lims_sale_data->UserID)->first();
         $lims_warehouse_data = Warehouse::find($lims_sale_data->WarehouseID);
         $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
         $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->get();
@@ -45,12 +48,12 @@ class PosController extends Controller
         $company = DB::table('company')->first();
 
         $numberToWords = new NumberToWords();
-        if(\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
+        if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
             $numberTransformer = $numberToWords->getNumberTransformer('en');
         else
             $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
         $numberInWords = $numberTransformer->toWords($lims_sale_data->GrandTotal);
-        return view('invoice.print_invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','company'));
+        return view('invoice.print_invoice', compact('lims_sale_data', 'lims_product_sale_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords', 'company'));
     }
 
     public function printVoucher($InvoiceMasterID)
@@ -58,28 +61,28 @@ class PosController extends Controller
         $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->whereNull('dish_type_id')->get();
         $lims_product_dish_data = DB::table('invoice_dish_details')->where('invoice_master_id', $InvoiceMasterID)->get();
-        $lims_biller_data = DB::table('user')->where('UserId',$lims_sale_data->UserID)->first();
+        $lims_biller_data = DB::table('user')->where('UserId', $lims_sale_data->UserID)->first();
 
         $lims_warehouse_data = Warehouse::find($lims_sale_data->WarehouseID);
         $lims_customer_data = DB::table('party')->where('PartyID', $lims_sale_data->PartyID)->first();
-        $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->orderBy('paymentID','DESC')->first();
+        $lims_payment_data = Payment::where('InvoiceMasterID', $InvoiceMasterID)->orderBy('paymentID', 'DESC')->first();
         // dd($lims_payment_data);
 
         $company = DB::table('company')->first();
 
         $numberToWords = new NumberToWords();
-        if(\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
+        if (\App::getLocale() == 'ar' || \App::getLocale() == 'hi' || \App::getLocale() == 'vi' || \App::getLocale() == 'en-gb')
             $numberTransformer = $numberToWords->getNumberTransformer('en');
         else
             $numberTransformer = $numberToWords->getNumberTransformer(\App::getLocale());
         $numberInWords = $numberTransformer->toWords($lims_sale_data->GrandTotal);
-        return view('invoice.print_voucher', compact('lims_sale_data', 'lims_product_sale_data','lims_product_dish_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords','company'));
+        return view('invoice.print_voucher', compact('lims_sale_data', 'lims_product_sale_data', 'lims_product_dish_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords', 'company'));
     }
 
     public function invoiceListing(Request $request)
     {
         if ($request->ajax()) {
-            $invoices = DB::table('invoice_master')->where('InvoiceNo','like','POS%')->get();
+            $invoices = DB::table('invoice_master')->where('InvoiceNo', 'like', 'POS%')->get();
             return Datatables::of($invoices)
                 ->addIndexColumn()
                 ->addColumn('payment_status', function ($row) {
@@ -92,7 +95,7 @@ class PosController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown"><a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-horizontal font-size-18"></i></a><div class="dropdown-menu dropdown-menu-end">';
-                    $btn .= '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="dropdown-item" target="_blank">Edit Invoice</a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">View Invoice</a><a href="' . route('voucher.print', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">Print Invoice</a><button type="button" class="add-payment dropdown-item" data-id = "'.$row->InvoiceMasterID.'" data-bs-toggle="modal" data-bs-target="#add-payment">'.trans('file.Add Payment').'</button>';
+                    $btn .= '<a href="' . route('sales.edit',   $row->InvoiceMasterID) . '" class="dropdown-item" target="_blank">Edit Invoice</a><a href="' . route('invoice.show', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">View Invoice</a><a href="' . route('voucher.print', ['id' => $row->InvoiceMasterID]) . '" class="dropdown-item" target="_blank">Print Invoice</a><button type="button" class="add-payment dropdown-item" data-id = "' . $row->InvoiceMasterID . '" data-bs-toggle="modal" data-bs-target="#add-payment">' . trans('file.Add Payment') . '</button>';
                     $btn .= ' </div></div>';
                     return $btn;
                 })
@@ -110,11 +113,11 @@ class PosController extends Controller
             return Datatables::of($wareHouses)
                 ->addIndexColumn()
                 ->addColumn('no_of_prod', function ($row) {
-                    $no_of_prod = DB::table('v_inventory')->where('WarehouseID',$row->id)->count('ItemID');
+                    $no_of_prod = DB::table('v_inventory')->where('WarehouseID', $row->id)->count('ItemID');
                     return $no_of_prod;
                 })
                 ->addColumn('stock_qty', function ($row) {
-                    $stock_qty = DB::table('v_inventory')->where('WarehouseID',$row->id)->sum('Balance');
+                    $stock_qty = DB::table('v_inventory')->where('WarehouseID', $row->id)->sum('Balance');
                     return $stock_qty;
                 })
                 ->addColumn('action', function ($row) {
@@ -190,6 +193,62 @@ class PosController extends Controller
         return redirect('ware-house-list')->with('error', 'Deleted Successfully')->with('class', 'success');
     }
 
+
+    public function stockWarehouseTransfer()
+    {
+        $warehouses = Warehouse::where('is_active','1')->get();
+        $pagetitle = 'Stock Warehouse Transfer';
+        return view('warehouse.stockwarehousetransfer', compact('pagetitle', 'warehouses'));
+    }
+
+    public function fetchWareHouses(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $warehouses = Warehouse::select('id', 'name')->where('is_active','1')->where('id', '<>', $id)->get();
+            $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $id)->where('IsActive', true)->get();
+            $data['warehouses'] = $warehouses;
+            $data['products']   = $products;
+            return response()->json($data);
+        }
+    }
+
+    public function checkQty($warehouseid, $id)
+    {
+        $products   = DB::table('v_items_in_warehouse')->select('qty')->where('warehouse_id', $warehouseid)->where('ItemID', $id)->where('IsActive', true)->first();
+        return response()->json($products);
+    }
+
+    public function runQuery()
+    {
+        dd(DB::statement("CREATE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))"));
+    }
+
+    public function postStockWarehouseTransfer(StoreRequest $request)
+    {
+        try {
+            $from_warehouse =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->from_warehouse_id)->first();
+            $to_warehouse   =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->to_warehouse_id)->first();
+            $qty            = $request->qty;
+            $remainingQty   = $from_warehouse->qty - $qty;
+            if (!empty($from_warehouse)) {
+                $from_warehouse->qty = $remainingQty;
+                $from_warehouse->save();
+            }
+            if (!empty($to_warehouse)) {
+                $to_warehouse->qty = $to_warehouse->qty + $qty;
+                $to_warehouse->save();
+            } else {
+                Product_Warehouse::create(['product_id' => $request->ItemID, 'warehouse_id' => $request->to_warehouse_id, 'qty' => $qty]);
+            }
+            session()->flash('success', 'Application has been posted for new loan successfully');
+            return true;
+        } catch (\Exception $exception) {
+            session()->flash('error', 'Something went Wrong, Try again later');
+            return false;
+        }
+    }
+
+
     public function brandList(Request $request)
     {
         if ($request->ajax()) {
@@ -198,9 +257,9 @@ class PosController extends Controller
                 ->addIndexColumn()
                 ->addColumn('brand_img', function ($row) {
                     if ($row->image)
-                        $brand_img = '<td><img src="'.url('thumbnail', $row->image).'"></td>';
+                        $brand_img = '<td><img src="' . url('thumbnail', $row->image) . '"></td>';
                     else
-                        $brand_img = '<td><img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="100" width="100"></td>';
+                        $brand_img = '<td><img src="' . url('assets/images/product/zummXD2dvAtI.png') . '" height="100" width="100"></td>';
 
                     return $brand_img;
                 })
@@ -243,12 +302,12 @@ class PosController extends Controller
         $image = $request->file('image');
         if ($image) {
 
-            $imageName = time().'.'.$image->extension();
+            $imageName = time() . '.' . $image->extension();
             $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save($destinationPath.'/'.$imageName);
+            })->save($destinationPath . '/' . $imageName);
             $destinationPath = public_path('assets/images/brand');
             $image->move($destinationPath, $imageName);
             $input['image'] = $imageName;
@@ -280,12 +339,12 @@ class PosController extends Controller
         $image = $request->file('image');
         if ($image) {
 
-            $imageName = time().'.'.$image->extension();
+            $imageName = time() . '.' . $image->extension();
             $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save($destinationPath.'/'.$imageName);
+            })->save($destinationPath . '/' . $imageName);
             $destinationPath = public_path('assets/images/brand');
             $image->move($destinationPath, $imageName);
 
@@ -310,10 +369,10 @@ class PosController extends Controller
             return Datatables::of($lims_unit_all)
                 ->addIndexColumn()
                 ->addColumn('status', function ($row) {
-                    if($row->status == 1)
-                    $status = 'Active';
+                    if ($row->status == 1)
+                        $status = 'Active';
                     else
-                    $status = 'In Active';
+                        $status = 'In Active';
 
                     return $status;
                 })
@@ -322,19 +381,19 @@ class PosController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['status','action'])
+                ->rawColumns(['status', 'action'])
                 ->make(true);
         }
 
-        return view('unit_list',compact('lims_unit_all'));
+        return view('unit_list', compact('lims_unit_all'));
     }
-    
+
     public function storeUnit(Request $request)
     {
         $this->validate($request, [
             'base_unit' => [
                 'max:255',
-                    Rule::unique('units')->where(function ($query) {
+                Rule::unique('units')->where(function ($query) {
                     return $query->where('status', 1);
                 }),
             ]
@@ -350,13 +409,13 @@ class PosController extends Controller
         $lims_unit_data = Unit::findOrFail($request->unit_id);
         return response()->json($lims_unit_data);
     }
-    
+
     public function updateUnit(Request $request)
     {
         $this->validate($request, [
             'base_unit' => [
                 'max:255',
-                    Rule::unique('units')->ignore($request->unit_id)->where(function ($query) {
+                Rule::unique('units')->ignore($request->unit_id)->where(function ($query) {
                     return $query->where('status', 1);
                 }),
             ]
@@ -364,7 +423,7 @@ class PosController extends Controller
         ]);
 
         $input = $request->all();
-        $lims_unit_data = Unit::where('id',$input['unit_id'])->first();
+        $lims_unit_data = Unit::where('id', $input['unit_id'])->first();
         $lims_unit_data->update($input);
         return redirect('unit-list')->with('error', 'Saved Successfully')->with('class', 'success');
     }
@@ -383,23 +442,23 @@ class PosController extends Controller
             return Datatables::of($item_categories)
                 ->addIndexColumn()
                 ->addColumn('image', function ($row) {
-                    if($row->image)
-                        $image = '<img src="'.url('thumbnail', $row->image).'">';
+                    if ($row->image)
+                        $image = '<img src="' . url('thumbnail', $row->image) . '">';
                     else
-                        $image = '<img src="'.url('assets/images/product/zummXD2dvAtI.png').'" height="100" width="100">';
+                        $image = '<img src="' . url('assets/images/product/zummXD2dvAtI.png') . '" height="100" width="100">';
 
                     return $image;
                 })
                 ->addColumn('parent_cat', function ($row) {
-                    if($row->ParentID)
-                        $parent = DB::table('item_category')->where('ItemCategoryID',$row->ParentID)->pluck('title')->first();
+                    if ($row->ParentID)
+                        $parent = DB::table('item_category')->where('ItemCategoryID', $row->ParentID)->pluck('title')->first();
                     else
                         $parent = "N/A";
 
                     return $parent;
                 })
                 ->addColumn('number_of_product', function ($row) {
-                    $number_of_product = DB::table('item')->where('ItemCategoryID',$row->ItemCategoryID)->where('IsActive', true)->count();
+                    $number_of_product = DB::table('item')->where('ItemCategoryID', $row->ItemCategoryID)->where('IsActive', true)->count();
                     return @$number_of_product;
                 })
                 ->addColumn('action', function ($row) {
@@ -407,16 +466,16 @@ class PosController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['image','parent_cat','number_of_product','stock_qty','stock_worth','action'])
+                ->rawColumns(['image', 'parent_cat', 'number_of_product', 'stock_qty', 'stock_worth', 'action'])
                 ->make(true);
         }
 
-        return view('item_category_list',compact('item_categories'));
+        return view('item_category_list', compact('item_categories'));
     }
 
     public function getItemCategoryDetail(Request $request)
     {
-        $lims_category_data = DB::table('item_category')->where('ItemCategoryID',$request->cat_id)->first();
+        $lims_category_data = DB::table('item_category')->where('ItemCategoryID', $request->cat_id)->first();
         $parent_id = DB::table('item_category')->where('ItemCategoryID', $lims_category_data->ParentID)->pluck('ItemCategoryID')->first();
 
         return response()->json([
@@ -431,7 +490,7 @@ class PosController extends Controller
         $this->validate($request, [
             'title' => [
                 'max:255',
-                    Rule::unique('item_category')->where(function ($query) {
+                Rule::unique('item_category')->where(function ($query) {
                     return $query->where('IsActive', 1);
                 }),
             ],
@@ -440,19 +499,17 @@ class PosController extends Controller
 
         $image = $request->file('categoryImage');
         if ($image) {
-            
-            $imageName = time().'.'.$image->extension();
+
+            $imageName = time() . '.' . $image->extension();
             $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save($destinationPath.'/'.$imageName);
-       
+            })->save($destinationPath . '/' . $imageName);
+
             $destinationPath = public_path('assets/images/category');
             $image->move($destinationPath, $imageName);
-            
-        }
-        else{
+        } else {
             $imageName = null;
         }
 
@@ -471,7 +528,7 @@ class PosController extends Controller
     public function updateItemCategory(Request $request)
     {
         $category_name = preg_replace('/\s+/', ' ', $request->editItemCategoryName);
-        $this->validate($request,[
+        $this->validate($request, [
             'title' => [
                 'max:255',
                 Rule::unique('item_category')->ignore($request->itemCategoryId)->where(function ($query) {
@@ -484,13 +541,13 @@ class PosController extends Controller
         $input = $request->except('editCategoryImage');
         $image = $request->file('editCategoryImage');
         if ($image) {
-            $imageName = time().'.'.$image->extension();
+            $imageName = time() . '.' . $image->extension();
             $destinationPath = public_path('/thumbnail');
             $img = Image::make($image->path());
             $img->resize(100, 100, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save($destinationPath.'/'.$imageName);
-       
+            })->save($destinationPath . '/' . $imageName);
+
             $destinationPath = public_path('assets/images/category');
             $image->move($destinationPath, $imageName);
 
@@ -500,8 +557,7 @@ class PosController extends Controller
                 "image" => $imageName,
                 "type" => $request->edit_type,
             );
-        }
-        else{
+        } else {
             $data = array(
                 "ParentID" => $request->edit_parent_id,
                 "title" => $category_name,
@@ -509,9 +565,9 @@ class PosController extends Controller
             );
         }
 
-        
 
-        
+
+
 
         $category = DB::table('item_category')->where('ItemCategoryID', $request->itemCategoryId)->update($data);
         return redirect('item-category-list')->with('error', 'Updated Successfully')->with('class', 'success');
@@ -523,7 +579,7 @@ class PosController extends Controller
         return redirect('item-category-list')->with('error', 'Deleted Successfully')->with('class', 'success');
     }
 
-    
+
     public function currencyList(Request $request)
     {
         if ($request->ajax()) {
@@ -603,7 +659,7 @@ class PosController extends Controller
         $this->validate($request, [
             'name' => [
                 'max:255',
-                    Rule::unique('taxes')->where(function ($query) {
+                Rule::unique('taxes')->where(function ($query) {
                     return $query->where('is_active', 1);
                 }),
             ],
@@ -655,8 +711,8 @@ class PosController extends Controller
         $lims_customer_list = DB::table('party')->get();
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
         $lims_pos_setting_data = PosSetting::latest()->first();
-        
-        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list','lims_pos_setting_data'));
+
+        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list', 'lims_pos_setting_data'));
     }
 
     public function storePosSetting(Request $request)
@@ -664,9 +720,9 @@ class PosController extends Controller
         $data = $request->all();
         //writting paypal info in .env file
         $path = '.env';
-        $searchArray = array('PAYPAL_LIVE_API_USERNAME='.env('PAYPAL_LIVE_API_USERNAME'), 'PAYPAL_LIVE_API_PASSWORD='.env('PAYPAL_LIVE_API_PASSWORD'), 'PAYPAL_LIVE_API_SECRET='.env('PAYPAL_LIVE_API_SECRET') );
+        $searchArray = array('PAYPAL_LIVE_API_USERNAME=' . env('PAYPAL_LIVE_API_USERNAME'), 'PAYPAL_LIVE_API_PASSWORD=' . env('PAYPAL_LIVE_API_PASSWORD'), 'PAYPAL_LIVE_API_SECRET=' . env('PAYPAL_LIVE_API_SECRET'));
 
-        $replaceArray = array('PAYPAL_LIVE_API_USERNAME='.$data['paypal_username'], 'PAYPAL_LIVE_API_PASSWORD='.$data['paypal_password'], 'PAYPAL_LIVE_API_SECRET='.$data['paypal_signature'] );
+        $replaceArray = array('PAYPAL_LIVE_API_USERNAME=' . $data['paypal_username'], 'PAYPAL_LIVE_API_PASSWORD=' . $data['paypal_password'], 'PAYPAL_LIVE_API_SECRET=' . $data['paypal_signature']);
 
         // file_put_contents($path, str_replace($searchArray, $replaceArray, file_get_contents($path)));
 
@@ -678,7 +734,7 @@ class PosController extends Controller
         $pos_setting->stripe_public_key = $data['stripe_public_key'];
         $pos_setting->stripe_secret_key = $data['stripe_secret_key'];
         $pos_setting->is_dish_enabled = $data['is_dish_enabled'];
-        if(!isset($data['keybord_active']))
+        if (!isset($data['keybord_active']))
             $pos_setting->keybord_active = false;
         else
             $pos_setting->keybord_active = true;
@@ -689,7 +745,7 @@ class PosController extends Controller
     public function storeParty(Request $request)
     {
         $lims_customer_data = $request->all();
-                //creating user if given user access
+        //creating user if given user access
         // if(isset($lims_customer_data['user'])) {
         //     $this->validate($request, [
         //         'PartyName' => [
@@ -732,7 +788,7 @@ class PosController extends Controller
             "Active" => 'Yes',
         );
 
-        
+
         // if($lims_customer_data['email']) {
         //     try{
         //         Mail::send( 'mail.customer_create', $lims_customer_data, function( $message ) use ($lims_customer_data)
@@ -746,18 +802,17 @@ class PosController extends Controller
         // }
 
         DB::table('party')->insert($party_data);
-        if($lims_customer_data['pos'])
+        if ($lims_customer_data['pos'])
             return redirect('create-invoice')->with('error', 'Customer Saved Successfully')->with('class', 'success');
         else
-           return redirect()->back()->with('error', 'Something Went Wrong')->with('class', 'danger');
-
+            return redirect()->back()->with('error', 'Something Went Wrong')->with('class', 'danger');
     }
 
     public function printBarcode()
     {
         // $lims_product_list_without_variant = $this->productWithoutVariant();
         // $lims_product_list_with_variant = $this->productWithVariant();
-        $lims_product_list_without_variant = DB::table('item')->where([['IsActive', true],['ItemType', 'standard']])->select('ItemID', 'ItemName', 'ItemCode')->get();
+        $lims_product_list_without_variant = DB::table('item')->where([['IsActive', true], ['ItemType', 'standard']])->select('ItemID', 'ItemName', 'ItemCode')->get();
         return view('print_barcode', compact('lims_product_list_without_variant'));
     }
 
@@ -765,24 +820,24 @@ class PosController extends Controller
     {
         // $lims_product_list_without_variant = $this->productWithoutVariant();
         // $lims_product_list_with_variant = $this->productWithVariant();
-        $lims_product_list_without_variant = DB::table('item')->where([['IsActive', true],['ItemType', 'Goods']])->select('ItemID', 'ItemName', 'ItemCode')->get();
+        $lims_product_list_without_variant = DB::table('item')->where([['IsActive', true], ['ItemType', 'Goods']])->select('ItemID', 'ItemName', 'ItemCode')->get();
         return view('print_barcodes', compact('lims_product_list_without_variant'));
     }
     public function limsStickerSearch(Request $request)
     {
         foreach ($request['code'] as $key => $product) {
             $data = array(
-            "qty" => $request['qty'][$key],
-            "itemid" => $product, 
-        );
-             $sticker = DB::table('sticker')->insert($data);
+                "qty" => $request['qty'][$key],
+                "itemid" => $product,
+            );
+            $sticker = DB::table('sticker')->insert($data);
         }
 
-        return response()->json(['url'=>url('products/lims_sticker_print')]);
-        
+        return response()->json(['url' => url('products/lims_sticker_print')]);
 
 
-       // return $product;
+
+        // return $product;
     }
 
     public function limsStickerPrint()
@@ -792,9 +847,11 @@ class PosController extends Controller
         // dd($stickerxy);
         $companyName = Session::get('CompanyName');
         //return view('printbarcodedata',compact('stickerxy','companyName'));
+        //$pdf = PDF::loadView('printbarcodedata', compact('stickerxy'));
 
         $pdf = PDF::loadView('printbarcodedata',compact('stickerxy','companyName'));
         $customPaper = array(0,0,200 ,130 );
+      //$customPaper = array(0, 0, 151, 116);
         $pdf->set_paper($customPaper);
 
         //DB::table('sticker')->truncate();
@@ -856,5 +913,4 @@ class PosController extends Controller
 
         return view('test_list');
     }
-
 }
