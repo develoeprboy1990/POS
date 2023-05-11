@@ -306,7 +306,7 @@
                                                 </div>
                                                 <div class="col-md-6 mt-2">
                                                     <div class="form-group">
-                                                        <label>{{trans('file.Biller')}} *</label>
+                                                        <label>{{trans('file.User')}} *</label>
                                                         <input type="hidden" name="biller_id_hidden" value="{{$lims_sale_data->SupplierID}}" />
                                                         <input type="hidden" name="biller_id" value="{{$lims_sale_data->UserID}}" />
                                                         <p><strong>{{ $biller ? $biller->FullName : Session::get('FullName') }}</strong></p>

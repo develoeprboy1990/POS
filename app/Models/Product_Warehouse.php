@@ -8,7 +8,6 @@ class Product_Warehouse extends Model
 {
 	protected $table = 'product_warehouse';
     protected $fillable =[
-
         "product_id", "product_batch_id", "varinat_id", "warehouse_id", "qty", "price"
     ];
 

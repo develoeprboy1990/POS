@@ -265,7 +265,7 @@
                                                 @if($lims_pos_setting_data)
                                                 <input type="hidden" name="biller_id_hidden" value="{{$lims_pos_setting_data->biller_id}}">
                                                 @endif
-                                                <select required id="biller_id" name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Biller...">
+                                                <select required id="biller_id" name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select User...">
                                                     @foreach($lims_biller_list as $biller)
                                                     <option value="{{$biller->UserID}}">{{$biller->FullName}}</option>
                                                     @endforeach
