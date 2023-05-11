@@ -237,7 +237,7 @@
                         .removeAttr('checked')
                         .removeAttr('selected');
                 }
-                // Handle success response
+                //Handle success response
             }
         }).fail(function(jqXHR, textStatus) {
             $("#submit").attr('disabled', false);
