@@ -855,7 +855,7 @@ class PosController extends Controller
       //$customPaper = array(0, 0, 151, 116);
         $pdf->set_paper($customPaper);
 
-        //DB::table('sticker')->truncate();
+        DB::table('sticker')->truncate();
         return $pdf->stream();
     }
 
