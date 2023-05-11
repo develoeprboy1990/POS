@@ -75,16 +75,11 @@
 <label for="example-tel-input" class="col-md-2 col-form-label fw-bold">User Type</label>
 <div class="col-md-4">
 <select name="UserType" class="form-select">
-
-     
-      <option value="User">User</option>
     <option value="Admin">Admin</option>
-    <option value="Biller">Biller</option>
-    
-    
-
-
-</select> </div>
+    <option value="User">User</option>
+    <option value="Saleman">Saleman</option>
+</select>
+</div>
  </div>
  
  <div class="mb-1 row">
