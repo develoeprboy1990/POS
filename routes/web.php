@@ -634,6 +634,9 @@ Route::get('/DBDump/',[Accounts::class,'DBDump']);
     Route::post('/saveOrderDish', [DishController::class, 'saveOrderDish']);
     Route::post('/updateDishOrder', [DishController::class, 'updateDishOrder']);
     
+    // Routes for adding single dish
+    Route::get('/add-dish', [DishController::class, 'addDish']);
+    Route::post('/saveSingleDish', [DishController::class, 'saveSingleDish']);
 
 
     // Item Category
