@@ -142,15 +142,14 @@
                   </div>
                 </div>
 
-                <div class="mb-3 row d-none" id="supplier-div">
+                <div class="mb-3 row">
                     <div class="col-sm-2">
                         <label class="col-form-label fw-bold" for="supplier">Supplier</label>
                     </div>
                     <div class="col-sm-9">
                         <select name="SupplierID" id="SupplierID" class="form-select">
-                            <option value="">Select Supplier</option>
                             @foreach ($supplier as $key => $value)
-                                <option value="{{$value->SupplierID}}">{{$value->SupplierName}}</option>
+                                <option value="{{$value->SupplierID}}" {{$lims_pos_setting_data->supplier_id == $value->SupplierID ? 'selected': ''}}>{{$value->SupplierName}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -215,15 +214,14 @@
                   </div>
                 </div>
 
-                <div class="mb-3 row d-none" id="warehouse-div">
+                <div class="mb-3 row">
                   <div class="col-sm-2">
                     <label class="col-form-label fw-bold" for="first-name">Warehouse</label>
                   </div>
                   <div class="col-sm-9">
                     <select name="warehouse_id" id="warehouse_id" class="form-select">
-                       <option value="">Select Warehouse</option>
                        @foreach($lims_warehouse_list as $warehouse)
-                        <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                        <option value="{{$warehouse->id}}" {{$lims_pos_setting_data->warehouse_id == $warehouse->id ? 'selected': ''}}>{{$warehouse->name}}</option>
                         @endforeach
                       </select>
                   </div>
@@ -450,24 +448,7 @@
   
 
 });
-
-$('#stockQty').keyup(function() {
-    var qty = $(this).val();
-    if(qty > 0){
-      $('#warehouse-div').removeClass("d-none");
-      $('#supplier-div').removeClass("d-none");
-    }
-    else{
-      $('#warehouse-div').addClass("d-none");
-      $('#supplier-div').addClass("d-none");
-    }
-});
-
-
  
-
- 
-
 </script>
 
  

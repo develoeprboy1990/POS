@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Warehouse;
 use App\Models\Unit;
+use App\Models\PosSetting;
 use App\Models\Item;
 // for excel export
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -1718,9 +1719,10 @@ $lims_warehouse_list = Warehouse::where('is_active', true)->get();
 $item_categories = DB::table('item_category')->get();
 $lims_brand_all = Brand::where('is_active', true)->get();
 $supplier = DB::table('supplier')->get();
+$lims_pos_setting_data = PosSetting::latest()->first();
 
 $chartofaccount = DB::table('chartofaccount')->where(DB::raw('right(ChartOfAccountID,4)'),00000)->where(DB::raw('right(ChartOfAccountID,5)'),'!=',00000)->get();
-return view ('item',compact('pagetitle','item','chartofaccount','units','lims_warehouse_list','item_categories','lims_brand_all','supplier'));
+return view ('item',compact('pagetitle','item','chartofaccount','units','lims_warehouse_list','item_categories','lims_brand_all','supplier','lims_pos_setting_data'));
 }
 
 
@@ -1790,6 +1792,7 @@ $itemId = DB::table('item')->insertGetId($data);
 // code to add newly created item in stockd
 $quantity = trim($request->stockQty);
 if($quantity > 0){
+  
    $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','BILL%')->count();
    $invoice_no = 'BILL-0000' . ++$invoice_no;
    $today_date = date('Y-m-d');
@@ -1809,11 +1812,11 @@ if($quantity > 0){
               'DiscountPer' => 0, 
               'DiscountAmount' => 0, 
               'Total' => $subTotal, 
-              'TotalQty' => $subTotal, 
+              'TotalQty' => $quantity, 
               'TaxPer' => 0, 
               'Tax' => 0, 
               'Shipping' => 0, 
-              'GrandTotal' => $quantity, 
+              'GrandTotal' => $subTotal, 
               'Paid' => $subTotal, 
               'Balance' => 0,              
               'UserID' => session::get('UserID'), 
