@@ -190,9 +190,10 @@
             id_arr = $(this).attr('id');
             id = id_arr.split("_");
             var qty = $(this).val();
-            var quantity = $('#stock_quantity_' + id[1]).text();
-            var stockQuantity = parseInt(quantity) - parseInt(qty);
-            $('#stock_quantity_' + id[1]).text(stockQuantity);
+            var quantity = $('.stock_quantity_' + id[1]).text();
+            var stockQuantity = parseInt(quantity) - parseInt(qty); 
+            $('.stock_quantity_' + id[1]).text('');
+            $('.stock_quantity_' + id[1]).text(stockQuantity); 
             console.log(stockQuantity);
         });
 
