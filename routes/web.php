@@ -535,10 +535,7 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
 
 
   Route::get('/DBDump/', [Accounts::class, 'DBDump']);
-
-
-  //POS routs..
-  // TEQ POS Section
+ 
   Route::get('/create-invoice', [TeqPosController::class, 'createTeqInvoice'])->name('invoice.create');
   Route::get('/create-voucher', [TeqPosController::class, 'createVoucher'])->name('voucher.create');
   Route::post('/save-teq-invoice', [TeqPosController::class, 'storeInvoice']);
@@ -649,6 +646,10 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
   Route::post('/saveOrderDish', [DishController::class, 'saveOrderDish']);
   Route::post('/updateDishOrder', [DishController::class, 'updateDishOrder']);
 
+  // Routes for adding single dish
+    Route::get('/add-dish', [DishController::class, 'addDish']);
+    Route::post('/saveSingleDish', [DishController::class, 'saveSingleDish']);
+
 
 
   // Item Category
@@ -684,4 +685,3 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
 
   Route::get('/test-list', [PosController::class, 'limsStickerSearch']);
 });  
-// middleware end
