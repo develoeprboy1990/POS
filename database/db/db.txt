@@ -350,3 +350,6 @@ UPDATE `pos_setting` SET `supplier_id` = '1' WHERE `pos_setting`.`id` = 1;
 ALTER TABLE `invoice_detail` CHANGE `Total` `Total` DOUBLE(10,2) NULL DEFAULT NULL;
 
 =================
+date: 12-5-2023
+
+ALTER TABLE `invoice_detail` CHANGE `Total` `Total` DOUBLE(50,2) NULL DEFAULT NULL;
