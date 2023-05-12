@@ -350,3 +350,9 @@ UPDATE `pos_setting` SET `supplier_id` = '1' WHERE `pos_setting`.`id` = 1;
 ALTER TABLE `invoice_detail` CHANGE `Total` `Total` DOUBLE(10,2) NULL DEFAULT NULL;
 
 =================
+date: 12-5-2023
+
+ALTER TABLE `invoice_detail` CHANGE `Total` `Total` DOUBLE(50,2) NULL DEFAULT NULL;
+
+
+CREATE OR REPLACE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`i`.`CostPrice` AS `CostPrice`,`i`.`SellingPrice` AS `SellingPrice`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))
