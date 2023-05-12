@@ -356,3 +356,5 @@ ALTER TABLE `invoice_detail` CHANGE `Total` `Total` DOUBLE(50,2) NULL DEFAULT NU
 
 
 CREATE OR REPLACE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`i`.`CostPrice` AS `CostPrice`,`i`.`SellingPrice` AS `SellingPrice`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))
+
+ALTER TABLE `user` ADD `address` TEXT NULL DEFAULT NULL AFTER `UserType`, ADD `mobile` VARCHAR(255) NULL DEFAULT NULL AFTER `address`, ADD `warehouse_id` INT NULL DEFAULT NULL AFTER `mobile`;
