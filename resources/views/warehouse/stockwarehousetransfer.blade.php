@@ -192,7 +192,7 @@
             var qty = $(this).val();
             var quantity = $('#quantity_' + id[1]).text();
             var stockQuantity = parseInt(quantity) - parseInt(qty);
-            $('#quantity_' + id[1]).text(stockQuantity);
+            $('.quantity_' + id[1]).text(stockQuantity);
             console.log(stockQuantity);
         });
 
