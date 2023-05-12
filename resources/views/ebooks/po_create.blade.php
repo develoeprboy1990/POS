@@ -640,73 +640,9 @@
         TotalPrice = parseFloat(Qty) * parseFloat(Price);
 
         TotalTaxPer = (parseFloat(TaxPer) / 100) * parseFloat(TotalPrice);
-
-
-
-
-
-
-
         ItemTotal = parseFloat(TotalPrice) + parseFloat(TotalTaxPer);
-
-
-
         $('#ItemTotal_' + id[1]).val(ItemTotal);
-        $('#TaxVal_' + id[1]).val(parseFloat(TotalTaxPer));
-
-
-
-
-        // console.log('new line');
-        // console.log('qty=');
-
-        // console.log(Qty);
-
-        // console.log('price');
-
-
-        // console.log(Price);
-
-
-        // console.log('---');
-
-
-
-        // console.log('----total price');
-        // console.log(TotalPrice);
-
-        // console.log('taxper');
-
-
-        // console.log(TaxPer);
-
-        // console.log('--taxamount-');
-        // console.log(TaxAmount);
-        // console.log('discount');
-        // console.log(discount);
-        // console.log('total price');
-        // console.log(TotalPrice);
-
-        // console.log('grand item total');
-        // console.log(ItemTotal);
-
-
-
-
-
-
-
-
-
-
-
-
-        // $('#ItemTotal_'+id[1]).val(  (parseFloat(json["SellingPrice"])*parseFloat( $('#Qty_'+id[1]).val() ) + parseFloat($('#TaxAmount_'+id[1]).val() )  - (parseFloat($('#discount_'+id[1]).val()) )    ).toFixed(2)   );
-
-
-
-
-
+        $('#TaxVal_' + id[1]).val(parseFloat(TotalTaxPer)); 
         calculatediscount();
         calculateTotal();
     });
@@ -722,52 +658,24 @@
 
 
 
-        total = $('#total_' + id[1]).val();
+        total = $('#total_' + id[1]).val(); 
 
 
-
-
-
-
-
-
-        Profit = (parseFloat(total) - parseFloat(Fare)).toFixed(2);
-
-
-
+        Profit = (parseFloat(total) - parseFloat(Fare)).toFixed(2); 
 
         $('#Service_' + id[1]).val(parseFloat(Profit) - (parseFloat(Profit / 100) * parseFloat(Tax)).toFixed(2));
 
         $('#quantity_' + id[1]).val((parseFloat(Profit / 100) * parseFloat(Tax)).toFixed(2));
-        // Profit = (parseFloat(total)-parseFloat(Fare)).toFixed(2) ;
-
-        // Tax = ;
-
-        // Service = (parseFloat(Proft)-parseFloat(Tax)).toFixed(2) ;
-
-        // alert(Profit+Tax+Service);
-
-        // $('#quantity'+id[1]).val( Tax );
-        // $('#Service_'+id[1]).val( Service );
-
-
-
+        
     });
 
     $(document).on('change', '.changesNoo', function() {
 
-
-
         id_arr = $(this).attr('id');
         id = id_arr.split("_");
-
         val = $('#ItemID0_' + id[1]).val().split("|");
-
-
         // alert($('#ItemID0_'+id[1]).val());
         $('#ItemID_' + id[1]).val(val[0]);
-
-
         calculatediscount();
 
     });

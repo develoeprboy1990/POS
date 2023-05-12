@@ -196,7 +196,7 @@ class PosController extends Controller
 
     public function stockWarehouseTransfer()
     {
-        $warehouses = Warehouse::where('is_active','1')->get();
+        $warehouses = Warehouse::where('is_active', '1')->get();
         $pagetitle = 'Stock Warehouse Transfer';
         return view('warehouse.stockwarehousetransfer', compact('pagetitle', 'warehouses'));
     }
@@ -204,7 +204,7 @@ class PosController extends Controller
     public function fetchWareHouses(Request $request, $id)
     {
         if ($request->ajax()) {
-            $warehouses = Warehouse::select('id', 'name')->where('is_active','1')->where('id', '<>', $id)->get();
+            $warehouses = Warehouse::select('id', 'name')->where('is_active', '1')->where('id', '<>', $id)->get();
             $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $id)->where('IsActive', true)->get();
             $data['warehouses'] = $warehouses;
             $data['products']   = $products;
@@ -218,13 +218,26 @@ class PosController extends Controller
         return response()->json($products);
     }
 
+    public function getProductDetais($warehouseid, $id)
+    {
+        $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $warehouseid)->where('ItemID', $id)->where('IsActive', true)->first();
+        $html = '<tr class="p-3"><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
+ 
+        $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' .$warehouseid. '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
+        $html .= '<td><span class="stock_quantity_' . $products->ItemID . '">' . $products->qty . '</span></td><td><span class="stock_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td><td><span id="stock_total_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td>';
+ 
+        $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
+        return $html;
+    }
+
     public function runQuery()
     {
-        dd(DB::statement("CREATE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))"));
+        dd(DB::statement("CREATE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`i`.`CostPrice` AS `CostPrice`,`i`.`SellingPrice` AS `SellingPrice`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))"));
     }
 
     public function postStockWarehouseTransfer(StoreRequest $request)
     {
+        dd($request->all());
         try {
             $from_warehouse =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->from_warehouse_id)->first();
             $to_warehouse   =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->to_warehouse_id)->first();
@@ -712,7 +725,7 @@ class PosController extends Controller
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
         $lims_supplier_list = DB::table('supplier')->get();
         $lims_pos_setting_data = PosSetting::latest()->first();
-        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list','lims_pos_setting_data','lims_supplier_list'));
+        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list', 'lims_pos_setting_data', 'lims_supplier_list'));
     }
 
     public function storePosSetting(Request $request)
@@ -850,12 +863,12 @@ class PosController extends Controller
         //return view('printbarcodedata',compact('stickerxy','companyName'));
         //$pdf = PDF::loadView('printbarcodedata', compact('stickerxy'));
 
-        $pdf = PDF::loadView('printbarcodedata',compact('stickerxy','companyName'));
-        $customPaper = array(0,0,200 ,130 );
-      //$customPaper = array(0, 0, 151, 116);
+        $pdf = PDF::loadView('printbarcodedata', compact('stickerxy', 'companyName'));
+        $customPaper = array(0, 0, 200, 130);
+        //$customPaper = array(0, 0, 151, 116);
         $pdf->set_paper($customPaper);
 
-        //DB::table('sticker')->truncate();
+        DB::table('sticker')->truncate();
         return $pdf->stream();
     }
 

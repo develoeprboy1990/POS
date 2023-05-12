@@ -115,16 +115,52 @@
                                     <input type="number" id="qty" class="form-control" name="qty" placeholder="Enter Quantity" min="1" max="3">
 
                                 </div>
+
+                                <div class="col-sm-4">
+                                    <label for="qty"> </label>
+
+                                    <div class="col-sm-2"> <button type="button" class="btn btn-success w-lg float-right add_input" id="submit">Add</button>
+
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
 
-                    </div>
-                    <div class="card-footer bg-light">
-                        <button type="submit" class="btn btn-success w-lg float-right" id="submit">Transfer Products</button>
+                        <hr class="invoice-spacing">
+                        <div class='row'>
+                            <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                                <table>
+                                    <thead>
+                                        <tr class="bg-light borde-1 border-light " style="height: 40px;">
+                                            <th width="10%">ITEM DETAILS</th>
+                                            <th width="4%">QUANTITY</th>
+                                            <th width="4%">Stock QUantity</th>
+                                            <th width="4%">Price</th>
+                                            <th width="4%">Total Price</th>
+                                            <th width="4%">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="form-group">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <button type="submit" class="btn btn-success w-lg float-right" id="submit">Transfer Products</button>
 
-                        <button type="reset" class="btn btn-secondary w-lg float-right" id="submit">Reset</button>
-                    </div>
-                </div>
+                            <button type="reset" class="btn btn-secondary w-lg float-right" id="submit">Reset</button>
+                        </div>
+
+
+
+                    </div><!-- card-body -->
+
+
+
+
+
+
             </form>
         </div>
     </div>
@@ -141,7 +177,42 @@
 @section('page-scripts')
 
 <script>
+    // Let's stick things in a closure, so it's nice and tidy
+    (function() { // Create the event handler on the document ready event, as we know then that the DOM document that was initially loaded
+        // will be rendered about now.
+        document.addEventListener('DOMContentLoaded', function() { // Get each of the elements
+
+        });
+    })();
     $(document).ready(function() {
+
+        $(document).on('change keyup blur ', '.changesQuantityNo', function() {
+            id_arr = $(this).attr('id');
+            id = id_arr.split("_");
+            var qty = $(this).val();
+            var quantity = $('.stock_quantity_' + id[1]).text();
+            var stockQuantity = parseInt(quantity) - parseInt(qty); 
+            $('.stock_quantity_' + id[1]).text('');
+            $('.stock_quantity_' + id[1]).text(stockQuantity); 
+            console.log(stockQuantity);
+        });
+
+        var limit = 5; //Set limit for input fields
+        var group = $(".form-group"); //Input Field Group
+        var add_button = $(".add_input"); //Add input field button 
+        //Action for add input button click
+        $(add_button).click(function(e) {
+            e.preventDefault();
+            getProductDetails(group);
+        });
+        //Action for remove input button click
+        $(group).on("click", ".remove_field", function(e) {
+            e.preventDefault();
+            $(this).closest("tr").remove();
+            $(this).parent('tr').remove();
+            console.log('shah');
+        });
+
         $(document).ajaxSend(function() {
             $("#overlay").fadeIn(300);
         });
@@ -184,6 +255,25 @@
             }
             $('#ItemID').html(product);
 
+        }); // DONE ENDS HERE
+    }
+
+
+    function getProductDetails(group) {
+        var product_id = $('#ItemID').val();
+        var warehouseid = $('#warehouseid').val();
+        let url = "{{route('warehouse.getproductdetais',[':warehouseid',':product_id'])}}";
+        route = url.replace(':warehouseid', warehouseid);
+        route = route.replace(':product_id', product_id);
+        $.ajax({
+            url: route,
+            type: "GET",
+            dataType: 'html',
+            processData: false,
+            contentType: false,
+            beforeSend: function() {}
+        }).done(function(response) {
+            $(group).append(response); //add input field
         }); // DONE ENDS HERE
     }
 
@@ -237,7 +327,7 @@
                         .removeAttr('checked')
                         .removeAttr('selected');
                 }
-                // Handle success response
+                //Handle success response
             }
         }).fail(function(jqXHR, textStatus) {
             $("#submit").attr('disabled', false);
