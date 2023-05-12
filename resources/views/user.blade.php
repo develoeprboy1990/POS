@@ -2,15 +2,15 @@
 @section('title', $pagetitle)
 @section('content')
 <div class="main-content">
-<div class="page-content">
-<div class="container-fluid">
-    @if (session('error'))
+    <div class="page-content">
+        <div class="container-fluid">
+        @if (session('error'))
         <div class="alert alert-{{ Session::get('class') }} p-1" id="success-alert">
-            {{ Session::get('error') }}
+        {{ Session::get('error') }}
         </div>
-    @endif
-    @if (count($errors) > 0)
-    <div>
+        @endif
+        @if (count($errors) > 0)
+        <div>
         <div class="alert alert-danger p-1   border-3">
            <p class="font-weight-bold"> There were some problems with your input.</p>
             <ul>                    
@@ -19,11 +19,10 @@
                 @endforeach
             </ul>
         </div>
-    </div>
-    @endif
-
-  <div class="card">
-      <div class="card-body">
+        </div>
+        @endif
+        <div class="card">
+        <div class="card-body">
             <form action="{{URL('/UserSave')}}" method="post">
                 {{csrf_field()}}
                 <div class="card">
@@ -31,56 +30,76 @@
                         <h4 class="card-title">Add New User</h4>
                         <p class="card-title-desc"></p>
                         <div class="mb-1 row">
-                        <label for="example-email-input" class="col-md-2 col-form-label fw-bold ">Full Name</label>
-                        <div class="col-md-4">
-                        <input class="form-control" type="text"  value="{{old('FullName')}}"  name="FullName" id="example-email-input">
+                            <label for="example-email-input" class="col-md-2 col-form-label fw-bold ">Full Name</label>
+                            <div class="col-md-4">
+                            <input class="form-control" type="text"  value="{{old('FullName')}}"  name="FullName" id="example-email-input">
+                            </div>
                         </div>
-        </div>
                         <div class="mb-1 row">
-                        <label for="example-url-input" class="col-md-2 col-form-label fw-bold">Username</label>
-                        <div class="col-md-4">
-                        <input class="form-control" type="text"  value="{{old('Email')}}" name="Email" required>
+                            <label for="example-url-input" class="col-md-2 col-form-label fw-bold">Username</label>
+                            <div class="col-md-4">
+                            <input class="form-control" type="text"  value="{{old('Email')}}" name="Email" required>
+                            </div>
                         </div>
-
-        </div>
                         <div class="mb-1 row">
-                        <label for="example-url-input" class="col-md-2 col-form-label fw-bold">Password</label>
-                        <div class="col-md-4">
-                        <input class="form-control" type="text"  name="Password" value="{{old('Password')}}" required>
+                            <label for="example-url-input" class="col-md-2 col-form-label fw-bold">Password</label>
+                            <div class="col-md-4">
+                            <input class="form-control" type="text"  name="Password" value="{{old('Password')}}" required>
+                            </div>
                         </div>
-
-        </div>
                         <div class="mb-1 row">
-                        <label for="example-tel-input" class="col-md-2 col-form-label fw-bold">User Type</label>
-                        <div class="col-md-4">
-                        <select name="UserType" class="form-select">
-                        <option value="Admin">Admin</option>
-                        <option value="User">User</option>
-                        <option value="Saleman">Saleman</option>
-                        </select>
+                            <label for="example-url-input" class="col-md-2 col-form-label fw-bold">Address</label>
+                            <div class="col-md-4">
+                            <input class="form-control" type="text"  value="{{old('Address')}}" name="Address" >
+                            </div>
                         </div>
-        </div>
                         <div class="mb-1 row">
-                        <label for="example-tel-input" class="col-md-2 col-form-label fw-bold">Active</label>
-                        <div class="col-md-4">
-                        <select name="Active" class="form-select">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        </select> 
+                            <label for="example-url-input" class="col-md-2 col-form-label fw-bold">Mobile</label>
+                            <div class="col-md-4">
+                            <input class="form-control" type="text"  value="{{old('Mobile')}}" name="Mobile" >
+                            </div>
                         </div>
+                        <div class="mb-1 row">
+                            <label for="example-tel-input" class="col-md-2 col-form-label fw-bold">User Type</label>
+                            <div class="col-md-4">
+                            <select name="UserType" class="form-select">
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                            <option value="Saleman">Saleman</option>
+                            </select>
+                            </div>
                         </div>
-                        <input type="submit" class="btn btn-primary w-md">                         
+                        <div class="mb-1 row">
+                            <label for="example-tel-input" class="col-md-2 col-form-label fw-bold">Warehouse</label>
+                            <div class="col-md-4">
+                            <select name="WarehouseID" class="form-select">
+                                @foreach($warehouse_list as $warehouse)
+                                    <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                                @endforeach
+                            </select>
+                            </div>
+                        </div>
+                        <div class="mb-1 row">
+                            <label for="example-tel-input" class="col-md-2 col-form-label fw-bold">Active</label>
+                            <div class="col-md-4">
+                            <select name="Active" class="form-select">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            </select> 
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary w-md">                    
                     </div>
                 </div>
             </form>
-      </div>
-  </div>
-  <div class="row">
-      <div class="col-lg-12">  
-          <div class="card">              
-              <div class="card-body">
-                <h4 class="card-title ">Manage Users</h4>          
-                   <div class="table-responsive">
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-lg-12">  
+            <div class="card">              
+                <div class="card-body">
+                    <h4 class="card-title ">Manage Users</h4>          
+                    <div class="table-responsive">
                     <table class="table  m-0"  class="table table-bordered table-sm">
                         <thead>
                            <tr>
@@ -88,7 +107,10 @@
                             <th>Full Name</th>
                             <th>Username</th>
                             <th>Password</th>
+                            <th>Address</th>
+                            <th>Mobile</th>                            
                             <th>User Type</th>
+                            <th>Warehouse</th>
                             <th>Created on</th>                         
                             <th>Active</th>
                             <th>Action</th>
@@ -102,7 +124,10 @@
                             <td scope="row">{{$value->FullName}}</td>
                             <td>{{$value->Email}}</td>
                             <td>*********</td>
+                            <td>{{$value->Address}}</td>
+                            <td>{{$value->Mobile}}</td>
                             <td>{{$value->UserType}}</td>
+                            <td>{{$value->WarehouseID}}</td>
                             <td>{{$value->eDate}}</td>
                             <td>{{$value->Active}}</td>
                             <td>
@@ -118,19 +143,19 @@
                     </table>
                     </div>
                 </div>
-          </div>
-      </div>
-  </div>    
-  </div>
+            </div>
+        </div>
+        </div>    
 </div>
+    </div>
 </div>
 </div>
 </div>
 <!-- END: Content-->
 <script type="text/javascript">
-$(document).ready(function() {
-     $('#student_table').DataTable( );
-});
+    $(document).ready(function() {
+         $('#student_table').DataTable( );
+    });
 </script>
 </div>
 </div>
