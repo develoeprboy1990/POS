@@ -634,7 +634,7 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
   Route::get('/dishImageDelete/{id}', [DishController::class, 'deleteDishImage']);
   Route::get('/dishRecipeDelete/{id}', [DishController::class, 'deleteDishRecipe']);
 
-  Route::get('/all-dishes', [DishController::class, 'index']);
+  Route::get('/all-dishes', [DishController::class, 'index'])->name('dish.list');
   Route::get('/dishDelete/{dish}', [DishController::class, 'destroy']);
 
   Route::get('/create-dish-order', [DishController::class, 'createDishOrder']);

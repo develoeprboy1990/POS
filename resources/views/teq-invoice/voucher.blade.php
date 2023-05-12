@@ -1346,6 +1346,7 @@
     var localStorageSubTotalUnit = [];
     var localStorageSubTotal = [];
     var localStorageProductCode = [];
+    var localStorageItemType = [];
     var localStorageSaleUnit = [];
     var localStorageTempUnitName = [];
     var localStorageSaleUnitOperator = [];
@@ -1394,6 +1395,7 @@
         localStorageSubTotal = getSavedValue("localStorageSubTotal").split(",");
         localStorageProductId = getSavedValue("localStorageProductId").split(",");
         localStorageProductCode = getSavedValue("localStorageProductCode").split(",");
+        localStorageItemType = getSavedValue("localStorageItemType").split(",");
         localStorageSaleUnit = getSavedValue("localStorageSaleUnit").split(",");
         localStorageTempUnitName = getSavedValue("localStorageTempUnitName").split(",,");
         localStorageSaleUnitOperator = getSavedValue("localStorageSaleUnitOperator").split(",,");
@@ -1413,6 +1415,7 @@
             $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.subtotal-value').val(localStorageSubTotal[i]);
             $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.product-id').val(localStorageProductId[i]);
             $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.product-code').val(localStorageProductCode[i]);
+            $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.itemType').val(localStorageItemType[i]);
             $('table.order-list tbody tr:nth-child(' + (i + 1) + ')').find('.sale-unit').val(localStorageSaleUnit[i]);
             if (i == 0) {
                 localStorageTempUnitName[i] += ',';
@@ -2046,6 +2049,7 @@
         localStorageSubTotalUnit.splice(rowindex, 1);
         localStorageSubTotal.splice(rowindex, 1);
         localStorageProductCode.splice(rowindex, 1);
+        localStorageItemType.splice(rowindex, 1);
 
         localStorageTaxName.splice(rowindex, 1);
         localStorageTaxMethod.splice(rowindex, 1);
@@ -2057,6 +2061,7 @@
         localStorage.setItem("localStorageQty", localStorageQty);
         localStorage.setItem("localStorageSaleUnit", localStorageSaleUnit);
         localStorage.setItem("localStorageProductCode", localStorageProductCode);
+        localStorage.setItem("localStorageItemType", localStorageItemType);
         localStorage.setItem("localStorageProductDiscount", localStorageProductDiscount);
         localStorage.setItem("localStorageTaxRate", localStorageTaxRate);
         localStorage.setItem("localStorageTaxName", localStorageTaxName);
@@ -2376,6 +2381,11 @@
         } else {
             cols += '<td class="col-sm-2"><input type="hidden" class="form-control batch-no" disabled/> <input type="hidden" class="product-batch-id" name="product_batch_id[]"/> </td>';
         }
+        if (data[13] == 'dishItem') {
+            cols += '<input type="hidden" class="itemType" name="itemType[]" value="dish"/>';
+        } else {
+            cols += '<input type="hidden" class="itemType" name="itemType[]" value="pos"/>';
+        }
         cols += '<td class="col-sm-2 product-price"></td>';
         cols += '<td class="col-sm-3"><div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default minus"><span class="dripicons-minus"></span></button></span><input type="text" name="qty[]" class="form-control qty numkey input-number" step="any" required><span class="input-group-btn"><button type="button" class="btn btn-default plus"><span class="dripicons-plus"></span></button></span></div></td>';
         cols += '<td class="col-sm-2 sub-total"></td>';
@@ -2439,6 +2449,7 @@
         localStorageQty.splice(rowindex, 0, 1);
         localStorageProductId.splice(rowindex, 0, data[9]);
         localStorageProductCode.splice(rowindex, 0, data[1]);
+        localStorageItemType.splice(rowindex, 0, data[13]);
         localStorageSaleUnit.splice(rowindex, 0, temp_unit_name[0]);
         localStorageProductDiscount.splice(rowindex, 0, product_discount[rowindex]);
         localStorageTaxRate.splice(rowindex, 0, tax_rate[rowindex].toFixed(2));
@@ -2456,6 +2467,7 @@
         localStorage.setItem("localStorageProductId", localStorageProductId);
         localStorage.setItem("localStorageSaleUnit", localStorageSaleUnit);
         localStorage.setItem("localStorageProductCode", localStorageProductCode);
+        localStorage.setItem("localStorageItemType", localStorageItemType);
         localStorage.setItem("localStorageTaxName", localStorageTaxName);
         localStorage.setItem("localStorageTaxMethod", localStorageTaxMethod);
         localStorage.setItem("localStorageTempUnitName", localStorageTempUnitName);

@@ -230,25 +230,25 @@
                             <input type="hidden" name="_token" id="csrf" value="{{Session::token()}}"> 
                               <div class="row mt-4">
                                 <div class="form-group col-md-6">
-                                    <label>Thumbnail <sup class="text-danger">*</sup></label>
-                                    <input type="file" name="image_thumbnail" class="form-control" accept="image/*">
-                                </div>
-                                <div class="form-group col-md-6">
                                     <label>Dish Name <sup class="text-danger">*</sup></label>
                                      <input type="text" name="name" class="form-control" placeholder="Dish Name" required>
                                 </div>
-                                  
-                              </div>
-                              <div class="row mt-4">
                                 <div class="form-group col-md-6">
                                     <label>Price <sup class="text-danger">*</sup></label>
                                     <input type="number" name="price" placeholder="Dish Price" class="form-control" required>
                                 </div>
+                                  
+                              </div>
+                              <div class="row mt-4">
+                                
                                 <div class="form-group col-md-6">
                                     <label>Code <sup class="text-danger">*</sup></label>
                                     <input type="number" name="code" class="form-control" placeholder="Enter Numeric Code"  required>
                                 </div>
-                                  
+                                <div class="form-group col-md-6">
+                                    <label>Thumbnail <sup class="text-danger">*</sup></label>
+                                    <input type="file" name="image_thumbnail" class="form-control" accept="image/*">
+                                </div>
                               </div>
                               <h4 class="mt-4">Dish Recipe</h4>
 

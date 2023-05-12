@@ -143,7 +143,7 @@ class DishController extends Controller
         $dish_type->dish_id = $dish->id;
         $dish_type->type = $input['name'];
         $dish_type->price = $input['price'];
-        $dish_type->code = 'RES-'.$input['code'];
+        $dish_type->code = $input['code'];
         $dish_type->image = $input['image_thumbnail'];
         $dish_type->save();
 
@@ -165,7 +165,7 @@ class DishController extends Controller
         }
 
         
-        return redirect()->back()->with('error', 'Saved Successfully')->with('class', 'success');
+        return redirect()->route('dish.list')->with('error', 'Saved Successfully')->with('class', 'success');
     }
 
     /**
@@ -255,7 +255,7 @@ class DishController extends Controller
         );
         $input = $request->all();
         $image = $request->file('image');
-        $input['code'] = 'RES-'.$input['code'];
+        $input['code'] = $input['code'];
         $input['image'] = null;
         if ($image) {
             $imageName = time().'.'.$image->extension();

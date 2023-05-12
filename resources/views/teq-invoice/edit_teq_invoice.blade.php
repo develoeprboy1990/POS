@@ -435,6 +435,7 @@
                                                                         <a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a>
                                                                     </td>
                                                                     <input type="hidden" class="product-code" name="product_code[]" value="{{$product_data->ItemCode}}" />
+                                                                    <input type="hidden" class="itemType" name="itemType[]" value="pos" />
                                                                     <input type="hidden" class="product-id" name="product_id[]" value="{{$product_data->ItemID}}" />
                                                                     <input type="hidden" name="product_variant_id[]" value="{{$product_variant_id}}" />
                                                                     <input type="hidden" class="product-price" name="product_price[]" value="{{$product_price}}" />
@@ -490,6 +491,7 @@
                                                                         <a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a>
                                                                     </td>
                                                                     <input type="hidden" class="product-code" name="product_code[]" value="{{$product_data->code}}" />
+                                                                    <input type="hidden" class="itemType" name="itemType[]" value="dish" />
                                                                     <input type="hidden" class="product-id" name="product_id[]" value="{{$product_data->id}}" />
                                                                     <input type="hidden" name="product_variant_id[]" value="{{$product_variant_id}}" />
                                                                     <input type="hidden" class="product-price" name="product_price[]" value="{{$product_price}}" />
@@ -1374,6 +1376,12 @@
                     
                     cols += '<td class="net_unit_price"></td>';
                     cols += '<td class="discount">0.00</td>';
+
+                    if (data[13] == 'dishItem') {
+                        cols += '<input type="hidden" class="itemType" name="itemType[]" value="dish"/>';
+                    } else {
+                        cols += '<input type="hidden" class="itemType" name="itemType[]" value="pos"/>';
+                    }
                  
                     cols += '<td class="sub-total"></td>';
                     cols += '<td><a href="#" class="ibtnDel"><i class="bx bx-trash  align-middle me-1"></i></a></td>';

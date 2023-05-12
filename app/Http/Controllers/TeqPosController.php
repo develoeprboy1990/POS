@@ -437,6 +437,7 @@ class TeqPosController extends Controller
         $product_pids = $data['product_id'];
         $product_units = $data['sale_unit'];
         $product_codes = $data['product_code'];
+        $itemTypes     = $data['itemType'];
         $product_hsns = $request->hsn;
         $product_serials = $request->serial;
 
@@ -448,7 +449,7 @@ class TeqPosController extends Controller
         /* Payment Save Ends here. */
 
         foreach ($product_pids as $key => $pid) {
-            if(preg_match('/RES/', $product_codes[$key])){
+            if($itemTypes[$key] == 'dish'){
                 $dish_type = DishType::findOrFail($pid);            
 
                 $invoice_dish_detail = new InvoiceDishDetail();
@@ -588,6 +589,7 @@ class TeqPosController extends Controller
         $product_pids       = $data['product_id'];
         $product_units      = $data['sale_unit'];
         $product_codes      = $data['product_code'];
+        $itemTypes          = $data['itemType'];
         $product_hsns       = $request->hsn;
         $product_serials    = $request->serial;
         $data['InvoiceMasterID'] = $invoice_master_id;
@@ -598,7 +600,7 @@ class TeqPosController extends Controller
 
 
         foreach ($product_pids as $key => $pid) {
-            if(preg_match('/RES/', $product_codes[$key])){
+            if($itemTypes[$key] == 'dish'){
                 $dish_type = DishType::findOrFail($pid);            
 
                 $invoice_dish_detail = new InvoiceDishDetail();
@@ -736,8 +738,8 @@ class TeqPosController extends Controller
         $product_code[0] = rtrim($product_code[0], " ");
         $product_variant_id = null;
         
-        if(preg_match('/RES/', $product_code[0])){
-            $lims_product_data = DishType::where('code',$product_code[0])->first();
+        $lims_product_data = DishType::where('code',$product_code[0])->first();
+        if($lims_product_data){
             $product[] = $lims_product_data->type;
             $product[] = $lims_product_data->code;
 
@@ -762,6 +764,7 @@ class TeqPosController extends Controller
             $product[] = $product_variant_id;
             $product[] = null;
             $product[] = null;
+            $product[] = 'dishItem';
         }
         else{
             $lims_product_data = Item::where('ItemCode',$product_code[0])->first();
@@ -794,6 +797,7 @@ class TeqPosController extends Controller
             $product[] = $product_variant_id;
             $product[] = null;
             $product[] = null;
+            $product[] = 'posItem';
         }
 
         return $product;
