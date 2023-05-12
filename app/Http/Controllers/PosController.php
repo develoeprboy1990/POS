@@ -230,7 +230,7 @@ class PosController extends Controller
 
     public function runQuery()
     {
-        dd(DB::statement("CREATE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))"));
+        dd(DB::statement("CREATE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`i`.`CostPrice` AS `CostPrice`,`i`.`SellingPrice` AS `SellingPrice`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))"));
     }
 
     public function postStockWarehouseTransfer(StoreRequest $request)

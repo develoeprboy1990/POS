@@ -177,17 +177,26 @@
 @section('page-scripts')
 
 <script>
+    // Let's stick things in a closure, so it's nice and tidy
+    (function() { // Create the event handler on the document ready event, as we know then that the DOM document that was initially loaded
+        // will be rendered about now.
+        document.addEventListener('DOMContentLoaded', function() { // Get each of the elements
+
+            $(document).on('change keyup blur ', '.changesNo', function() {
+                id_arr = $(this).attr('id');
+                id = id_arr.split("_");
+                var ItemID = $(this).val();
+                var quantity = $('#quantity_' + id[1]).text();
+                var stockQuantity = parseInt(quantity) - parseInt(ItemID);
+                $('#quantity_23').text(stockQuantity);
+                console.log(stockQuantity);
+            });
+
+        });
+    })();
     $(document).ready(function() {
 
-        $(document).on('change keyup blur ', '.changesNo', function() {
-            id_arr            = $(this).attr('id');
-            id                = id_arr.split("_");
-            var ItemID        = $(this).val();
-            var quantity      = $('#quantity_' + id[1]).text();
-            var stockQuantity = parseInt(quantity) - parseInt(ItemID);
-            $('#quantity_' + id[1]).text(stockQuantity);
-            console.log(stockQuantity);
-        });
+
 
         var limit = 5; //Set limit for input fields
         var group = $(".form-group"); //Input Field Group
