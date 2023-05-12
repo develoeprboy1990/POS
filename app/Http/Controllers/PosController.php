@@ -222,8 +222,10 @@ class PosController extends Controller
     {
         $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $warehouseid)->where('ItemID', $id)->where('IsActive', true)->first();
         $html = '<tr class="p-3"><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
-        $html .= '<td><input type="number" name="qty[]" id="qty_' . $products->ItemID . '" data-id="' .$warehouseid. '_' . $products->ItemID . '" class="form-control changesNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1"></td>';
-        $html .= '<td><span id="quantity_' . $products->ItemID . '" class="quantity_' . $products->ItemID . '" >' . $products->qty . '</span></td><td><span id="price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td><td><span id="total_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td>';
+ 
+        $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' .$warehouseid. '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
+        $html .= '<td><span class="stock_quantity_' . $products->ItemID . '">' . $products->qty . '</span></td><td><span class="stock_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td><td><span id="stock_total_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td>';
+ 
         $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
         return $html;
     }
@@ -235,6 +237,7 @@ class PosController extends Controller
 
     public function postStockWarehouseTransfer(StoreRequest $request)
     {
+        dd($request->all());
         try {
             $from_warehouse =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->from_warehouse_id)->first();
             $to_warehouse   =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->to_warehouse_id)->first();
