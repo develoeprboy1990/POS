@@ -258,22 +258,23 @@
                                         <thead>
                                             <tr class="bg-light borde-1 border-light " style="height: 40px;">
                                                 <th width="1%" class="text-center"><input id="check_all" type="checkbox" /></th>
-                                                <th width="10%">ITEM DETAILS</th>
-                                                <th width="7%">Unit need to cook</th>
-                                                <th width="7%">Child Unit need to cook</th>
+                                                <th style="width: 33.33%;">ITEM DETAILS</th>
+                                                <th style="width: 33.33%;">Unit need to cook</th>
+                                                <th style="width: 33.33%;">Child Unit need to cook</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr class="p-3">
                                                 <td class="p-1 bg-light borde-1 border-light text-center"><input class="case" type="checkbox" /></td>
                                                 <td>
-
-                                                    <select name="ItemID0[]" id="ItemID0_1" class="item form-select form-control-sm select2 changesNoo" onchange="km(this.value,1);" style="width: 300px !important;">
-                                                        <option>Select Item</option>
-                                                        @foreach($kitchen_items as $item)
-                                                            <option value="{{$item->ItemID}}">{{$item->ItemName}}</option>
-                                                        @endforeach
-                                                    </select>
+                                                    <div class="input-group mb-3">
+                                                        <select name="ItemID0[]" id="ItemID0_1" class="item form-select form-control-sm select2 changesNoo" onchange="km(this.value,1);">
+                                                            <option>Select Item</option>
+                                                            @foreach($kitchen_items as $item)
+                                                                <option value="{{$item->ItemID}}">{{$item->ItemName}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                     <input type="hidden" name="ItemID[]" id="ItemID_1">
                                                 </td>
 
@@ -336,7 +337,7 @@
         html = '<tr class="bg-light borde-1 border-light ">';
         html += '<td class="p-1 text-center"><input class="case" type="checkbox"/></td>';
 
-        html += '<td><select name="ItemID0[]" id="ItemID0_'+i+'" class="form-select changesNoo" onchange="km(this.value,'+i+');"> <option value="">Select</option>}@foreach ($kitchen_items as $item)<option value="{{$item->ItemID}}">{{$item->ItemName}}</option>@endforeach</select><input type="hidden" name="ItemID[]" id="ItemID_'+i+'"></td>';
+        html += '<td><div class="input-group mb-3"><select name="ItemID0[]" id="ItemID0_'+i+'" class="form-select changesNoo" onchange="km(this.value,'+i+');"> <option value="">Select</option>}@foreach ($kitchen_items as $item)<option value="{{$item->ItemID}}">{{$item->ItemName}}</option>@endforeach</select></div><input type="hidden" name="ItemID[]" id="ItemID_'+i+'"></td>';
 
         html += '<td><div class="input-group mb-3"><input type="number" class="form-control changesNo" name="base_unit_amount_cooked[]" aria-label="Amount (to the nearest dollar)"step="0.01" id="unit_input_'+i+'" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" <div class="input-group-append"><span class="input-group-text" id="unit_'+i+'">.00</span></div></div></td>';
 
