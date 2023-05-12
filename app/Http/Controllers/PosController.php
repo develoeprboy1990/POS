@@ -196,7 +196,7 @@ class PosController extends Controller
 
     public function stockWarehouseTransfer()
     {
-        $warehouses = Warehouse::where('is_active','1')->get();
+        $warehouses = Warehouse::where('is_active', '1')->get();
         $pagetitle = 'Stock Warehouse Transfer';
         return view('warehouse.stockwarehousetransfer', compact('pagetitle', 'warehouses'));
     }
@@ -204,7 +204,7 @@ class PosController extends Controller
     public function fetchWareHouses(Request $request, $id)
     {
         if ($request->ajax()) {
-            $warehouses = Warehouse::select('id', 'name')->where('is_active','1')->where('id', '<>', $id)->get();
+            $warehouses = Warehouse::select('id', 'name')->where('is_active', '1')->where('id', '<>', $id)->get();
             $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $id)->where('IsActive', true)->get();
             $data['warehouses'] = $warehouses;
             $data['products']   = $products;
@@ -216,6 +216,16 @@ class PosController extends Controller
     {
         $products   = DB::table('v_items_in_warehouse')->select('qty')->where('warehouse_id', $warehouseid)->where('ItemID', $id)->where('IsActive', true)->first();
         return response()->json($products);
+    }
+
+    public function getProductDetais($warehouseid, $id)
+    {
+        $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $warehouseid)->where('ItemID', $id)->where('IsActive', true)->first();
+        $html = '<tr class="p-3"><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
+        $html .= '<td><input type="number" name="qty[]" id="qty_' . $products->ItemID . '" data-id="' .$warehouseid. '_' . $products->ItemID . '" class="form-control changesNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1"></td>';
+        $html .= '<td><span id="quantity_' . $products->ItemID . '">' . $products->qty . '</span></td><td><span id="price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td><td><span id="total_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td>';
+        $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
+        return $html;
     }
 
     public function runQuery()
@@ -712,7 +722,7 @@ class PosController extends Controller
         $lims_warehouse_list = Warehouse::where('is_active', true)->get();
         $lims_supplier_list = DB::table('supplier')->get();
         $lims_pos_setting_data = PosSetting::latest()->first();
-        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list','lims_pos_setting_data','lims_supplier_list'));
+        return view('pos_setting', compact('lims_customer_list', 'lims_warehouse_list', 'lims_pos_setting_data', 'lims_supplier_list'));
     }
 
     public function storePosSetting(Request $request)
@@ -850,9 +860,9 @@ class PosController extends Controller
         //return view('printbarcodedata',compact('stickerxy','companyName'));
         //$pdf = PDF::loadView('printbarcodedata', compact('stickerxy'));
 
-        $pdf = PDF::loadView('printbarcodedata',compact('stickerxy','companyName'));
-        $customPaper = array(0,0,200 ,130 );
-      //$customPaper = array(0, 0, 151, 116);
+        $pdf = PDF::loadView('printbarcodedata', compact('stickerxy', 'companyName'));
+        $customPaper = array(0, 0, 200, 130);
+        //$customPaper = array(0, 0, 151, 116);
         $pdf->set_paper($customPaper);
 
         //DB::table('sticker')->truncate();

@@ -583,6 +583,10 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
     Route::get('/fetch-ware-houses/{id}', [PosController::class, 'fetchWareHouses'])->name('warehouse.fetchwarehouses');
     Route::get('/check-qty/{warehouseid}/{id}', [PosController::class, 'checkQty'])->name('warehouse.checkqty');
     Route::post('/stock-warehouse-transfer', [PosController::class, 'postStockWarehouseTransfer'])->name('warehouse.stock-warehouse-transfer');
+
+
+    Route::get('/get-product-detais/{warehouseid}/{id}', [PosController::class, 'getProductDetais'])->name('warehouse.getproductdetais');
+    
   });
 
 
