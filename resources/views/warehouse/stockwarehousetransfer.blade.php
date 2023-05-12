@@ -126,11 +126,6 @@
                             </div>
 
                         </div>
-                        <div class="card-footer bg-light">
-                            <button type="submit" class="btn btn-success w-lg float-right" id="submit">Transfer Products</button>
-
-                            <button type="reset" class="btn btn-secondary w-lg float-right" id="submit">Reset</button>
-                        </div>
 
                         <hr class="invoice-spacing">
                         <div class='row'>
@@ -150,6 +145,11 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <button type="submit" class="btn btn-success w-lg float-right" id="submit">Transfer Products</button>
+
+                            <button type="reset" class="btn btn-secondary w-lg float-right" id="submit">Reset</button>
                         </div>
 
 
@@ -181,18 +181,18 @@
     (function() { // Create the event handler on the document ready event, as we know then that the DOM document that was initially loaded
         // will be rendered about now.
         document.addEventListener('DOMContentLoaded', function() { // Get each of the elements
-          
+
         });
     })();
     $(document).ready(function() {
 
-        $(document).on('change keyup blur ', '.changesNo', function() {
+        $(document).on('change keyup blur ', '.changesQuantityNo', function() {
             id_arr = $(this).attr('id');
             id = id_arr.split("_");
             var qty = $(this).val();
-            var quantity = $('#quantity_' + id[1]).text();
+            var quantity = $('#stock_quantity_' + id[1]).text();
             var stockQuantity = parseInt(quantity) - parseInt(qty);
-            $('#quantity_' + id[1]).text(stockQuantity);
+            $('#stock_quantity_' + id[1]).text(stockQuantity);
             console.log(stockQuantity);
         });
 
