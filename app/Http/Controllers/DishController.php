@@ -69,6 +69,12 @@ class DishController extends Controller
         return view('dish.create'); //create page
     }
 
+    public function addDish()
+    {
+        $kitchen_items = Item::where('ItemType','Restaurant')->get();
+        return view('dish.add-dish',compact('kitchen_items'));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -100,6 +106,66 @@ class DishController extends Controller
         }
         $dish = Dish::create($input);
         return redirect()->route('dish.type', $dish->id)->with('error', 'Saved Successfully')->with('class', 'success');
+    }
+
+    public function saveSingleDish(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'name.required' => 'Dish Name is required',
+                'price.required' => 'Dish Price is required',
+                'code.required' => 'Dish Code is required',
+            ]
+        );
+        $input = $request->all();
+        $input['image_thumbnail'] = null;
+        $image = $request->file('image_thumbnail');
+        if ($image) {
+
+            $imageName = time().'.'.$image->extension();
+            $destinationPath = public_path('/thumbnail');
+            $img = Image::make($image->path());
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPath.'/'.$imageName);
+            $destinationPath = public_path('assets/images/dish-types');
+            $image->move($destinationPath, $imageName);
+            $input['image_thumbnail'] = $imageName;
+        }
+
+        $dish = new Dish();
+        $dish->name = $input['name'];
+        $dish->image_thumbnail = $input['image_thumbnail'];
+        $dish->save();
+
+        $dish_type = new DishType();
+        $dish_type->dish_id = $dish->id;
+        $dish_type->type = $input['name'];
+        $dish_type->price = $input['price'];
+        $dish_type->code = $input['code'];
+        $dish_type->image = $input['image_thumbnail'];
+        $dish_type->save();
+
+        $item_ids = $input['ItemID'];
+
+        if($item_ids){
+            foreach ($item_ids as $key => $item_id) {
+                $dish_recipe = array(
+                    "dish_id" => $dish->id,
+                    "dish_type_id" => $dish_type->id,
+                    "item_id" => $item_id,
+                    "base_unit_amount_cooked" => $input['base_unit_amount_cooked'][$key],
+                    "child_unit_amount_cooked" => $input['child_unit_amount_cooked'][$key],
+                );
+
+                 DishRecipe::create($dish_recipe);
+
+            }
+        }
+
+        
+        return redirect()->route('dish.list')->with('error', 'Saved Successfully')->with('class', 'success');
     }
 
     /**
@@ -189,7 +255,7 @@ class DishController extends Controller
         );
         $input = $request->all();
         $image = $request->file('image');
-        $input['code'] = 'RES-'.$input['code'];
+        $input['code'] = $input['code'];
         $input['image'] = null;
         if ($image) {
             $imageName = time().'.'.$image->extension();
