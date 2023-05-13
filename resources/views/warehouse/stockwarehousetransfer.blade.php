@@ -136,8 +136,6 @@
                                             <th width="10%">ITEM DETAILS</th>
                                             <th width="4%">QUANTITY</th>
                                             <th width="4%">Stock QUantity</th>
-                                            <th width="4%">Price</th>
-                                            <th width="4%">Total Price</th>
                                             <th width="4%">Action</th>
                                         </tr>
                                     </thead>
@@ -190,11 +188,11 @@
             id_arr = $(this).attr('id');
             id = id_arr.split("_");
             var qty = $(this).val();
-            var quantity = $('.stock_quantity_' + id[1]).text();
-            var stockQuantity = parseInt(quantity) - parseInt(qty); 
+            var quantity = parseInt($('.stock_quantity_' + id[1]).text());
+            var stockQuantity = parseInt(quantity) - parseInt(qty);
             $('.stock_quantity_' + id[1]).text('');
-            $('.stock_quantity_' + id[1]).text(stockQuantity); 
-            console.log(stockQuantity);
+            $('.stock_quantity_' + id[1]).text(stockQuantity);
+            console.log(quantity);
         });
 
         var limit = 5; //Set limit for input fields
@@ -214,7 +212,7 @@
         });
 
         $(document).ajaxSend(function() {
-            $("#overlay").fadeIn(300);
+           // $("#overlay").fadeIn(300);
         });
 
         $(document).ajaxComplete(function() {
