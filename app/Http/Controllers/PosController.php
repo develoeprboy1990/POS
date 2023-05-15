@@ -205,7 +205,7 @@ class PosController extends Controller
     {
         if ($request->ajax()) {
             $warehouses = Warehouse::select('id', 'name')->where('is_active', '1')->where('id', '<>', $id)->get();
-            $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $id)->where('IsActive', true)->get();
+            $products   = DB::table('v_inventory')->select('ItemID', 'ItemName')->where('WarehouseID', $id)->get();
             $data['warehouses'] = $warehouses;
             $data['products']   = $products;
             return response()->json($data);
@@ -214,18 +214,18 @@ class PosController extends Controller
 
     public function checkQty($warehouseid, $id)
     {
-        $products   = DB::table('v_items_in_warehouse')->select('qty')->where('warehouse_id', $warehouseid)->where('ItemID', $id)->where('IsActive', true)->first();
+        $products   = DB::table('v_inventory')->select(DB::raw('QtyIn-QtyOut as qty'))->where('WarehouseID', $warehouseid)->where('ItemID', $id)->first();
         return response()->json($products);
     }
 
     public function getProductDetais($warehouseid, $id)
     {
-        $products   = DB::table('v_items_in_warehouse')->where('warehouse_id', $warehouseid)->where('ItemID', $id)->where('IsActive', true)->first();
+        $products   = DB::table('v_inventory')->select('ItemID', 'ItemName', DB::raw('QtyIn-QtyOut as qty'))->where('WarehouseID', $warehouseid)->where('ItemID', $id)->first();
         $html = '<tr class="p-3"><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
- 
-        $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' .$warehouseid. '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
-        $html .= '<td><span class="stock_quantity_' . $products->ItemID . '">' . $products->qty . '</span></td><td><span class="stock_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td><td><span id="stock_total_price_' . $products->ItemID . '">' . $products->CostPrice . '</span></td>';
- 
+
+        $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' . $warehouseid . '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
+        $html .= '<td><span class="stock_quantity_' . $products->ItemID . '">' . $products->qty . '</span></td>';
+
         $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
         return $html;
     }
@@ -237,21 +237,108 @@ class PosController extends Controller
 
     public function postStockWarehouseTransfer(StoreRequest $request)
     {
-        dd($request->all());
         try {
-            $from_warehouse =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->from_warehouse_id)->first();
-            $to_warehouse   =  Product_Warehouse::where('product_id', $request->ItemID)->where('warehouse_id', '=', $request->to_warehouse_id)->first();
-            $qty            = $request->qty;
-            $remainingQty   = $from_warehouse->qty - $qty;
-            if (!empty($from_warehouse)) {
-                $from_warehouse->qty = $remainingQty;
-                $from_warehouse->save();
-            }
-            if (!empty($to_warehouse)) {
-                $to_warehouse->qty = $to_warehouse->qty + $qty;
-                $to_warehouse->save();
-            } else {
-                Product_Warehouse::create(['product_id' => $request->ItemID, 'warehouse_id' => $request->to_warehouse_id, 'qty' => $qty]);
+            if ($request->has('qty')) {
+
+                $InvoiceNo  = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Wout%')->count();
+                $invoice_no = 'Wout-0000' . ++$InvoiceNo;
+                $today_date = date('Y-m-d');
+                $biller_id  = Session::get('UserID');
+                /* INSET OUT ENTRY IN INVOICE MASTER */
+                $invoice_data = array(
+                    "InvoiceNo"          => $invoice_no,
+                    "ReferenceNo"        => null,
+                    "Date"               => $today_date,  // focus
+                    "DueDate"            => $today_date, // focus
+                    "PartyID"            => null,
+                    "WarehouseID"        => $request->from_warehouse_id,
+                    "DishTableID"        => null,
+                    "WalkinCustomerName" => null,
+                    "UserID"             => $biller_id,
+                    "DescriptionNotes"   => null, // focus
+                    "CustomerNotes"      => null, // focus
+                    "Tax"                => null,
+                    "TaxPer"             => null,
+                    "Paid"               => null,
+                    "Balance"            => null,
+                    "TotalQty"           => $request->total_qty,
+                    "SubTotal"           => null,
+                    "PaymentMode"        => 'Cash', // focus
+                    "DiscountModel"      => 'percentage',
+                    "DiscountPer"        => null,
+                    "DiscountAmount"     => null,
+                    "Shipping"           => null,
+                    "GrandTotal"         => null,
+                    "Total"              => null,
+
+                );
+
+                $lims_sale_data = DB::table('invoice_master')->insertGetId($invoice_data);
+                $InvoiceNo      = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Win%')->count();
+                $invoice_no     = 'Wout-0000' . ++$InvoiceNo;
+                foreach ($request->qty as $warehouseIds => $productsIds) {
+                    $invoice_data = array(
+                        "InvoiceNo"          => $invoice_no,
+                        "ReferenceNo"        => null,
+                        "Date"               => $today_date,  // focus
+                        "DueDate"            => $today_date, // focus
+                        "PartyID"            => null,
+                        "WarehouseID"        => $warehouseIds,
+                        "DishTableID"        => null,
+                        "WalkinCustomerName" => null,
+                        "UserID"             => $biller_id,
+                        "DescriptionNotes"   => null, // focus
+                        "CustomerNotes"      => null, // focus
+                        "Tax"                => null,
+                        "TaxPer"             => null,
+                        "Paid"               => null,
+                        "Balance"            => null,
+                        "TotalQty"           => $request->total_qty,
+                        "SubTotal"           => null,
+                        "PaymentMode"        => 'Cash', // focus
+                        "DiscountModel"      => 'percentage',
+                        "DiscountPer"        => null,
+                        "DiscountAmount"     => null,
+                        "Shipping"           => null,
+                        "GrandTotal"         => null,
+                        "Total"              => null,
+
+                    );
+
+                    $InvoiceMasterID = DB::table('invoice_master')->insertGetId($invoice_data);
+
+                    foreach ($productsIds as $ids => $quantity) {
+                        $item_name = DB::table('item')->where('ItemID', $ids)->pluck('ItemName')->first();
+                        $prod_qty  = $quantity;
+                        $invoice_detailOut = array(
+                            "InvoiceMasterID" => $lims_sale_data,
+                            "InvoiceNo"       => $invoice_no,
+                            "ItemID"          => $ids,
+                            "Description"     => $item_name,
+                            "PartyID"         => null,
+                            "Qty"             => $prod_qty,
+                            "Rate"            => null,
+                            "TaxPer"          => null,
+                            "Tax"             => null,
+                            "Total"           => null,
+                        );
+                        DB::table('invoice_detail')->insert($invoice_detailOut);
+
+                        $invoice_detailIn = array(
+                            "InvoiceMasterID" => $InvoiceMasterID,
+                            "InvoiceNo"       => $invoice_no,
+                            "ItemID"          => $ids,
+                            "Description"     => $item_name,
+                            "PartyID"         => null,
+                            "Qty"             => $prod_qty,
+                            "Rate"            => null,
+                            "TaxPer"          => null,
+                            "Tax"             => null,
+                            "Total"           => null,
+                        );
+                        DB::table('invoice_detail')->insert($invoice_detailIn);
+                    }
+                }
             }
             session()->flash('success', 'Application has been posted for new loan successfully');
             return true;
