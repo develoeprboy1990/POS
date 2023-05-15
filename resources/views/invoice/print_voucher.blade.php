@@ -142,7 +142,7 @@
                         - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
                     </p>
                 </div>
-                <p style="text-align:left;line-height: 1.5;">{{ trans('file.Date') }}: {{ $lims_sale_data->Date }}<br>
+                <p style="text-align:left;line-height: 1.5;">{{ trans('file.Date') }}: {{ date("d-m-Y", strtotime($lims_sale_data->Date)) }}<br>
                         - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
                 </p>
                 <p style="text-align:left;line-height: 1.5;">
