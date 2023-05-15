@@ -135,17 +135,22 @@
                             style="margin:10px 0;">
                     @endif
 
-                    <h2>{{ $company->Name }}</h2>
+                    <h4>{{ $company->Name }}</h4>
 
-                    <p>{{ trans('file.Address') }}: {{ $company->Address }}
-                        <br>{{ trans('file.Phone Number') }}: {{ $company->Contact }}
+                    <p style="text-align:left;line-height: 1.5;">{{ trans('file.Address') }}: {{ $company->Address }}
+                        <br>{{ trans('file.Phone Number') }}: {{ $company->Contact }}<br>
+                        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
                     </p>
                 </div>
-                <p>{{ trans('file.Date') }}: {{ $lims_sale_data->Date }}<br>
+                <p style="text-align:left;line-height: 1.5;">{{ trans('file.Date') }}: {{ $lims_sale_data->Date }}<br>
+                        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+                </p>
+                <p style="text-align:left;line-height: 1.5;">
                    Invoice no: {{ $lims_sale_data->InvoiceNo }}<br>
                     {{ trans('file.customer') }}: {{ $lims_customer_data->PartyName }}<br>
                     {{ trans('Phone number') }}: {{ $lims_customer_data->Phone }}<br>
-                    {{ trans('Address') }}: {{ $lims_customer_data->Address }}
+                    {{ trans('Address') }}: {{ $lims_customer_data->Address }}<br>
+                    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
                 </p>
                 <table class="table-data">
                     <!-- <thead>
@@ -285,14 +290,11 @@
                                 <?php echo($due_amount)?></th>
                         </tr>
                         <tr>
+                            <th colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:</th>
                             @if (@$general_setting->currency_position == 'prefix')
-                                <th class="centered" colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:
-                                    <span>{{ config('currency') }}</span>
-                                    <span>{{ str_replace('-', ' ', $numberInWords) }}</span></th>
+                                    <th style="text-align:right;white-space: nowrap;">{{ config('currency') }} {{ str_replace('-', ' ', $numberInWords) }}</th>
                             @else
-                                <th class="centered" colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:
-                                    <span>{{ str_replace('-', ' ', $numberInWords) }}</span>
-                                    <span>{{ config('currency') }}</span></th>
+                                    <th style="text-align:right;white-space: nowrap;">{{ str_replace('-', ' ', $numberInWords) }} {{ config('currency') }}</th>
                             @endif
                         </tr>
                     </tbody>
