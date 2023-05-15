@@ -64,9 +64,9 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="row mb-3">
-                            <div class="alert alert-primary" role="alert">
+                          <!--   <div class="alert alert-primary" role="alert">
                                 <strong>Transfer</strong> Select warehose carefully.
-                            </div>
+                            </div> -->
 
                             <div class="alert alert-danger" role="alert" style="display:none">
                                 <strong>Oh snap!</strong> Change a few things up and try submitting again.
@@ -110,7 +110,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-4" style="display:none">
                                     <label for="qty">Enter Quantity</label>
                                     <input type="number" id="qty" class="form-control" name="qty" placeholder="Enter Quantity" min="1" max="3">
 
@@ -134,8 +134,8 @@
                                     <thead>
                                         <tr class="bg-light borde-1 border-light " style="height: 40px;">
                                             <th width="10%">ITEM DETAILS</th>
-                                            <th width="4%">QUANTITY</th>
-                                            <th width="4%">Stock QUantity</th>
+                                            <th width="4%">Stock Quantity</th>
+                                            <th width="4%">Enter Quantity</th> 
                                             <th width="4%">Action</th>
                                         </tr>
                                     </thead>
@@ -189,9 +189,8 @@
             id = id_arr.split("_");
             var qty = $(this).val();
             var quantity = parseInt($('.stock_quantity_' + id[1]).text());
-            var stockQuantity = parseInt(quantity) - parseInt(qty);
-            $('.stock_quantity_' + id[1]).text('');
-            $('.stock_quantity_' + id[1]).text(stockQuantity);
+            var stockQuantity = parseInt(quantity) + (-parseInt(qty)); 
+            $('.remaining_quantity_' + id[1]).text(stockQuantity);
             console.log(quantity);
         });
 
@@ -212,7 +211,7 @@
         });
 
         $(document).ajaxSend(function() {
-           // $("#overlay").fadeIn(300);
+            // $("#overlay").fadeIn(300);
         });
 
         $(document).ajaxComplete(function() {
