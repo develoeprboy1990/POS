@@ -535,7 +535,7 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
 
 
   Route::get('/DBDump/', [Accounts::class, 'DBDump']);
- 
+
   Route::get('/create-invoice', [TeqPosController::class, 'createTeqInvoice'])->name('invoice.create');
   Route::get('/create-voucher', [TeqPosController::class, 'createVoucher'])->name('voucher.create');
   Route::post('/save-teq-invoice', [TeqPosController::class, 'storeInvoice']);
@@ -574,8 +574,13 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
   Route::get('/wareHouseDelete/{id}', [PosController::class, 'deleteWareHouse']);
 
   Route::get('/run-database-query', [PosController::class, 'runQuery'])->name('run-database-query');
-  
+
   Route::group(['prefix' => 'warehouse'], function () {
+
+    Route::get('/stock-warehouses-out', [PosController::class, 'WareHouseOut'])->name('warehouse.stock-warehouses-out');
+    Route::get('/stock-warehouses-in', [PosController::class, 'WareHouseIn'])->name('warehouse.stock-warehouses-in');
+    Route::get('/stock-warehouse-list', [PosController::class, 'ListWareHouseTransfers'])->name('warehouse.stock-warehouse-list');
+
     Route::get('/stock-warehouse-transfer', [PosController::class, 'stockWarehouseTransfer'])->name('warehouse.warehousestransfer');
     Route::get('/fetch-ware-houses/{id}', [PosController::class, 'fetchWareHouses'])->name('warehouse.fetchwarehouses');
     Route::get('/check-qty/{warehouseid}/{id}', [PosController::class, 'checkQty'])->name('warehouse.checkqty');
@@ -583,7 +588,6 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
 
 
     Route::get('/get-product-detais/{warehouseid}/{id}', [PosController::class, 'getProductDetais'])->name('warehouse.getproductdetais');
-    
   });
 
 
@@ -647,8 +651,8 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
   Route::post('/updateDishOrder', [DishController::class, 'updateDishOrder']);
 
   // Routes for adding single dish
-    Route::get('/add-dish', [DishController::class, 'addDish']);
-    Route::post('/saveSingleDish', [DishController::class, 'saveSingleDish']);
+  Route::get('/add-dish', [DishController::class, 'addDish']);
+  Route::post('/saveSingleDish', [DishController::class, 'saveSingleDish']);
 
 
 
@@ -684,4 +688,4 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
 
 
   Route::get('/test-list', [PosController::class, 'limsStickerSearch']);
-});  
+});

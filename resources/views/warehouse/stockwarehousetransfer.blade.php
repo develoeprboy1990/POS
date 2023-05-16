@@ -50,23 +50,26 @@
         <span class="spinner"></span>
     </div>
 </div>
+<!-- SPEND CODE ENDS HERE -->
+
+
+
+
 <div class="main-content">
-
-
-
     <div class="page-content">
         <div class="container-fluid">
-            <div class="card-header">
-                <h2>Transfer Items From One Warehouse To Another Warehouse</h2>
-            </div>
+            <!-- start page title -->
+
+            <!-- enctype="multipart/form-data" -->
             <form action="{{route('warehouse.stock-warehouse-transfer')}}" method="post" name="form1" id="form1">
                 @csrf
+
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <div class="row mb-3">
-                            <div class="alert alert-primary" role="alert">
+                            <!--  <div class="alert alert-success" role="alert">
                                 <strong>Transfer</strong> Select warehose carefully.
-                            </div>
+                            </div> -->
 
                             <div class="alert alert-danger" role="alert" style="display:none">
                                 <strong>Oh snap!</strong> Change a few things up and try submitting again.
@@ -75,98 +78,137 @@
                                 <strong>Success !</strong> Selected item has been transfered to warehouse.
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <div class="mb-1">
-                                    <label for="basicpill-firstname-input">From Ware House</label>
-                                    <select name="from_warehouse_id" id="from_warehouse_id" class="select2 form-select my_class" onchange="getValue(this);" data-id='shah'>
-                                        <option value="">All WareHouses</option>
-                                        @foreach ($warehouses as $key => $value)
-                                        <option value="{{$value->id}}">{{$value->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    <input type="hidden" name="warehouseid" id="warehouseid" value="">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-1">
-                                    <label for="basicpill-firstname-input">To Ware House</label>
-                                    <select name="to_warehouse_id" id="to_warehouse_id" class="select2 form-select my_class" id="select2-basic">
-                                        <option value="">All WareHouses</option>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-1 row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label" for="password">From Ware House </label>
+                                    </div>
+                                    <div class="col-sm-9">
 
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row products">
 
-                            <div class="mb-3 row">
-                                <div class="col-sm-4">
-                                    <div class="mb-1">
-                                        <label for="ItemID">Products in the selected warehouse</label>
+                                        <select name="from_warehouse_id" id="from_warehouse_id" class="select2 form-select mt-5 my_class" onchange="getValue(this);" data-id='shah'>
+                                            <option value="">All WareHouses</option>
+                                            @foreach ($warehouses as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="hidden" name="warehouseid" id="warehouseid" value="">
+
+                                    </div>
+                                </div>
+
+                                <div class="mb-1 row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label" for="password">Select Producte</label>
+                                    </div>
+
+                                    <div class="col-sm-9">
                                         <select name="ItemID" id="ItemID" class="select2 form-select my_class" onchange="getProductValue(this);">
 
 
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <label for="qty">Enter Quantity</label>
-                                    <input type="number" id="qty" class="form-control" name="qty" placeholder="Enter Quantity" min="1" max="3">
 
+
+
+                            </div>
+                            <div class="col-md-6">
+
+
+                                <div class="col-12">
+                                    <div class="mb-1 row">
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label text-danger" for="password">To Ware House </label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div id="invoict_type">
+
+                                                <select name="to_warehouse_id" id="to_warehouse_id" class="select2 form-select my_class" id="select2-basic">
+                                                    <option value="">All WareHouses</option>
+
+                                                </select>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="col-sm-4">
-                                    <label for="qty"> </label>
+                                <div class="col-12" id="paymentdetails">
+                                    <div class="mb-1 row">
+                                        <div class="col-sm-3">
+                                            <label class="col-form-label text-danger" for="password"> </label>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="col-sm-2"> <button type="button" class="btn btn-success w-lg float-right add_input" id="submit">Add</button>
 
-                                    <div class="col-sm-2"> <button type="button" class="btn btn-success w-lg float-right add_input" id="submit">Add</button>
-
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                        </div>
+                            <hr class="invoice-spacing">
 
-                        <hr class="invoice-spacing">
-                        <div class='row'>
-                            <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
-                                <table>
-                                    <thead>
-                                        <tr class="bg-light borde-1 border-light " style="height: 40px;">
-                                            <th width="10%">ITEM DETAILS</th>
-                                            <th width="4%">QUANTITY</th>
-                                            <th width="4%">Stock QUantity</th>
-                                            <th width="4%">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="form-group">
-                                    </tbody>
-                                </table>
+                            <div class='text-center'>
+
                             </div>
+                            <div class='row'>
+                                <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                                    <table>
+                                        <thead>
+                                            <tr class="bg-light borde-1 border-light " style="height: 40px;">
+                                                <th width="1%" class="text-center"> </th>
+                                                <th width="10%">ITEM DETAILS</th>
+                                                <th width="4%">Stock Quantity</th>
+                                                <th width="4%">Enter Quantity</th>
+                                                <th width="4%">Action</th>
+                                            </tr>
+                                        </thead>
+
+
+                                        <tbody class="form-group">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row mt-4">
+
+                                <div class="col-lg-8 col-12  ">
+
+
+                                </div>
+
+                                <div class="card-footer bg-light">
+                                    <button type="submit" class="btn btn-success w-lg float-right" id="submit">Transfer Products</button>
+
+                                    <button type="reset" class="btn btn-secondary w-lg float-right" id="submit">Reset</button>
+                                </div>
+
+
+                            </div>
+
+
                         </div>
-                        <div class="card-footer bg-light">
-                            <button type="submit" class="btn btn-success w-lg float-right" id="submit">Transfer Products</button>
-
-                            <button type="reset" class="btn btn-secondary w-lg float-right" id="submit">Reset</button>
-                        </div>
-
-
-
-                    </div><!-- card-body -->
-
+                    </div>
+                </div>
 
 
 
 
 
             </form>
+
+
         </div>
     </div>
+</div>
 
-</div>
-</div>
-</div>
-<!-- END: Content-->
 
 
 @endsection
@@ -189,9 +231,8 @@
             id = id_arr.split("_");
             var qty = $(this).val();
             var quantity = parseInt($('.stock_quantity_' + id[1]).text());
-            var stockQuantity = parseInt(quantity) - parseInt(qty);
-            $('.stock_quantity_' + id[1]).text('');
-            $('.stock_quantity_' + id[1]).text(stockQuantity);
+            var stockQuantity = parseInt(quantity) + (-parseInt(qty));
+            $('.remaining_quantity_' + id[1]).text(stockQuantity);
             console.log(quantity);
         });
 
@@ -212,7 +253,7 @@
         });
 
         $(document).ajaxSend(function() {
-           // $("#overlay").fadeIn(300);
+             $("#overlay").fadeIn(300);
         });
 
         $(document).ajaxComplete(function() {
@@ -315,15 +356,19 @@
             success: function(response) {
                 $("#submit").attr('disabled', false);
                 $('.alert-danger').hide();
-                if (response) {
-                    $("#overlay").fadeOut(300);
-                    $('.alert-success').show();
-                    $("#form1").reset();
+                if (response) { 
+                    $('.alert-success').show(); 
                     $(':input', '#form1')
                         .not(':button, :submit, :reset, :hidden')
                         .val('')
                         .removeAttr('checked')
                         .removeAttr('selected');
+
+                    setTimeout(function() {
+                        $("#overlay").fadeOut(300);
+                        $('.alert-success').hide();
+                        location.reload(true);
+                    }, 3000);
                 }
                 //Handle success response
             }
