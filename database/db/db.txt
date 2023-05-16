@@ -358,3 +358,17 @@ ALTER TABLE `invoice_detail` CHANGE `Total` `Total` DOUBLE(50,2) NULL DEFAULT NU
 CREATE OR REPLACE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`i`.`CostPrice` AS `CostPrice`,`i`.`SellingPrice` AS `SellingPrice`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))
 
 ALTER TABLE `user` ADD `Address` TEXT NULL DEFAULT NULL AFTER `UserType`, ADD `Mobile` VARCHAR(255) NULL DEFAULT NULL AFTER `Address`, ADD `WarehouseID` INT NULL DEFAULT NULL AFTER `Mobile`;
+
+
+=================================================================
+
+
+date: 16-5-2023
+ALTER TABLE `invoice_master` ADD `otherWareHouseID` INT NULL AFTER `WarehouseID`; 
+
+CREATE VIEW v_warehouse_stock_transfer AS select `extbooks_accounting`.`invoice_master`.`InvoiceMasterID` AS `InvoiceMasterID`,`extbooks_accounting`.`invoice_master`.`WarehouseID` AS `WarehouseID`,`extbooks_accounting`.`warehouses`.`name` AS `WarehouseName`,w.name as otherWareHouse,`extbooks_accounting`.`invoice_master`.`Date` AS `Date`,`extbooks_accounting`.`invoice_master`.`UserID` AS `UserID`,`extbooks_accounting`.`invoice_master`.`PaymentMode` AS `PaymentMode`,`extbooks_accounting`.`invoice_master`.`InvoiceNo` AS `InvoiceNo`,`extbooks_accounting`.`invoice_master`.`TotalQty`,`extbooks_accounting`.`invoice_master`.`CustomerNotes` AS `CustomerNotes`,`extbooks_accounting`.`invoice_master`.`Subject` AS `Subject`,`extbooks_accounting`.`invoice_master`.`WalkinCustomerName` AS `WalkinCustomerName`,`extbooks_accounting`.`invoice_master`.`DescriptionNotes` AS `DescriptionNotes`
+        from  `extbooks_accounting`.`invoice_master`
+        INNER JOIN `extbooks_accounting`.`warehouses` ON `extbooks_accounting`.`warehouses`.`id` = `extbooks_accounting`.`invoice_master`.`WarehouseID`
+        INNER JOIN `extbooks_accounting`.`warehouses` as w ON w.`id` = `extbooks_accounting`.`invoice_master`.`otherWareHouseID`
+        WHERE InvoiceNo LIKE 'WIN%' OR InvoiceNo LIKE 'WOUT%'
+        order by `extbooks_accounting`.`invoice_master`.`InvoiceMasterID`;"

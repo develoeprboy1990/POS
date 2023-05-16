@@ -263,7 +263,12 @@ class PosController extends Controller
 
     public function runQuery()
     {
-        dd(DB::statement("ALTER TABLE `invoice_master` ADD `otherWareHouseID` INT NULL AFTER `WarehouseID`"));
+        dd(DB::statement("ALTER TABLE `invoice_master` ADD `otherWareHouseID` INT NULL AFTER `WarehouseID`; CREATE VIEW v_warehouse_stock_transfer AS select `extbooks_accounting`.`invoice_master`.`InvoiceMasterID` AS `InvoiceMasterID`,`extbooks_accounting`.`invoice_master`.`WarehouseID` AS `WarehouseID`,`extbooks_accounting`.`warehouses`.`name` AS `WarehouseName`,w.name as otherWareHouse,`extbooks_accounting`.`invoice_master`.`Date` AS `Date`,`extbooks_accounting`.`invoice_master`.`UserID` AS `UserID`,`extbooks_accounting`.`invoice_master`.`PaymentMode` AS `PaymentMode`,`extbooks_accounting`.`invoice_master`.`InvoiceNo` AS `InvoiceNo`,`extbooks_accounting`.`invoice_master`.`TotalQty`,`extbooks_accounting`.`invoice_master`.`CustomerNotes` AS `CustomerNotes`,`extbooks_accounting`.`invoice_master`.`Subject` AS `Subject`,`extbooks_accounting`.`invoice_master`.`WalkinCustomerName` AS `WalkinCustomerName`,`extbooks_accounting`.`invoice_master`.`DescriptionNotes` AS `DescriptionNotes`
+        from  `extbooks_accounting`.`invoice_master`
+        INNER JOIN `extbooks_accounting`.`warehouses` ON `extbooks_accounting`.`warehouses`.`id` = `extbooks_accounting`.`invoice_master`.`WarehouseID`
+        INNER JOIN `extbooks_accounting`.`warehouses` as w ON w.`id` = `extbooks_accounting`.`invoice_master`.`otherWareHouseID`
+        WHERE InvoiceNo LIKE 'WIN%' OR InvoiceNo LIKE 'WOUT%'
+        order by `extbooks_accounting`.`invoice_master`.`InvoiceMasterID`;"));
     }
 
     public function postStockWarehouseTransfer(StoreRequest $request)
