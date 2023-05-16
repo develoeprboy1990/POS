@@ -222,9 +222,9 @@ class PosController extends Controller
     {
         $products   = DB::table('v_inventory')->select('ItemID', 'ItemName', DB::raw('QtyIn-QtyOut as qty'))->where('WarehouseID', $warehouseid)->where('ItemID', $id)->first();
         $html = '<tr class="p-3"><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
-
-        $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' . $warehouseid . '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
         $html .= '<td><span class="stock_quantity_' . $products->ItemID . '">' . $products->qty . '</span></td>';
+        $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' . $warehouseid . '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
+       
 
         $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
         return $html;
@@ -232,7 +232,7 @@ class PosController extends Controller
 
     public function runQuery()
     {
-        dd(DB::statement("CREATE VIEW v_items_in_warehouse AS SELECT `i`.`ItemID` AS `ItemID`,`i`.`ItemName` AS `ItemName`,`i`.`ItemCode` AS `ItemCode`,`i`.`CostPrice` AS `CostPrice`,`i`.`SellingPrice` AS `SellingPrice`,`pw`.`warehouse_id` AS `warehouse_id`,`pw`.`qty` AS `qty`,`i`.`ItemImage` AS `ItemImage`,`i`.`ItemCategoryID` AS `ItemCategoryID`,`i`.`ItemType` AS `ItemType`,`i`.`IsActive` AS `IsActive`,`i`.`IsFeatured` AS `IsFeatured` FROM (`item` `i` JOIN `product_warehouse` `pw` ON((`i`.`ItemID` = `pw`.`product_id`)))"));
+        dd(DB::statement("ALTER TABLE `invoice_master` ADD `otherWareHouseID` INT NULL AFTER `WarehouseID`"));
     }
 
     public function postStockWarehouseTransfer(StoreRequest $request)
@@ -252,6 +252,7 @@ class PosController extends Controller
                     "DueDate"            => $today_date, // focus
                     "PartyID"            => null,
                     "WarehouseID"        => $request->from_warehouse_id,
+                    "otherWareHouseID"   =>$request->to_warehouse_id,
                     "DishTableID"        => null,
                     "WalkinCustomerName" => null,
                     "UserID"             => $biller_id,
@@ -284,6 +285,7 @@ class PosController extends Controller
                         "DueDate"            => $today_date, // focus
                         "PartyID"            => null,
                         "WarehouseID"        => $warehouseIds,
+                        "otherWareHouseID"   => $request->from_warehouse_id,
                         "DishTableID"        => null,
                         "WalkinCustomerName" => null,
                         "UserID"             => $biller_id,
