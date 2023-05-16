@@ -15,8 +15,8 @@ use App\Models\PosSetting;
 use App\Models\Tax;
 use App\Models\Payment;
 use App\Models\Currency;
-
-use App\Models\Product_Warehouse;
+use App\Models\InvoiceDetail;
+use App\Models\InvoiceMaster;
 use App\Http\Requests\StoreRequest;
 use DNS1D;
 use DNS2D;
@@ -194,6 +194,37 @@ class PosController extends Controller
     }
 
 
+
+    public function WareHouseOut(Request $request)
+    {
+        return view('warehouse.warehouseout');
+    }
+
+    public function WareHouseIn(Request $request)
+    {
+        return view('warehouse.warehousein');
+    }
+
+    public function ListWareHouseTransfers(Request $request)
+    {
+        $data = DB::table('v_warehouse_stock_transfer')->orderBy('InvoiceMasterID');
+        return Datatables::of($data)
+            ->addIndexColumn()->filter(function ($data) use ($request) {
+                if ($request->get('warehouse') == 'out') {
+                    $data->where('InvoiceNo', 'LIKE', "%WOUT%");
+                } elseif ($request->get('warehouse') == 'in') {
+                    $data->where('InvoiceNo', 'LIKE', "%WIN%");
+                }
+            })->addColumn('action', function ($row) {
+                $btn = '<div class="d-flex align-items-center col-actions">
+                <a href="' . URL('/BillView/' . $row->InvoiceMasterID) . '"><i class="font-size-18 mdi mdi-eye-outline align-middle me-1 text-secondary"></i></a></div>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+
     public function stockWarehouseTransfer()
     {
         $warehouses = Warehouse::where('is_active', '1')->get();
@@ -221,10 +252,10 @@ class PosController extends Controller
     public function getProductDetais($warehouseid, $id)
     {
         $products   = DB::table('v_inventory')->select('ItemID', 'ItemName', DB::raw('QtyIn-QtyOut as qty'))->where('WarehouseID', $warehouseid)->where('ItemID', $id)->first();
-        $html = '<tr class="p-3"><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
+        $html = '<tr class="p-3">  <td class="p-1 bg-light borde-1 border-light text-center"></td><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
         $html .= '<td><span class="stock_quantity_' . $products->ItemID . '">' . $products->qty . '</span></td>';
         $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' . $warehouseid . '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
-       
+
 
         $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
         return $html;
@@ -232,14 +263,19 @@ class PosController extends Controller
 
     public function runQuery()
     {
-        dd(DB::statement("ALTER TABLE `invoice_master` ADD `otherWareHouseID` INT NULL AFTER `WarehouseID`"));
+        dd(DB::statement("ALTER TABLE `invoice_master` ADD `otherWareHouseID` INT NULL AFTER `WarehouseID`; CREATE VIEW v_warehouse_stock_transfer AS select `extbooks_accounting`.`invoice_master`.`InvoiceMasterID` AS `InvoiceMasterID`,`extbooks_accounting`.`invoice_master`.`WarehouseID` AS `WarehouseID`,`extbooks_accounting`.`warehouses`.`name` AS `WarehouseName`,w.name as otherWareHouse,`extbooks_accounting`.`invoice_master`.`Date` AS `Date`,`extbooks_accounting`.`invoice_master`.`UserID` AS `UserID`,`extbooks_accounting`.`invoice_master`.`PaymentMode` AS `PaymentMode`,`extbooks_accounting`.`invoice_master`.`InvoiceNo` AS `InvoiceNo`,`extbooks_accounting`.`invoice_master`.`TotalQty`,`extbooks_accounting`.`invoice_master`.`CustomerNotes` AS `CustomerNotes`,`extbooks_accounting`.`invoice_master`.`Subject` AS `Subject`,`extbooks_accounting`.`invoice_master`.`WalkinCustomerName` AS `WalkinCustomerName`,`extbooks_accounting`.`invoice_master`.`DescriptionNotes` AS `DescriptionNotes`
+        from  `extbooks_accounting`.`invoice_master`
+        INNER JOIN `extbooks_accounting`.`warehouses` ON `extbooks_accounting`.`warehouses`.`id` = `extbooks_accounting`.`invoice_master`.`WarehouseID`
+        INNER JOIN `extbooks_accounting`.`warehouses` as w ON w.`id` = `extbooks_accounting`.`invoice_master`.`otherWareHouseID`
+        WHERE InvoiceNo LIKE 'WIN%' OR InvoiceNo LIKE 'WOUT%'
+        order by `extbooks_accounting`.`invoice_master`.`InvoiceMasterID`;"));
     }
 
     public function postStockWarehouseTransfer(StoreRequest $request)
     {
+
         try {
             if ($request->has('qty')) {
-
                 $InvoiceNo  = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Wout%')->count();
                 $invoice_no = 'Wout-0000' . ++$InvoiceNo;
                 $today_date = date('Y-m-d');
@@ -252,7 +288,7 @@ class PosController extends Controller
                     "DueDate"            => $today_date, // focus
                     "PartyID"            => null,
                     "WarehouseID"        => $request->from_warehouse_id,
-                    "otherWareHouseID"   =>$request->to_warehouse_id,
+                    "otherWareHouseID"   => $request->to_warehouse_id,
                     "DishTableID"        => null,
                     "WalkinCustomerName" => null,
                     "UserID"             => $biller_id,
@@ -270,21 +306,21 @@ class PosController extends Controller
                     "DiscountAmount"     => null,
                     "Shipping"           => null,
                     "GrandTotal"         => null,
-                    "Total"              => null,
-
+                    "Total"              => null
                 );
 
-                $lims_sale_data = DB::table('invoice_master')->insertGetId($invoice_data);
+                $InvoiceMasterOutID = DB::table('invoice_master')->insertGetId($invoice_data);
+
                 $InvoiceNo      = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Win%')->count();
-                $invoice_no     = 'Wout-0000' . ++$InvoiceNo;
+                $invoice_in_no     = 'Win-0000' . ++$InvoiceNo;
                 foreach ($request->qty as $warehouseIds => $productsIds) {
                     $invoice_data = array(
-                        "InvoiceNo"          => $invoice_no,
+                        "InvoiceNo"          => $invoice_in_no,
                         "ReferenceNo"        => null,
                         "Date"               => $today_date,  // focus
                         "DueDate"            => $today_date, // focus
                         "PartyID"            => null,
-                        "WarehouseID"        => $warehouseIds,
+                        "WarehouseID"        => $request->to_warehouse_id,
                         "otherWareHouseID"   => $request->from_warehouse_id,
                         "DishTableID"        => null,
                         "WalkinCustomerName" => null,
@@ -307,13 +343,13 @@ class PosController extends Controller
 
                     );
 
-                    $InvoiceMasterID = DB::table('invoice_master')->insertGetId($invoice_data);
-
+                    $InvoiceMasterInID = DB::table('invoice_master')->insertGetId($invoice_data);
+                    $total_qty = 0;
                     foreach ($productsIds as $ids => $quantity) {
                         $item_name = DB::table('item')->where('ItemID', $ids)->pluck('ItemName')->first();
                         $prod_qty  = $quantity;
                         $invoice_detailOut = array(
-                            "InvoiceMasterID" => $lims_sale_data,
+                            "InvoiceMasterID" => $InvoiceMasterOutID,
                             "InvoiceNo"       => $invoice_no,
                             "ItemID"          => $ids,
                             "Description"     => $item_name,
@@ -325,10 +361,9 @@ class PosController extends Controller
                             "Total"           => null,
                         );
                         DB::table('invoice_detail')->insert($invoice_detailOut);
-
                         $invoice_detailIn = array(
-                            "InvoiceMasterID" => $InvoiceMasterID,
-                            "InvoiceNo"       => $invoice_no,
+                            "InvoiceMasterID" => $InvoiceMasterInID,
+                            "InvoiceNo"       => $invoice_in_no,
                             "ItemID"          => $ids,
                             "Description"     => $item_name,
                             "PartyID"         => null,
@@ -338,11 +373,15 @@ class PosController extends Controller
                             "Tax"             => null,
                             "Total"           => null,
                         );
+                        $total_qty = $total_qty + $prod_qty;
+
                         DB::table('invoice_detail')->insert($invoice_detailIn);
                     }
+                    InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterOutID)->update(['TotalQty' => $total_qty]);
+                    InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterInID)->update(['TotalQty' => $total_qty]);
                 }
             }
-            session()->flash('success', 'Application has been posted for new loan successfully');
+            session()->flash('success', 'Stock has been updated successfully.');
             return true;
         } catch (\Exception $exception) {
             session()->flash('error', 'Something went Wrong, Try again later');

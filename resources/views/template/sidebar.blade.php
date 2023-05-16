@@ -93,7 +93,8 @@
                         <li><a href="{{URL('/item-category-list')}}" key="t-products">Item Categories</a></li>
                         <li><a href="{{URL('/ware-house-list')}}" key="t-products">WareHouses</a></li>
 
-                        <li><a href="{{route('warehouse.warehousestransfer')}}" key="t-products">WareHouse Stock Transfer</a></li>
+                        <li><a href="{{route('warehouse.stock-warehouses-in')}}" key="t-products">WareHouse Stock In</a></li>
+                        <li><a href="{{route('warehouse.stock-warehouses-out')}}" key="t-products">WareHouse Stock Out</a></li>
                         <li><a href="{{URL('/brand-list')}}" key="t-products">Brand</a></li>
                         <li><a href="{{URL('/unit-list')}}" key="t-products">Unit</a></li>
                         <li><a href="{{URL('/tax-list')}}" key="t-products">Tax</a></li>
