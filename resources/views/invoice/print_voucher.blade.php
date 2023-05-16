@@ -9,7 +9,8 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">  
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
@@ -46,7 +47,12 @@
         table {
             border-collapse: collapse;
         }
-        tr {border-bottom: 1px dotted #ddd;}
+        tbody tr{border-bottom: 1px dotted #ddd;}
+
+        {
+  border:0
+}
+
         td,th {padding: 7px 0;width: 50%;}
 
         table {width: 100%;}
@@ -65,8 +71,9 @@
             }
             td,th {padding: 5px 0;}
             .hidden-print {
-                display: none !important;
+            display: none !important;
             }
+
             @page  { margin: 1.5cm 0.5cm 0.5cm; }
             @page:first { margin-top: 0.5cm; }
             /*tbody::after {
@@ -75,7 +82,17 @@
                 page-break-inside: avoid;
                 page-break-before: avoid;        
             }*/
+
         }
+        .dashed-2 {
+        border: none !important;
+        height: 1px  !important;
+        background: #000  !important;
+        background: repeating-linear-gradient(90deg,#000 0px,#000 6px,transparent 6px,transparent 12px)  !important;
+        }
+
+
+
     </style>
     </head>
 
@@ -106,12 +123,9 @@
                                 {{ trans('file.Back') }}</a></div>
                 <div class="col-sm-4"><button style="margin-right: 260px !important;" onclick="window.print();" class="btn btn-primary"><i class="dripicons-print"></i>
                                 {{ trans('file.Print') }}</button></div>
-                <div class="col-sm-4">
-                    
+                <div class="col-sm-4">                    
                     @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
-                  
-                  @else
-                      
+                    @else                      
                   <form class="form-horizontal" method="Post" action="{{ route('admin.extra_tax')}}">
                       @csrf
                       @method('PUT')
@@ -124,8 +138,6 @@
                     
                 </div>
             </div>
-               
-             
             </div>
 
             <div id="receipt-data"><br>
@@ -134,37 +146,33 @@
                         <img src="{{ url('public/logo', $general_setting->site_logo) }}" height="200" width="300"
                             style="margin:10px 0;">
                     @endif
-
-                    <h4>{{ $company->Name }}</h4>
-
-                    <p style="text-align:left;line-height: 1.5;">{{ trans('file.Address') }}: {{ $company->Address }}
-                        <br>{{ trans('file.Phone Number') }}: {{ $company->Contact }}<br>
-                        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+                    <h4 style="font-weight:bold;">{{ $company->Name }}</h4>
+                    <p>{{ trans('file.Address') }}: {{ $company->Address }}
+                        <br>{{ trans('file.Phone Number') }}: {{ $company->Contact }}
                     </p>
+                    <p>
+                   RECEIPT :{{ $lims_sale_data->InvoiceNo }}<br>
+                   DATE :{{ trans('file.Date') }}: {{ date("d/m/Y", strtotime($lims_sale_data->Date)) }}<br>
+                    {{ trans('file.customer') }} :{{ $lims_customer_data->PartyName }}<br>
+                    <!-- {{ trans('Phone number') }}: {{ $lims_customer_data->Phone }}<br>
+                    {{ trans('Address') }}: {{ $lims_customer_data->Address }} -->
+                </p>
                 </div>
-                <p style="text-align:left;line-height: 1.5;">{{ trans('file.Date') }}: {{ date("d-m-Y", strtotime($lims_sale_data->Date)) }}<br>
-                        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-                </p>
-                <p style="text-align:left;line-height: 1.5;">
-                   Invoice no: {{ $lims_sale_data->InvoiceNo }}<br>
-                    {{ trans('file.customer') }}: {{ $lims_customer_data->PartyName }}<br>
-                    {{ trans('Phone number') }}: {{ $lims_customer_data->Phone }}<br>
-                    {{ trans('Address') }}: {{ $lims_customer_data->Address }}<br>
-                    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                </p>
-                <table class="table-data">
-                    <!-- <thead>
+                
+                <hr class="dashed-2">
+                <table class="table-data ">
+                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Code</th>
+                            <th colspan="6">Name</th>
+                            <!-- <th>Code</th>
                             <th>RRP</th>
                             <th>Disc. Price</th>
-                            <th>Tax</th>
-                            <th>Qty</th>
+                            <th>Tax</th> 
+                            <th>Qty</th>-->
                             
                             <th style="text-align: right;">Total</th>
                         </tr>
-                    </thead> -->
+                    </thead> 
                     <tbody>
                         <?php $total_product_tax = 0; ?>
                         @foreach ($lims_product_sale_data as $key => $product_sale_data)
@@ -193,6 +201,7 @@
                                
                             </tr>
                         @endforeach
+
                         @foreach ($lims_product_dish_data as $key => $product_sale_data)
                                 @php
                                     $lims_product_data = \DB::table('dish_types')->where('id',$product_sale_data->dish_type_id)->first();
@@ -213,15 +222,17 @@
                             </tr>
                         @endforeach
 
-                        <!-- <tfoot> -->
+                    </tbody>
+                    
+                    <tfoot>
                         <tr>
                             <th colspan="6" style="text-align:left">{{ trans('file.Total') }}</th>
                             <th style="text-align:right">
                                 {{ number_format((float) $lims_sale_data->GrandTotal, 2, '.', '') - $lims_sale_data->Tax }}</th>
                         </tr>
                         
-                          @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
-                           <tr>
+                        @if($lims_sale_data->ReferenceNo ==$lims_sale_data->Tax)
+                        <tr>
                             <th colspan="6" style="text-align:left">Extra Tax</th>
                             <th style="text-align:right">
                                 4%(<?php echo( $percentx)?>)</th>
@@ -229,9 +240,7 @@
                     
                     @else
 
-                    @endif
-                        
-                        
+                    @endif    
                         
                         @if (@$general_setting->invoice_format == 'gst' && @$general_setting->state == 1)
                             <tr>
@@ -289,16 +298,18 @@
                             <th style="text-align:right">
                                 <?php echo($due_amount)?></th>
                         </tr>
-                        <tr>
-                            <th colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:</th>
+                       <!--  <tr>
                             @if (@$general_setting->currency_position == 'prefix')
-                                    <th style="text-align:right;white-space: nowrap;">{{ config('currency') }} {{ str_replace('-', ' ', $numberInWords) }}</th>
+                                <th class="centered" colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:
+                                    <span>{{ config('currency') }}</span>
+                                    <span>{{ str_replace('-', ' ', $numberInWords) }}</span></th>
                             @else
-                                    <th style="text-align:right;white-space: nowrap;">{{ str_replace('-', ' ', $numberInWords) }} {{ config('currency') }}</th>
+                                <th class="centered" colspan="6" style="text-align:left;">{{ trans('file.In Words') }}:
+                                    <span>{{ str_replace('-', ' ', $numberInWords) }}</span>
+                                    <span>{{ config('currency') }}</span></th>
                             @endif
-                        </tr>
-                    </tbody>
-                    <!-- </tfoot> -->
+                        </tr> -->
+                    </tfoot>
                 </table>
                 <table>
                     <tbody>
@@ -323,9 +334,9 @@
                     @endif
                         <tr>
                             <td class="centered" colspan="5">
-                                <?php echo '<img style="height: 25px; width: 160px;" src="data:image/png;base64,' . DNS1D::getBarcodePNG($lims_sale_data->ReferenceNo, 'C128') . '" width="300" alt="barcode"   />'; ?>
-                                <br>
-                                <?php echo '<img src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->ReferenceNo, 'QRCODE') . '" alt="barcode"   />'; ?>
+                                <?php echo '<img style="height: 25px; width: 160px;" src="data:image/png;base64,' . DNS1D::getBarcodePNG($lims_sale_data->InvoiceNo, 'C128') . '" width="300" alt="barcode"   />'; ?>
+                                <!-- <br>
+                                <?php //echo '<img src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->InvoiceNo, 'QRCODE') . '" alt="barcode"   />'; ?> -->
                             </td>
                         </tr>
                     </tbody>
