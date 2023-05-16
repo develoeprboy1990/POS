@@ -132,11 +132,22 @@
                     </div>
                     <div class="row col-md-12 mt-3">
                         <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control status form-select" name="is_active">
+                                <option value="1">Active</option>
+                                <option value="0">In-Active</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    <div class="row col-md-12 mt-3">
+                        <div class="form-group">
                             <label for="address">Address</label>
                             <textarea required class="form-control" rows="3" id="address" name="address"></textarea>
                         </div>
                         
                     </div>
+                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="sumbit" class="btn btn-success">Update</button>
@@ -222,6 +233,7 @@
                         $('#name').val(data.name);
                         $('#email').val(data.email);
                         $('#phone').val(data.phone);
+                        $('.status').val(data.is_active);
                         $('#address').val(data.address);
                         $('#editWareHouseModal').modal('show');
                     }
