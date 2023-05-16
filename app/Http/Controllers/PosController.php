@@ -120,12 +120,19 @@ class PosController extends Controller
                     $stock_qty = DB::table('v_inventory')->where('WarehouseID', $row->id)->sum('Balance');
                     return $stock_qty;
                 })
+                ->addColumn('status', function ($row) {
+                    if($row->is_active)
+                        $status = 'Active';
+                    else
+                        $status = 'In-Active';
+                    return $status;
+                })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" class="edit_warehouse" data-id="' . $row->id . '" data-name="' . $row->name . '"><i class="bx bx-pencil align-middle me-1"></i></a> <a href="#" onclick="delete_confirm2(`wareHouseDelete`,' . $row->id . ')"><i class="bx bx-trash  align-middle me-1"></i></a>';
 
                     return $btn;
                 })
-                ->rawColumns(['no_of_prod', 'stock_qty', 'action'])
+                ->rawColumns(['no_of_prod', 'stock_qty','status','action'])
                 ->make(true);
         }
 

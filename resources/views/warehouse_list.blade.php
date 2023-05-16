@@ -170,6 +170,7 @@
                             <th scope="col">Warehouse</th>
                             <th scope="col">Phone Number</th>
                             <th scope="col">Email</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Address</th>
                             <th scope="col">Number of Product</th>
                             <th scope="col">Stock Quantity</th>
@@ -206,6 +207,7 @@
                 { "data": "name" },
                 { "data": "phone" },
                 { "data": "email" },
+                { "data": "status", name: 'status' },
                 { "data": "address" },
                 { "data": "no_of_prod", name: 'no_of_prod' },
                 { "data": "stock_qty", name: 'stock_qty' },
