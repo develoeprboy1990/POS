@@ -38,9 +38,9 @@
                             <table id="student_table" class="table table-striped table-sm " style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-2">InvoiceMasterID#</th>
-                                        <th>WarehouseName</th>
-                                        <th class="col-md-3">otherWareHouse</th>
+                                        <th class="col-md-2">ID#</th>
+                                        <th>Warehouse</th>
+                                        <th class="col-md-3">To Warehouse</th>
                                         <th class="col-md-2">TotalQty</th>
                                         <th class="col-md-2">Date</th>
                                         <th>Action</th>

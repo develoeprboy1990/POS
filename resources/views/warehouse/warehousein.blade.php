@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Ware House Out Stock</h4>
+                        <h4 class="mb-sm-0 font-size-18">Warehouse IN Stock</h4>
                         <a href="{{route('warehouse.warehousestransfer')}}" class="btn btn-primary w-md float-right "><i class="bx bx-plus"></i> Add New</a>
                     </div>
                 </div>
@@ -38,9 +38,9 @@
                             <table id="student_table" class="table table-striped table-sm " style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="col-md-2">InvoiceMasterID#</th>
-                                        <th>WarehouseName</th>
-                                        <th class="col-md-3">otherWareHouse</th>
+                                        <th class="col-md-2">ID#</th>
+                                        <th>Warehouse</th>
+                                        <th class="col-md-3">From Warehouse</th>
                                         <th class="col-md-2">TotalQty</th>
                                         <th class="col-md-2">Date</th>
                                         <th>Action</th>
