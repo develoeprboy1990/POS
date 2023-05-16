@@ -47,7 +47,12 @@
         table {
             border-collapse: collapse;
         }
-        tr {border-bottom: 1px dotted #ddd;}
+        tbody tr{border-bottom: 1px dotted #ddd;}
+
+        {
+  border:0
+}
+
         td,th {padding: 7px 0;width: 50%;}
 
         table {width: 100%;}
@@ -156,18 +161,18 @@
                 
                 <hr class="dashed-2">
                 <table class="table-data ">
-                    <!-- <thead>
+                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Code</th>
+                            <th colspan="6">Name</th>
+                            <!-- <th>Code</th>
                             <th>RRP</th>
                             <th>Disc. Price</th>
-                            <th>Tax</th>
-                            <th>Qty</th>
+                            <th>Tax</th> 
+                            <th>Qty</th>-->
                             
                             <th style="text-align: right;">Total</th>
                         </tr>
-                    </thead> -->
+                    </thead> 
                     <tbody>
                         <?php $total_product_tax = 0; ?>
                         @foreach ($lims_product_sale_data as $key => $product_sale_data)
@@ -218,6 +223,7 @@
                         @endforeach
 
                     </tbody>
+                    
                     <tfoot>
                         <tr>
                             <th colspan="6" style="text-align:left">{{ trans('file.Total') }}</th>
@@ -328,9 +334,9 @@
                     @endif
                         <tr>
                             <td class="centered" colspan="5">
-                                <?php echo '<img style="height: 25px; width: 160px;" src="data:image/png;base64,' . DNS1D::getBarcodePNG($lims_sale_data->ReferenceNo, 'C128') . '" width="300" alt="barcode"   />'; ?>
-                                <br>
-                                <?php echo '<img src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->ReferenceNo, 'QRCODE') . '" alt="barcode"   />'; ?>
+                                <?php echo '<img style="height: 25px; width: 160px;" src="data:image/png;base64,' . DNS1D::getBarcodePNG($lims_sale_data->InvoiceNo, 'C128') . '" width="300" alt="barcode"   />'; ?>
+                                <!-- <br>
+                                <?php //echo '<img src="data:image/png;base64,' . DNS2D::getBarcodePNG($lims_sale_data->InvoiceNo, 'QRCODE') . '" alt="barcode"   />'; ?> -->
                             </td>
                         </tr>
                     </tbody>
