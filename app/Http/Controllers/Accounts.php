@@ -1771,7 +1771,6 @@ $data = array(
 'UnitID' => $request->input('unit_id'),
 'ItemCategoryID' => $request->input('item_category_id'),
 'BrandID' => $request->input('brand_id'),
-'WarehouseID' => $request->input('warehouse_id'),
 'ItemCode' => $request->input('ItemCode'),
 'ItemName' => $request->input('ItemName'),
 'ItemImage' => $imageName,
