@@ -10244,8 +10244,9 @@ public  function Inventory()
 {
 
 	$pagetitle = 'Inventory';
+  $warehouses = Warehouse::where('is_active', '1')->get();
   
-return view ('inventory',compact('pagetitle'));
+return view ('inventory',compact('pagetitle','warehouses'));
 
 
 }
@@ -10259,8 +10260,10 @@ public  function Inventory1(request $request)
   $inventory = DB::table('v_inventory_detail')
   ->select('ItemID','ItemName','UnitName',DB::RAW('sum(SaleReturn) as SaleReturn, sum(QtyIn) as QtyIn, sum(QtyOut) as QtyOut'))
   		->whereBetween('Date',array($request->StartDate,$request->EndDate))
+      ->whereRaw($request->warehouse_id ? 'WarehouseID = '.$request->warehouse_id : '1')
   		->groupBy('ItemID','ItemName','UnitName')
   				->get();      
+
 
  return View ('inventory1',compact('pagetitle','company','inventory'));
 

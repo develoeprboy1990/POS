@@ -109,7 +109,7 @@ class PosController extends Controller
     public function wareHouseList(Request $request)
     {
         if ($request->ajax()) {
-            $wareHouses = Warehouse::where('is_active', 1)->get();
+            $wareHouses = Warehouse::get();
             return Datatables::of($wareHouses)
                 ->addIndexColumn()
                 ->addColumn('no_of_prod', function ($row) {
