@@ -519,18 +519,17 @@ class TeqPosController extends Controller
 
     public function edit($InvoiceMasterID)
     {
-
-        $lims_customer_list = DB::table('party')->where('Active', 'Yes')->get();
-        $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-        $lims_biller_list = DB::table('user')->where('UserType','Biller')->get();
-        $lims_tax_list = Tax::where('is_active', true)->get();
-        $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
+        $lims_customer_list    = DB::table('party')->where('Active', 'Yes')->get();
+        $lims_warehouse_list   = Warehouse::where('is_active', true)->get();
+        $lims_biller_list      = DB::table('user')->where('UserType','Biller')->get();
+        $lims_tax_list         = Tax::where('is_active', true)->get();
+        $lims_sale_data        = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $lims_pos_setting_data = PosSetting::latest()->first();
 
         $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->whereNull('dish_type_id')->get();
-        $dish_invoices = InvoiceDishDetail::where('invoice_master_id',$InvoiceMasterID)->get();
-        $dish_tables = DishTable::orderBy('id')->get();
-        $biller = DB::table('user')->where('UserID',$lims_sale_data->UserID)->first();
+        $dish_invoices          = InvoiceDishDetail::where('invoice_master_id',$InvoiceMasterID)->get();
+        $dish_tables            = DishTable::orderBy('id')->get();
+        $biller                 = DB::table('user')->where('UserID',$lims_sale_data->UserID)->first();
         return view('teq-invoice.edit_teq_invoice', compact('lims_customer_list', 'lims_warehouse_list', 'lims_biller_list', 'lims_tax_list', 'lims_sale_data', 'lims_product_sale_data','dish_invoices','biller','lims_pos_setting_data','dish_tables'));
     }
 
