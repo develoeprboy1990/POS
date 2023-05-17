@@ -208,16 +208,9 @@
         </div>
     </div>
 </div>
-
-
-
 @endsection
-
-
 @section('page-scripts')
-
 <script>
-    // Let's stick things in a closure, so it's nice and tidy
     (function() { // Create the event handler on the document ready event, as we know then that the DOM document that was initially loaded
         // will be rendered about now.
         document.addEventListener('DOMContentLoaded', function() { // Get each of the elements
@@ -253,7 +246,7 @@
         });
 
         $(document).ajaxSend(function() {
-             $("#overlay").fadeIn(300);
+            $("#overlay").fadeIn(300);
         });
 
         $(document).ajaxComplete(function() {
@@ -301,6 +294,10 @@
     function getProductDetails(group) {
         var product_id = $('#ItemID').val();
         var warehouseid = $('#warehouseid').val();
+   
+        var cartValue = new Object(); // Empty object
+        localStorage.setItem("cartValue", JSON.stringify(cartValue)); 
+
         let url = "{{route('warehouse.getproductdetais',[':warehouseid',':product_id'])}}";
         route = url.replace(':warehouseid', warehouseid);
         route = route.replace(':product_id', product_id);
@@ -313,6 +310,18 @@
             beforeSend: function() {}
         }).done(function(response) {
             $(group).append(response); //add input field
+            var cartValue = localStorage.getItem('cartValue');
+            var cartValue = JSON.parse(cartValue);
+            console.log(typeof cartValue);
+            if (cartValue === null) {
+                console.log(cartValue);
+                // Variable is null
+            } else {
+                // Variable is not null
+            }
+
+
+
         }); // DONE ENDS HERE
     }
 
@@ -356,8 +365,8 @@
             success: function(response) {
                 $("#submit").attr('disabled', false);
                 $('.alert-danger').hide();
-                if (response) { 
-                    $('.alert-success').show(); 
+                if (response) {
+                    $('.alert-success').show();
                     $(':input', '#form1')
                         .not(':button, :submit, :reset, :hidden')
                         .val('')
