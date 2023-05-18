@@ -575,7 +575,8 @@
                     var cols = '';
                     pos = product_code.indexOf(data[1]);
                     temp_unit_name = (data[6]).split(',');
-                    cols += '<td>' + data[0] + '<button type="button" class="btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
+                    cols += '<td>' + data[0] + '</td>';
+                    cols += '<td>' + data[1]+'</td>';
                     cols += '<td><input type="number" class="form-control qty" name="qty[' + data[9] + ']" value="1" step="any" required/></td>';
                     //cols += '<td class="net_unit_price"></td>';
                     //cols += '<td class="discount">0.00</td>';
@@ -720,7 +721,7 @@
                     html += '<option value="' + value.id + '">' + value.name + '</option>';
                 });
                 $('#to_warehouse_id').html(html);
-                if (response['products'].length !== 0) {
+               /*  if (response['products'].length !== 0) {
                     var product = '<option vale="">Please Chose Item</option>';
                     $.each(response['products'], function(key, value) {
                         product += '<option value="' + value.ItemID + '">' + value.ItemName + '</option>';
@@ -729,7 +730,7 @@
                 } else {
                     var product = '<option vale="">No Items Found.</option>';
                 }
-                $('#ItemID').html(product);
+                $('#ItemID').html(product); */
             }
         });
     }
