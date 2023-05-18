@@ -2881,7 +2881,8 @@
     }
 
     function creditCard() {
-        $.getScript("public/vendor/stripe/checkout.js");
+        var base_url = "{{asset('vendor/stripe/checkout.js')}}";
+        $.getScript(base_url);
         $(".card-element").show();
         $(".card-errors").show();
         $(".cheque").hide();
