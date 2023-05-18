@@ -258,12 +258,10 @@ class PosController extends Controller
 
     public function getProductDetais($warehouseid, $id)
     {
-        $products   = DB::table('v_inventory')->select('ItemID', 'ItemName', DB::raw('QtyIn-QtyOut as qty'))->where('ItemID',$id)->where('WarehouseID', $warehouseid)->where('ItemID', $id)->first();
+        $products   = DB::table('v_inventory')->select('ItemID', 'ItemName', DB::raw('QtyIn-QtyOut as qty'))->where('ItemID', $id)->where('WarehouseID', $warehouseid)->where('ItemID', $id)->first();
         $html = '<tr class="p-3">  <td class="p-1 bg-light borde-1 border-light text-center"></td><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
         $html .= '<td><span class="stock_quantity_' . $products->ItemID . '">' . $products->qty . '</span></td>';
         $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' . $warehouseid . '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
-
-
         $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
         return $html;
     }
@@ -281,7 +279,6 @@ class PosController extends Controller
 
     public function postStockWarehouseTransfer(StoreRequest $request)
     {
-
         try {
             if ($request->has('qty')) {
                 $InvoiceNo  = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Wout%')->count();
@@ -321,7 +318,8 @@ class PosController extends Controller
 
                 $InvoiceNo      = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Win%')->count();
                 $invoice_in_no     = 'Win-0000' . ++$InvoiceNo;
-                foreach ($request->qty as $warehouseIds => $productsIds) {
+                $productsIds = $request->qty;
+           
                     $invoice_data = array(
                         "InvoiceNo"          => $invoice_in_no,
                         "ReferenceNo"        => null,
@@ -352,7 +350,7 @@ class PosController extends Controller
                     );
 
                     $InvoiceMasterInID = DB::table('invoice_master')->insertGetId($invoice_data);
-                    $total_qty = 0;
+                    $total_qty         = 0;
                     foreach ($productsIds as $ids => $quantity) {
                         $item_name = DB::table('item')->where('ItemID', $ids)->pluck('ItemName')->first();
                         $prod_qty  = $quantity;
@@ -387,7 +385,7 @@ class PosController extends Controller
                     }
                     InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterOutID)->update(['TotalQty' => $total_qty]);
                     InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterInID)->update(['TotalQty' => $total_qty]);
-                }
+               
             }
             session()->flash('success', 'Stock has been updated successfully.');
             return true;
