@@ -25,8 +25,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'from_warehouse_id' => 'required|numeric|min:1',
-            'to_warehouse_id'   => 'required|numeric|min:1',
-            'ItemID'            => 'required|numeric|min:1'
+            'to_warehouse_id'   => 'required|numeric|min:1'
         ];
     }
 
@@ -39,11 +38,9 @@ class StoreRequest extends FormRequest
     {
         return [
             'from_warehouse_id.required' => 'Please select from warehouse',
-            'to_warehouse_id.required'   => 'Please select to warehouse.',
-            'ItemID.required'            => 'Please select item.',            
+            'to_warehouse_id.required'   => 'Please select to warehouse.',         
             'from_warehouse_id.numeric' => 'Please select from warehouse',
-            'to_warehouse_id.numeric'   => 'Please select to warehouse.',
-            'ItemID.numeric'            => 'Please select one item.'
+            'to_warehouse_id.numeric'   => 'Please select to warehouse.'
             
         ];
     }

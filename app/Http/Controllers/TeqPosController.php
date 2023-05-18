@@ -731,13 +731,13 @@ class TeqPosController extends Controller
 
     public function limsProductSearch(Request $request)
     {
-        $ItemCode = $request->get('data');
-        $todayDate = date('Y-m-d');
-        $product_code = explode("(", $ItemCode);
-        $product_code[0] = rtrim($product_code[0], " ");
+        $ItemCode           = $request->get('data');
+        $todayDate          = date('Y-m-d');
+        $product_code       = explode("(", $ItemCode);
+        $product_code[0]    = rtrim($product_code[0], " ");
         $product_variant_id = null;
         
-        $lims_product_data = DishType::where('code',$product_code[0])->first();
+        $lims_product_data  = DishType::where('code',$product_code[0])->first();
         if($lims_product_data){
             $product[] = $lims_product_data->type;
             $product[] = $lims_product_data->code;
@@ -809,44 +809,39 @@ class TeqPosController extends Controller
             ->where([
                 ['v_inventory.WarehouseID', $id],
                 ['v_inventory.Balance', '>', 0]
-            ])
-            ->select('v_inventory.*', 'item.*')
-            ->get();
+            ])->select('v_inventory.*', 'item.*')->get();
 
-        $dish_type_codes = DishType::pluck('type','code')->toArray();
-
-        $product_code  = [];
-        $product_name  = [];
-        $product_qty   = [];
-        $product_price = [];
-        $product_data  = [];
-        $product_type  = [];
-        $product_id  = [];
-        $product_list  = [];
-        $qty_list  = [];
-        $batch_no  = [];
+        $dish_type_codes   = DishType::pluck('type','code')->toArray();
+        $product_code      = [];
+        $product_name      = [];
+        $product_qty       = [];
+        $product_price     = [];
+        $product_data      = [];
+        $product_type      = [];
+        $product_id        = [];
+        $product_list      = [];
+        $qty_list          = [];
+        $batch_no          = [];
         $product_batch_id  = [];
         //product without variant 
         foreach ($lims_product_warehouse_data as $product_warehouse) {
-            $product_qty[]     = $product_warehouse->Balance;
-            $product_price[]   = $product_warehouse->price;
+            $product_qty[]      = $product_warehouse->Balance;
+            $product_price[]    = $product_warehouse->price;
             //$lims_product_data = Item::where('ItemID', $product_warehouse->product_id)->first();
-            $product_code[]    =  $product_warehouse->ItemCode;
-            $product_name[]    = htmlspecialchars($product_warehouse->ItemName);
-            $product_type[]    = 'standard'; //$lims_product_data->type;
-            $product_id[]      = $product_warehouse->ItemID;
-            $product_list[]    = null; //$lims_product_data->product_list;
-            $qty_list[]        = null; //$lims_product_data->qty_list;
-            $batch_no[]        = null;
+            $product_code[]     =  $product_warehouse->ItemCode;
+            $product_name[]     = htmlspecialchars($product_warehouse->ItemName);
+            $product_type[]     = 'standard'; //$lims_product_data->type;
+            $product_id[]       = $product_warehouse->ItemID;
+            $product_list[]     = null; //$lims_product_data->product_list;
+            $qty_list[]         = null; //$lims_product_data->qty_list;
+            $batch_no[]         = null;
             $product_batch_id[] = null;
         }
 
         foreach ($dish_type_codes as $code => $name) {
             $product_code[]    =  $code;
             $product_name[]    =  $name;
-        }
-
-     
+        }     
         $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id];
         return $product_data;
     }
