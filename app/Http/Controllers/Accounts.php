@@ -97,10 +97,8 @@ class Accounts extends Controller
     if (count($data) > 0) {
       Session::put('FullName', $data[0]->FullName);
       Session::put('UserID', $data[0]->UserID);
-      Session::put('WarehouseID', $data[0]->WarehouseID);
       Session::put('Email', $data[0]->Email);
       Session::put('UserType', $data[0]->UserType);
-      Session::put('isSuperAdmin', $data[0]->isSuperAdmin);
       Session::put('Currency', $company[0]->Currency);
       Session::put('CompanyName', $company[0]->Name . ' ' . $company[0]->Name2);
 
@@ -1606,71 +1604,6 @@ class Accounts extends Controller
     $r = ($r[0]->Balance == null) ? '0' :  $r[0]->Balance;
     $e = ($e[0]->Balance == null) ? '0' :  $e[0]->Balance;
 
-
-    $imageName = time().'.'.$image->extension();
-    $destinationPath = public_path('/thumbnail');
-    $img = Image::make($image->path());
-    $img->resize(100, 100, function ($constraint) {
-        $constraint->aspectRatio();
-    })->save($destinationPath.'/'.$imageName);
-    $destinationPath = public_path('assets/images/items');
-    $image->move($destinationPath, $imageName);
-
-
-$data = array(
-'UnitID' => $request->input('unit_id'),
-'ItemCategoryID' => $request->input('item_category_id'),
-'BrandID' => $request->input('brand_id'),
-'ItemCode' => $request->input('ItemCode'),
-'ItemName' => $request->input('ItemName'),
-'ItemImage' => $imageName,
-'ItemType' => $request->input('ItemType'),
-'Taxable' => $request->input('Taxable'),
-'Percentage' => $request->input('Percentage'),
-'CostPrice' => $request->input('CostPrice'),
-'SellingPrice' => $request->input('SellingPrice'),
-'isFeatured' => $request->input('isFeatured'),
-'isActive' => $request->input('isActive'),
-
-);
-
-
-
-$itemId = DB::table('item')->insertGetId($data);
-
-// code to add newly created item in stockd
-$quantity = trim($request->stockQty);
-if($quantity > 0){
-  
-   $invoice_no = DB::table('invoice_master')->where('InvoiceNo','like','BILL%')->count();
-   $invoice_no = 'BILL-0000' . ++$invoice_no;
-   $today_date = date('Y-m-d');
-   $reference_no = date("his");
-   $price = trim($request->SellingPrice); // whether to store cost or selling price
-   $subTotal = $price * $quantity;
-   $invoice_mst = array(
-              'InvoiceNo' => $invoice_no, 
-              'Date' => $today_date, 
-              'DueDate' => $today_date, 
-              'SupplierID' => $request->SupplierID, 
-              'WarehouseID' => $request->warehouse_id, 
-              'WalkinCustomerName' => 'Walkin Customer', 
-              'ReferenceNo' => $reference_no, 
-              'PaymentMode' => 'Cash',  
-              'SubTotal' => $subTotal, 
-              'DiscountPer' => 0, 
-              'DiscountAmount' => 0, 
-              'Total' => $subTotal, 
-              'TotalQty' => $quantity, 
-              'TaxPer' => 0, 
-              'Tax' => 0, 
-              'Shipping' => 0, 
-              'GrandTotal' => $subTotal, 
-              'Paid' => $subTotal, 
-              'Balance' => 0,              
-              'UserID' => session::get('UserID'), 
-      );
-
     $profit_loss = $r - $e;
 
 
@@ -1691,7 +1624,7 @@ if($quantity > 0){
     // 'exp_chart'
     return view('dashboard', compact('pagetitle', 'v_cashflow', 'invoice_master', 'expense', 'revenue', 'profit_loss', 'cash', 'cash1', 'sale'));
   }
-}
+
 
   public  function Item()
   {
@@ -5982,31 +5915,31 @@ if($quantity > 0){
     // // payment in payment table
 
     //  $payment_master = array
-    //  				  (
+    //            (
 
-    //  				  	'PartyID' => $request->PartyID, 
-    //  				  	'PaymentAmount' => $request->amountPaid, 
-    //  				  	'PaymentDate' => $request->Date, 
-    //  				  	'PaymentMode' => $request->PaymentMode, 
-    //  				  	'ChartOfAccountID' => 110400, 
-    //  				  	'ReferenceNo' => $request->ReferenceNo, 
-    //  				  	'Notes' => $request->Subject, 
-    //   				  );
+    //              'PartyID' => $request->PartyID, 
+    //              'PaymentAmount' => $request->amountPaid, 
+    //              'PaymentDate' => $request->Date, 
+    //              'PaymentMode' => $request->PaymentMode, 
+    //              'ChartOfAccountID' => 110400, 
+    //              'ReferenceNo' => $request->ReferenceNo, 
+    //              'Notes' => $request->Subject, 
+    //            );
 
 
     // $PaymentMasterID= DB::table('payment_master')->insertGetId($payment_master);
 
     //  $payment_detail = array
-    // 		(
-    // 		'PaymentMasterID' => $PaymentMasterID, 
-    // 		'PaymentDate' => $request->Date, 
-    // 		'InvoiceMasterID' => $InvoiceMasterID, 
-    // 		'Payment' => $request->amountPaid, 
-    // 		);				  
+    //    (
+    //    'PaymentMasterID' => $PaymentMasterID, 
+    //    'PaymentDate' => $request->Date, 
+    //    'InvoiceMasterID' => $InvoiceMasterID, 
+    //    'Payment' => $request->amountPaid, 
+    //    );          
 
 
 
-    // 	 $payment_detail= DB::table('payment_detail')->insertGetId($payment_detail);
+    //   $payment_detail= DB::table('payment_detail')->insertGetId($payment_detail);
 
 
     // // end payment in payment table
@@ -7121,7 +7054,7 @@ if($quantity > 0){
 
     $supplier = DB::table('supplier')->get();
     $items = DB::table('item')->get();
-    $user = DB::table('user')->where('UserType','Saleman')->get();
+    $user = DB::table('user')->get();
 
     $items = DB::table('item')->get();
     $tax = DB::table('tax')->get();
@@ -7133,59 +7066,11 @@ if($quantity > 0){
 
     session::put('VHNO', 'BILL-' . $vhno[0]->VHNO);
 
-   $lims_warehouse_list = Warehouse::where('is_active', true)->get();
-   $lims_pos_setting_data = PosSetting::latest()->first();
-    // $items=DB::table('product')->get();
-    return view('purchase.bill_create', compact('supplier',  'items', 'user', 'vhno', 'item', 'items','pagetitle','tax','lims_warehouse_list','lims_pos_setting_data'));
-  }
-
-public function BillSave(Request $request)
-  {
-
-       $invoice_mst = array(
-              'WarehouseID' => $request->warehouse_id, 
-              'InvoiceNo' => $request->InvoiceNo, 
-               'Date' => $request->Date, 
-              'DueDate' => $request->DueDate, 
-              'SupplierID' => $request->SupplierID, 
-              'WalkinCustomerName' => $request->WalkinCustomerName, 
-              'ReferenceNo' => $request->ReferenceNo, 
-              'PaymentMode' => $request->PaymentMode, 
-              'PaymentDetails' => $request->PaymentDetails, 
-              'Subject' => $request->Subject, 
-              'SubTotal' => $request->SubTotal, 
-              'DiscountPer' => $request->DiscountPer, 
-              'DiscountAmount' => $request->DiscountAmount, 
-              'Total' => $request->Total, 
-              'TaxPer' => $request->Taxpercentage, 
-              'Tax' => $request->grandtotaltax, 
-              'Shipping' => $request->Shipping, 
-              'GrandTotal' => $request->Grandtotal, 
-              'Paid' => $request->amountPaid, 
-              'Balance' => $request->amountDue, 
-              'CustomerNotes' => $request->CustomerNotes,               
-              'DescriptionNotes' => $request->DescriptionNotes,               
-              'UserID' => session::get('UserID'), 
-      );
-      // dd($challan_mst);
-      // $id= DB::table('')->insertGetId($data);
-      
-      $InvoiceMasterID= DB::table('invoice_master')->insertGetId($invoice_mst);
-// END OF SALE RETURN
- 
-//  start for item array from invoice
-  for ($i = 0; $i < count($request->ItemID); $i++) {
-      $invoice_det = array (
-        'InvoiceMasterID' =>  $InvoiceMasterID, 
-        'InvoiceNo' => $request->InvoiceNo, 
-         'ItemID' => $request->ItemID[$i],
-         'SupplierID' => $request->input('SupplierID'), 
     $lims_warehouse_list = Warehouse::where('is_active', true)->get();
     // $items=DB::table('product')->get();
     return view('purchase.bill_create', compact('supplier',  'items', 'user', 'vhno', 'item', 'items', 'pagetitle', 'tax', 'lims_warehouse_list'));
   }
 
-}
   public function BillSave(Request $request)
   {
 
@@ -8573,10 +8458,10 @@ public function BillSave(Request $request)
         // payment received 
 
 
-        // A/C PAYABLE	
+        // A/C PAYABLE  
         $ac_payable = array(
           'VHNO' => 'BILLPAY-' . $request->input('PaymentMasterID'),
-          'ChartOfAccountID' => 210100,  // A/C PAYABLE	
+          'ChartOfAccountID' => 210100,  // A/C PAYABLE 
           'JournalType' => $JournalType,
           'SupplierID' => $request->input('SupplierID'),
           'InvoiceMasterID' => $request->InvoiceMasterID[$i],
@@ -9285,7 +9170,7 @@ public function BillSave(Request $request)
         // Tax Payable debit
         $ar_payment = array(
           'VHNO' => $request->ExpenseNo,
-          'ChartOfAccountID' => 210300,  // TAX PAYABLES	
+          'ChartOfAccountID' => 210300,  // TAX PAYABLES  
           'SupplierID' => $request->input('SupplierID'),
           'ExpenseMasterID' => $ExpenseMasterID,
           'Date' => $request->input('Date'),
@@ -9516,7 +9401,7 @@ public function BillSave(Request $request)
         // Tax Payable debit
         $ar_payment = array(
           'VHNO' => $request->ExpenseNo,
-          'ChartOfAccountID' => 210300,  // TAX PAYABLES	
+          'ChartOfAccountID' => 210300,  // TAX PAYABLES  
           'SupplierID' => $request->input('SupplierID'),
           'ExpenseMasterID' => $request->ExpenseMasterID,
           'Date' => $request->input('Date'),
