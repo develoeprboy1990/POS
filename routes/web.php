@@ -84,6 +84,7 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
   Route::get('/ItemEdit/{id}', [Accounts::class, 'ItemEdit']);
   Route::post('/ItemUpdate/', [Accounts::class, 'ItemUpdate']);
   Route::get('/ItemDelete/{id}', [Accounts::class, 'ItemDelete']);
+  Route::get('Items/generatecode', [Accounts::class,'generateCode'])->name('items.generatecode');
 
 
 
