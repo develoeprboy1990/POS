@@ -8,8 +8,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Ware House Out Stock</h4>
-                        <a href="{{route('warehouse.warehousestransfer')}}" class="btn btn-primary w-md float-right "><i class="bx bx-plus"></i> Add New</a>
+                        <h4 class="mb-sm-0 font-size-18">Ware House Out Stock</h4> 
                     </div>
                 </div>
             </div>
