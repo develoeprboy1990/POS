@@ -24,6 +24,11 @@ use Keygen;
 use Image;
 use PDF;
 
+use App\Models\Item;
+use App\Models\Dish;
+use App\Models\DishType;
+use App\Models\DishTable;
+
 class PosController extends Controller
 {
 
@@ -248,6 +253,48 @@ class PosController extends Controller
             $data['products']   = $products;
             return response()->json($data);
         }
+
+        if ($request->ajax()) {
+            $lims_product_warehouse_data = Item::join('v_inventory', 'item.ItemID', '=', 'v_inventory.ItemID')
+                ->where([
+                    ['v_inventory.WarehouseID', $id],
+                    ['v_inventory.Balance', '>', 0]
+                ])->select('v_inventory.*', 'item.*')->get();
+
+            $dish_type_codes   = DishType::pluck('type', 'code')->toArray();
+            $product_code      = [];
+            $product_name      = [];
+            $product_qty       = [];
+            $product_price     = [];
+            $product_data      = [];
+            $product_type      = [];
+            $product_id        = [];
+            $product_list      = [];
+            $qty_list          = [];
+            $batch_no          = [];
+            $product_batch_id  = [];
+            //product without variant 
+            foreach ($lims_product_warehouse_data as $product_warehouse) {
+                $product_qty[]      = $product_warehouse->Balance;
+                $product_price[]    = $product_warehouse->price;
+                //$lims_product_data = Item::where('ItemID', $product_warehouse->product_id)->first();
+                $product_code[]     =  $product_warehouse->ItemCode;
+                $product_name[]     = htmlspecialchars($product_warehouse->ItemName);
+                $product_type[]     = 'standard'; //$lims_product_data->type;
+                $product_id[]       = $product_warehouse->ItemID;
+                $product_list[]     = null; //$lims_product_data->product_list;
+                $qty_list[]         = null; //$lims_product_data->qty_list;
+                $batch_no[]         = null;
+                $product_batch_id[] = null;
+            }
+
+            foreach ($dish_type_codes as $code => $name) {
+                $product_code[]    =  $code;
+                $product_name[]    =  $name;
+            }
+            $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id];
+            return $product_data;
+        }
     }
 
     public function checkQty($warehouseid, $id)
@@ -256,7 +303,7 @@ class PosController extends Controller
         return response()->json($products);
     }
 
-    public function getProductDetais($warehouseid, $id)
+    public function getProductDetais1($warehouseid, $id)
     {
         $products   = DB::table('v_inventory')->select('ItemID', 'ItemName', DB::raw('QtyIn-QtyOut as qty'))->where('ItemID', $id)->where('WarehouseID', $warehouseid)->where('ItemID', $id)->first();
         $html = '<tr class="p-3">  <td class="p-1 bg-light borde-1 border-light text-center"></td><td><input type="hidden" value="' . $products->ItemID . '" name="product_id[]">' . $products->ItemName . '</td>';
@@ -264,6 +311,88 @@ class PosController extends Controller
         $html .= '<td><input type="number" name="qty[' . $warehouseid . '][' . $products->ItemID . ']" id="qty_' . $products->ItemID . '" data-id="' . $warehouseid . '_' . $products->ItemID . '" class="form-control changesQuantityNo" autocomplete="off" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" value="1" min="1" max="' . $products->qty . '"></td>';
         $html .= '<td><button class="btn btn-danger remove_field" type="button"><i class="bx bx-trash align-middle font-medium-3 me-20 remove_field"></i> Remove </button></td></tr>';
         return $html;
+    }
+
+
+
+    public function getProductDetais(Request $request,$warehouseid)
+    {
+        $ItemCode           = $request->get('data');
+        $todayDate          = date('Y-m-d');
+        $product_code       = explode("(", $ItemCode);
+        $product_code[0]    = rtrim($product_code[0], " ");
+        $product_variant_id = null;
+
+
+        
+
+        $lims_product_data  = DishType::where('code', $product_code[0])->first();
+        if ($lims_product_data) {
+            $qty   = DB::table('v_inventory')->select('Balance')->where('WarehouseID', $warehouseid)
+            ->where('ItemID', $lims_product_data->id)->pluck('Balance')->first();
+
+            $product[] = $lims_product_data->type;
+            $product[] = $lims_product_data->code;
+            $product[] = $lims_product_data->price;
+            $product[] = 0;
+            $product[] = 'No Tax';
+            $product[] = 1;
+            if (1) {
+                $unit_name = ['piece', 'carton', '12piece container', '24pc cnt', '36pc cntr', '48pc cntr', 'test unit upd'];
+                $unit_operator = ['*', '*', '*', '*', '*', '*', '*'];
+                $unit_operation_value = ['1', '12', '12', '24', '36', '48', '12'];
+                $product[] = implode(",", $unit_name) . ',';
+                $product[] = implode(",", $unit_operator) . ',';
+                $product[] = implode(",", $unit_operation_value) . ',';
+            } else {
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+            }
+            $product[] = $lims_product_data->id;
+            $product[] = $product_variant_id;
+            $product[] = null;
+            $product[] = $qty;
+            $product[] = 'dishItem';
+        } else {
+            $lims_product_data = Item::where('ItemCode', $product_code[0])->first();
+
+            $qty   = DB::table('v_inventory')->select('Balance')->where('WarehouseID', $warehouseid)
+            ->where('ItemID',$lims_product_data->ItemID)->pluck('Balance')->first();
+
+            $product[] = $lims_product_data->ItemName;
+            $product[] = $lims_product_data->ItemCode;
+
+            $product[] = $lims_product_data->SellingPrice;
+
+            if ($lims_product_data->Taxable == 'Yes') {
+                $product[]     = $lims_product_data->Percentage;
+                $product[]     = 'unregistered ';
+            } else {
+                $product[] = 0;
+                $product[] = 'No Tax';
+            }
+            $product[] = 1;
+            if (1) {
+                $unit_name = ['piece', 'carton', '12piece container', '24pc cnt', '36pc cntr', '48pc cntr', 'test unit upd'];
+                $unit_operator = ['*', '*', '*', '*', '*', '*', '*'];
+                $unit_operation_value = ['1', '12', '12', '24', '36', '48', '12'];
+                $product[] = implode(",", $unit_name) . ',';
+                $product[] = implode(",", $unit_operator) . ',';
+                $product[] = implode(",", $unit_operation_value) . ',';
+            } else {
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+                $product[] = 'n/a' . ',';
+            }
+            $product[] = $lims_product_data->ItemID;
+            $product[] = $product_variant_id;
+            $product[] = null;
+            $product[] = $qty;
+            $product[] = 'posItem';
+        }
+
+        return $product;
     }
 
     public function runQuery()
@@ -277,12 +406,24 @@ class PosController extends Controller
         order by `extbooks_accounting`.`invoice_master`.`InvoiceMasterID`"));
     }
 
+    public function demoCards()
+    {
+        $pagetitle = 'Cards Demo';
+        return view('warehouse.cards', compact('pagetitle'));
+    }
+
+
     public function postStockWarehouseTransfer(StoreRequest $request)
     {
         try {
             if ($request->has('qty')) {
-                $InvoiceNo  = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Wout%')->count();
-                $invoice_no = 'Wout-0000' . ++$InvoiceNo;
+                $productsIds = $request->qty;
+                $transferedQuantity = 0;
+                /* foreach ($productsIds as $ids => $quantity) {
+                    $transferedQuantity = $transferedQuantity + $quantity;
+                } */
+                $InvoiceNo  = DB::table('invoice_master')->where('InvoiceNo', 'like', 'WOUT%')->count();
+                $invoice_no = 'WOUT-0000' . ++$InvoiceNo;
                 $today_date = date('Y-m-d');
                 $biller_id  = Session::get('UserID');
                 /* INSET OUT ENTRY IN INVOICE MASTER */
@@ -303,7 +444,7 @@ class PosController extends Controller
                     "TaxPer"             => null,
                     "Paid"               => null,
                     "Balance"            => null,
-                    "TotalQty"           => $request->total_qty,
+                    "TotalQty"           => $transferedQuantity,
                     "SubTotal"           => null,
                     "PaymentMode"        => 'Cash', // focus
                     "DiscountModel"      => 'percentage',
@@ -315,77 +456,74 @@ class PosController extends Controller
                 );
 
                 $InvoiceMasterOutID = DB::table('invoice_master')->insertGetId($invoice_data);
+                $InvoiceNo      = DB::table('invoice_master')->where('InvoiceNo', 'like', 'WIN%')->count();
+                $invoice_in_no     = 'WIN-0000' . ++$InvoiceNo;
 
-                $InvoiceNo      = DB::table('invoice_master')->where('InvoiceNo', 'like', 'Win%')->count();
-                $invoice_in_no     = 'Win-0000' . ++$InvoiceNo;
-                $productsIds = $request->qty;
-           
-                    $invoice_data = array(
-                        "InvoiceNo"          => $invoice_in_no,
-                        "ReferenceNo"        => null,
-                        "Date"               => $today_date,  // focus
-                        "DueDate"            => $today_date, // focus
-                        "PartyID"            => null,
-                        "WarehouseID"        => $request->to_warehouse_id,
-                        "otherWareHouseID"   => $request->from_warehouse_id,
-                        "DishTableID"        => null,
-                        "WalkinCustomerName" => null,
-                        "UserID"             => $biller_id,
-                        "DescriptionNotes"   => null, // focus
-                        "CustomerNotes"      => null, // focus
-                        "Tax"                => null,
-                        "TaxPer"             => null,
-                        "Paid"               => null,
-                        "Balance"            => null,
-                        "TotalQty"           => $request->total_qty,
-                        "SubTotal"           => null,
-                        "PaymentMode"        => 'Cash', // focus
-                        "DiscountModel"      => 'percentage',
-                        "DiscountPer"        => null,
-                        "DiscountAmount"     => null,
-                        "Shipping"           => null,
-                        "GrandTotal"         => null,
-                        "Total"              => null,
+                $invoice_data = array(
+                    "InvoiceNo"          => $invoice_in_no,
+                    "ReferenceNo"        => null,
+                    "Date"               => $today_date,  // focus
+                    "DueDate"            => $today_date, // focus
+                    "PartyID"            => null,
+                    "WarehouseID"        => $request->to_warehouse_id,
+                    "otherWareHouseID"   => $request->from_warehouse_id,
+                    "DishTableID"        => null,
+                    "WalkinCustomerName" => null,
+                    "UserID"             => $biller_id,
+                    "DescriptionNotes"   => null, // focus
+                    "CustomerNotes"      => null, // focus
+                    "Tax"                => null,
+                    "TaxPer"             => null,
+                    "Paid"               => null,
+                    "Balance"            => null,
+                    "TotalQty"           => $transferedQuantity,
+                    "SubTotal"           => null,
+                    "PaymentMode"        => 'Cash', // focus
+                    "DiscountModel"      => 'percentage',
+                    "DiscountPer"        => null,
+                    "DiscountAmount"     => null,
+                    "Shipping"           => null,
+                    "GrandTotal"         => null,
+                    "Total"              => null,
 
+                );
+
+                $InvoiceMasterInID = DB::table('invoice_master')->insertGetId($invoice_data);
+                $total_qty         = 0;
+                foreach ($productsIds as $ids => $quantity) {
+                    $item_name = DB::table('item')->where('ItemID', $ids)->pluck('ItemName')->first();
+                    $prod_qty  = $quantity;
+                    $invoice_detailOut = array(
+                        "InvoiceMasterID" => $InvoiceMasterOutID,
+                        "InvoiceNo"       => $invoice_no,
+                        "ItemID"          => $ids,
+                        "Description"     => $item_name,
+                        "PartyID"         => null,
+                        "Qty"             => $prod_qty,
+                        "Rate"            => null,
+                        "TaxPer"          => null,
+                        "Tax"             => null,
+                        "Total"           => null,
                     );
+                    DB::table('invoice_detail')->insert($invoice_detailOut);
+                    $invoice_detailIn = array(
+                        "InvoiceMasterID" => $InvoiceMasterInID,
+                        "InvoiceNo"       => $invoice_in_no,
+                        "ItemID"          => $ids,
+                        "Description"     => $item_name,
+                        "PartyID"         => null,
+                        "Qty"             => $prod_qty,
+                        "Rate"            => null,
+                        "TaxPer"          => null,
+                        "Tax"             => null,
+                        "Total"           => null,
+                    );
+                    $total_qty = $total_qty + $prod_qty;
 
-                    $InvoiceMasterInID = DB::table('invoice_master')->insertGetId($invoice_data);
-                    $total_qty         = 0;
-                    foreach ($productsIds as $ids => $quantity) {
-                        $item_name = DB::table('item')->where('ItemID', $ids)->pluck('ItemName')->first();
-                        $prod_qty  = $quantity;
-                        $invoice_detailOut = array(
-                            "InvoiceMasterID" => $InvoiceMasterOutID,
-                            "InvoiceNo"       => $invoice_no,
-                            "ItemID"          => $ids,
-                            "Description"     => $item_name,
-                            "PartyID"         => null,
-                            "Qty"             => $prod_qty,
-                            "Rate"            => null,
-                            "TaxPer"          => null,
-                            "Tax"             => null,
-                            "Total"           => null,
-                        );
-                        DB::table('invoice_detail')->insert($invoice_detailOut);
-                        $invoice_detailIn = array(
-                            "InvoiceMasterID" => $InvoiceMasterInID,
-                            "InvoiceNo"       => $invoice_in_no,
-                            "ItemID"          => $ids,
-                            "Description"     => $item_name,
-                            "PartyID"         => null,
-                            "Qty"             => $prod_qty,
-                            "Rate"            => null,
-                            "TaxPer"          => null,
-                            "Tax"             => null,
-                            "Total"           => null,
-                        );
-                        $total_qty = $total_qty + $prod_qty;
-
-                        DB::table('invoice_detail')->insert($invoice_detailIn);
-                    }
-                    InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterOutID)->update(['TotalQty' => $total_qty]);
-                    InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterInID)->update(['TotalQty' => $total_qty]);
-               
+                    DB::table('invoice_detail')->insert($invoice_detailIn);
+                }
+                InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterOutID)->update(['TotalQty' => $total_qty]);
+                InvoiceMaster::where('InvoiceMasterID', '=', $InvoiceMasterInID)->update(['TotalQty' => $total_qty]);
             }
             session()->flash('success', 'Stock has been updated successfully.');
             return true;

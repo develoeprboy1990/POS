@@ -347,14 +347,14 @@
                                     </div>
 
                                     <div class="col-sm-9">
-                                    <div class="search-box input-group">
-                                        <button type="button" class="btn btn-secondary btn-lg"><i class="fa fa-barcode"></i></button>
-                                        <input type="text" name="product_code_name" id="lims_productcodeSearch" placeholder="Please type product code and select..." class="form-control" />
-                                    </div>
+                                        <div class="search-box input-group">
+                                            <button type="button" class="btn btn-secondary btn-lg"><i class="fa fa-barcode"></i></button>
+                                            <input type="text" name="product_code_name" id="lims_productcodeSearch" placeholder="Please type product code and select..." class="form-control" />
+                                        </div>
                                     </div>
                                 </div>
 
-                   
+
                             </div>
                             <div class="col-md-6">
                                 <div class="col-12">
@@ -373,7 +373,7 @@
                                         </div>
                                     </div>
                                 </div>
-                           
+
                             </div>
                             <hr class="invoice-spacing">
 
@@ -407,9 +407,10 @@
                                     <div class="table-responsive mt-3">
                                         <table id="myTable" class="table table-hover order-list">
                                             <thead>
-                                            <tr class="bg-light borde-1 border-light " style="height: 40px;">
+                                                <tr class="bg-light borde-1 border-light " style="height: 40px;">
                                                     <th>{{trans('file.name')}}</th>
                                                     <th>{{trans('file.Code')}}</th>
+                                                    <th>Stock Quantity</th>
                                                     <th>{{trans('file.Quantity')}}</th>
                                                     <!--<th>{{trans('file.Net Unit Price')}}</th>
                                                     <th>{{trans('file.Discount')}}</th>
@@ -551,10 +552,15 @@
     });
 
     function productSearch(data) {
-        var url = "{{route('product_sale.search')}}";
+        var warehouseid = $('#warehouseid').val();
+        let url = "{{route('warehouse.getproductdetais',[':warehouseid'])}}";
+        route   = url.replace(':warehouseid', warehouseid);
+        //route   = route.replace(':product_id', data);
+         
+        //var url = "{{route('product_sale.search')}}?warehouseid=" + warehouseid;
         $.ajax({
             type: 'GET',
-            url: url,
+            url: route,
             data: {
                 data: data
             },
@@ -575,7 +581,9 @@
                     var cols = '';
                     pos = product_code.indexOf(data[1]);
                     temp_unit_name = (data[6]).split(',');
-                    cols += '<td>' + data[0] + '<button type="button" class="btn btn-link" data-toggle="modal" data-target="#editModal"> <i class="dripicons-document-edit"></i></button></td>';
+                    cols += '<td>' + data[0] + '</td>';
+                    cols += '<td>' + data[1] + '</td>';
+                    cols += '<td>' + data[12] + '</td>';
                     cols += '<td><input type="number" class="form-control qty" name="qty[' + data[9] + ']" value="1" step="any" required/></td>';
                     //cols += '<td class="net_unit_price"></td>';
                     //cols += '<td class="discount">0.00</td>';
@@ -646,8 +654,8 @@
 
     //Delete product
     $("table.order-list tbody").on("click", ".edit-product", function(event) {
-        rowindex = $(this).closest('tr').index(); 
-        $(this).closest("tr").remove(); 
+        rowindex = $(this).closest('tr').index();
+        $(this).closest("tr").remove();
     });
 
 
@@ -720,16 +728,16 @@
                     html += '<option value="' + value.id + '">' + value.name + '</option>';
                 });
                 $('#to_warehouse_id').html(html);
-                if (response['products'].length !== 0) {
-                    var product = '<option vale="">Please Chose Item</option>';
-                    $.each(response['products'], function(key, value) {
-                        product += '<option value="' + value.ItemID + '">' + value.ItemName + '</option>';
+                /*  if (response['products'].length !== 0) {
+                     var product = '<option vale="">Please Chose Item</option>';
+                     $.each(response['products'], function(key, value) {
+                         product += '<option value="' + value.ItemID + '">' + value.ItemName + '</option>';
 
-                    });
-                } else {
-                    var product = '<option vale="">No Items Found.</option>';
-                }
-                $('#ItemID').html(product);
+                     });
+                 } else {
+                     var product = '<option vale="">No Items Found.</option>';
+                 }
+                 $('#ItemID').html(product); */
             }
         });
     }
