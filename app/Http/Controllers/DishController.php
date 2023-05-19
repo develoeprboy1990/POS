@@ -355,17 +355,13 @@ class DishController extends Controller
         );
 
         $input = $request->all();
+
         if($input['dish_type_recipe_id']){
-            $dish_type_recipe = DishRecipe::findOrFail($input['dish_type_recipe_id']);
-            $dish_type_recipe->dish_type_id = $input['dish_type_id'];
-            $dish_type_recipe->item_id = $input['item_id'];
-            $dish_type_recipe->base_unit_amount_cooked = $input['base_unit_amount_cooked'];
-            $dish_type_recipe->child_unit_amount_cooked = $input['child_unit_amount_cooked'];
-            $dish_type_recipe->save();
+            DishRecipe::updateOrCreate(['id' => $input['dish_type_recipe_id']],$input);
         }
         else{
             $input['dish_id'] = $id;
-            DishRecipe::create($input);
+            DishRecipe::updateOrCreate(['dish_type_id' => $input['dish_type_id'],'item_id' => $input['item_id']],$input);
         }
         
         return redirect()->route('dish.recipe', $id)->with('error', 'Saved Successfully')->with('class', 'success');
