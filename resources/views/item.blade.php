@@ -2,10 +2,59 @@
 @section('title', $pagetitle)
 @push('before-styles')
 <style>
-#genbutton{
-  cursor: pointer;
-}
+  #genbutton {
+    cursor: pointer;
+   
+  }
 
+  .blinking-icon {
+    display: inline-block;
+    animation: blink-animation 2s infinite;
+    font-size: 1rem;
+  }
+
+  @keyframes blink-animation1 {
+    0% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+      transform: scale(2);
+    }
+
+    51% {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes blink-animation {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    50% {
+      transform: rotate(180deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+
+  .blinking-icon:hover {
+    -webkit-animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    -o-animation-play-state: paused;
+    animation-play-state: paused;
+  }
 </style>
 @endpush
 @section('content')
@@ -90,7 +139,7 @@
                       <div class="col-sm-9">
                         <div class="input-group" id="datepicker21">
                           <input type="text" id="item_code" class="form-control" name="ItemCode" placeholder="Item Code">
-                          <span class="input-group-text" id="genbutton" title="Click to generate random code"><i class="mdi mdi-refresh" ></i></span>
+                          <span class="input-group-text" id="genbutton" title="Click to generate random code"><i class="blinking-icon mdi mdi-refresh"></i></span>
                         </div>
                       </div>
 
@@ -416,8 +465,9 @@
   <script>
     $('#genbutton').on("click", function() {
       var link = "{{route('items.generatecode')}}";
-      $.get(link, function(data) { 
+      $.get(link, function(data) {
         $("input[name='ItemCode']").val(data);
+        $('.blinking-icon').removeClass('blinking-icon');
       });
     });
 
