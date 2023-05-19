@@ -10,23 +10,15 @@
 <!-- 
 <script src="{{asset('assets/invoice/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('assets/invoice/js/bootstrap-datepicker.js')}}"></script>  -->
-
-
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
-
 <!-- multipe image upload  -->
 <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 <link href="multiple/dist/imageuploadify.min.css" rel="stylesheet">
-
 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -45,17 +37,17 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-1 row">
-                  <div class="col-sm-3">
-                    <label class="col-form-label" for="password">Supplier </label>
-                  </div>
-                  <div class="col-sm-9">
-                    <select name="SupplierID" id="SupplierID" class="form-select select2 mt-5" name="SupplierID" required="">
-                      <?php foreach ($supplier as $key => $value) : ?>
-                        <option value="{{$value->SupplierID}}">{{$value->SupplierName}}</option>
-                      <?php endforeach ?>
-                    </select>
-                  </div>
-                </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label" for="password">Supplier </label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select name="SupplierID" id="SupplierID" class="form-select select2 mt-5" name="SupplierID" required="">
+                                            <?php foreach ($supplier as $key => $value) : ?>
+                                                <option value="{{$value->SupplierID}}">{{$value->SupplierName}}</option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <div class="mb-1 row " id="WalkinCustomer">
                                     <div class="col-sm-3">
@@ -91,24 +83,24 @@
                                 </div>
                                 <div class="mb-1 row">
                                     <div class="col-sm-3">
-                                        <label class="col-form-label" for="password">Tax</label> 
+                                        <label class="col-form-label" for="password">Tax</label>
                                     </div>
 
                                     <div class="col-sm-9">
                                         <select name="UserI D" id="seletedVal" class="form-select" onchange="GetSelectedTextValue(this)">
-                                        <?php foreach ($tax as $key => $valueX1) : ?>
-                                                        <option value="{{$valueX1->TaxPer}}">{{$valueX1->Description}}</option>
-                                                    <?php endforeach ?>
+                                            <?php foreach ($tax as $key => $valueX1) : ?>
+                                                <option value="{{$valueX1->TaxPer}}">{{$valueX1->Description}}</option>
+                                            <?php endforeach ?>
 
                                         </select>
                                     </div>
                                 </div>
-                                
+
 
 
                             </div>
                             <div class="col-md-6">
- 
+
 
                                 <div class="col-12">
                                     <div class="mb-1 row">
@@ -159,7 +151,7 @@
                                         </div>
                                     </div>
                                 </div>
-                              
+
                                 <div class="col-12" id="paymentdetails">
                                     <div class="mb-1 row">
                                         <div class="col-sm-3">
@@ -274,7 +266,7 @@
                                 <label for="" class="mt-2">Description</label>
                                 <textarea class="form-control" rows='5' name="DescriptionNotes" id="note" placeholder="Description notes if any."></textarea>
 
-                                                        <br>
+                                <br>
                                 <iframe src="{{URL('/Attachment')}}" width="100%" height="40%" border="0" scrolling="yes" style="overflow: hidden;"></iframe>
 
                                 <div class="mt-2"><button type="submit" class="btn btn-success w-md float-right">Save</button>
@@ -533,7 +525,7 @@
                 return i + 1;
             }
         });
-       
+
 
 
         $('#Qty_' + id[1]).val(1);
@@ -622,7 +614,7 @@
 
 
 
-    
+
 
 
     //price change
@@ -642,7 +634,7 @@
         TotalTaxPer = (parseFloat(TaxPer) / 100) * parseFloat(TotalPrice);
         ItemTotal = parseFloat(TotalPrice) + parseFloat(TotalTaxPer);
         $('#ItemTotal_' + id[1]).val(ItemTotal);
-        $('#TaxVal_' + id[1]).val(parseFloat(TotalTaxPer)); 
+        $('#TaxVal_' + id[1]).val(parseFloat(TotalTaxPer));
         calculatediscount();
         calculateTotal();
     });
@@ -658,15 +650,15 @@
 
 
 
-        total = $('#total_' + id[1]).val(); 
+        total = $('#total_' + id[1]).val();
 
 
-        Profit = (parseFloat(total) - parseFloat(Fare)).toFixed(2); 
+        Profit = (parseFloat(total) - parseFloat(Fare)).toFixed(2);
 
         $('#Service_' + id[1]).val(parseFloat(Profit) - (parseFloat(Profit / 100) * parseFloat(Tax)).toFixed(2));
 
         $('#quantity_' + id[1]).val((parseFloat(Profit / 100) * parseFloat(Tax)).toFixed(2));
-        
+
     });
 
     $(document).on('change', '.changesNoo', function() {
@@ -715,9 +707,9 @@
 
     $(document).on('blur', '#discountAmount', function() {
 
- calculateTotal();
+        calculateTotal();
         calculatediscountper();
-         calculateTotal();
+        calculateTotal();
 
     });
 
@@ -756,7 +748,7 @@
 
     // discount percentage
     $(document).on('change keyup blur onmouseover onclick', '#discountper', function() {
-         calculateTotal();
+        calculateTotal();
         calculatediscount();
 
 
@@ -961,11 +953,11 @@
     }
 </script>
 
- 
 
 
 
- 
+
+
 <script type="text/javascript">
     function GetSelectedTextValue(seletedVal) {
         gTotalVal = $('#grandtotal').val();

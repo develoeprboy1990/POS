@@ -315,7 +315,7 @@ class PosController extends Controller
 
 
 
-    public function getProductDetais(Request $request)
+    public function getProductDetais(Request $request,$warehouseid)
     {
         $ItemCode           = $request->get('data');
         $todayDate          = date('Y-m-d');
@@ -323,8 +323,14 @@ class PosController extends Controller
         $product_code[0]    = rtrim($product_code[0], " ");
         $product_variant_id = null;
 
+
+        
+
         $lims_product_data  = DishType::where('code', $product_code[0])->first();
         if ($lims_product_data) {
+            $qty   = DB::table('v_inventory')->select('Balance')->where('WarehouseID', $warehouseid)
+            ->where('ItemID', $lims_product_data->id)->pluck('Balance')->first();
+
             $product[] = $lims_product_data->type;
             $product[] = $lims_product_data->code;
             $product[] = $lims_product_data->price;
@@ -346,10 +352,14 @@ class PosController extends Controller
             $product[] = $lims_product_data->id;
             $product[] = $product_variant_id;
             $product[] = null;
-            $product[] = null;
+            $product[] = $qty;
             $product[] = 'dishItem';
         } else {
             $lims_product_data = Item::where('ItemCode', $product_code[0])->first();
+
+            $qty   = DB::table('v_inventory')->select('Balance')->where('WarehouseID', $warehouseid)
+            ->where('ItemID',$lims_product_data->ItemID)->pluck('Balance')->first();
+
             $product[] = $lims_product_data->ItemName;
             $product[] = $lims_product_data->ItemCode;
 
@@ -378,7 +388,7 @@ class PosController extends Controller
             $product[] = $lims_product_data->ItemID;
             $product[] = $product_variant_id;
             $product[] = null;
-            $product[] = null;
+            $product[] = $qty;
             $product[] = 'posItem';
         }
 

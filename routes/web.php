@@ -84,6 +84,7 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
   Route::get('/ItemEdit/{id}', [Accounts::class, 'ItemEdit']);
   Route::post('/ItemUpdate/', [Accounts::class, 'ItemUpdate']);
   Route::get('/ItemDelete/{id}', [Accounts::class, 'ItemDelete']);
+  Route::get('Items/generatecode', [Accounts::class,'generateCode'])->name('items.generatecode');
 
 
 
@@ -587,7 +588,7 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
     Route::post('/stock-warehouse-transfer', [PosController::class, 'postStockWarehouseTransfer'])->name('warehouse.stock-warehouse-transfer');
 
     Route::get('/stock-warehouse-cards', [PosController::class, 'demoCards'])->name('warehouse.demo-cards');
-    Route::get('/get-product-detais/{warehouseid}/{id}', [PosController::class, 'getProductDetais'])->name('warehouse.getproductdetais');
+    Route::get('/get-product-detais/{warehouseid}', [PosController::class, 'getProductDetais'])->name('warehouse.getproductdetais');
   });
 
 
