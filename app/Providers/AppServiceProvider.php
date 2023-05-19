@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Session;
 use DB;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\URL;
@@ -52,15 +53,14 @@ class AppServiceProvider extends ServiceProvider
         config(['currency' => $currency, 'currency_position' => $currency_position]);
 
         view()->composer('*', function ($view) {
-            $isAdmin = session::get('isAdmin');
-            if($isAdmin == 1){
-                $branch = DB::table('branch')->get();
-            }
-            else{
-                $branch_id = Session::get('BranchID');
-                $branch = DB::table('branch')->where('BranchID',$branch_id)->get();
-            }
-            $view->with(compact('branch'));
+            $isSuperAdmin = session::get('isSuperAdmin');
+            $warehouseId = Session::get('WarehouseID');
+            if($isSuperAdmin == 1)
+                $lims_warehouse_data = Warehouse::where('is_active', '1')->get();
+            else
+                $lims_warehouse_data = Warehouse::where('id',$warehouseId)->get();
+
+            $view->with(compact('lims_warehouse_data'));
         });
     }
 }

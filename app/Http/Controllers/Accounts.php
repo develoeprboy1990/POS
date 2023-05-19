@@ -97,8 +97,10 @@ class Accounts extends Controller
     if (count($data) > 0) {
       Session::put('FullName', $data[0]->FullName);
       Session::put('UserID', $data[0]->UserID);
+      Session::put('WarehouseID', $data[0]->WarehouseID);
       Session::put('Email', $data[0]->Email);
       Session::put('UserType', $data[0]->UserType);
+      Session::put('isSuperAdmin', $data[0]->isSuperAdmin);
       Session::put('Currency', $company[0]->Currency);
       Session::put('CompanyName', $company[0]->Name . ' ' . $company[0]->Name2);
 
