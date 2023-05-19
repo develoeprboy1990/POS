@@ -102,7 +102,10 @@ class User extends Controller
         session::put('menu','User');     
         $pagetitle = 'User';
        
-        $user= DB::table('user')->get();
+        $user= DB::table('user')
+                ->select('user.*','warehouses.name as warehouseName')
+                ->leftJoin('warehouses', 'user.WarehouseID', '=', 'warehouses.id')
+                ->get();
         $warehouse_list     = Warehouse::where('is_active', true)->get();
         
         return  view ('user',compact('user','warehouse_list','pagetitle'));

@@ -97,8 +97,10 @@ class Accounts extends Controller
     if (count($data) > 0) {
       Session::put('FullName', $data[0]->FullName);
       Session::put('UserID', $data[0]->UserID);
+      Session::put('WarehouseID', $data[0]->WarehouseID);
       Session::put('Email', $data[0]->Email);
       Session::put('UserType', $data[0]->UserType);
+      Session::put('isSuperAdmin', $data[0]->isSuperAdmin);
       Session::put('Currency', $company[0]->Currency);
       Session::put('CompanyName', $company[0]->Name . ' ' . $company[0]->Name2);
 
@@ -1668,9 +1670,8 @@ if($quantity > 0){
               'Balance' => 0,              
               'UserID' => session::get('UserID'), 
       );
-=======
+
     $profit_loss = $r - $e;
->>>>>>> 53e67746dbcf0e578071972d3f01eac975705a5e
 
 
     $cash = DB::table('v_journal')
@@ -7179,12 +7180,12 @@ public function BillSave(Request $request)
         'InvoiceNo' => $request->InvoiceNo, 
          'ItemID' => $request->ItemID[$i],
          'SupplierID' => $request->input('SupplierID'), 
-=======
     $lims_warehouse_list = Warehouse::where('is_active', true)->get();
     // $items=DB::table('product')->get();
     return view('purchase.bill_create', compact('supplier',  'items', 'user', 'vhno', 'item', 'items', 'pagetitle', 'tax', 'lims_warehouse_list'));
   }
 
+}
   public function BillSave(Request $request)
   {
 
@@ -7226,7 +7227,6 @@ public function BillSave(Request $request)
         'InvoiceNo' => $request->InvoiceNo,
         'ItemID' => $request->ItemID[$i],
         'SupplierID' => $request->input('SupplierID'),
->>>>>>> 53e67746dbcf0e578071972d3f01eac975705a5e
         'Qty' => $request->Qty[$i],
         'Description' => $request->Description[$i],
         'TaxPer' => $request->Tax[$i],

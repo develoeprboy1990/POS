@@ -127,7 +127,7 @@
                             <td>{{$value->Address}}</td>
                             <td>{{$value->Mobile}}</td>
                             <td>{{$value->UserType}}</td>
-                            <td>{{$value->WarehouseID}}</td>
+                            <td>{{$value->warehouseName ? $value->warehouseName : 'N/A'}}</td>
                             <td>{{$value->eDate}}</td>
                             <td>{{$value->Active}}</td>
                             <td>

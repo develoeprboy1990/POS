@@ -372,3 +372,12 @@ CREATE VIEW v_warehouse_stock_transfer AS select `extbooks_accounting_pos`.`invo
         INNER JOIN `extbooks_accounting_pos`.`warehouses` as w ON w.`id` = `extbooks_accounting_pos`.`invoice_master`.`otherWareHouseID`
         WHERE InvoiceNo LIKE 'WIN%' OR InvoiceNo LIKE 'WOUT%'
         order by `extbooks_accounting_pos`.`invoice_master`.`InvoiceMasterID`;"
+
+
+
+====================================
+date: 19-5-2023
+
+php artisan migrate --path=database/migrations/2023_05_19_112007_add_is_super_admin_to_user.php
+
+===============================
