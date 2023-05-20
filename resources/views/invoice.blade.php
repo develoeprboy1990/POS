@@ -82,6 +82,7 @@
             <tr>
                 <th>Invoice#</th>
                  <th class="col-md-3">Party</th>
+                 <th class="col-md-3">WareHouse</th>
                 <th class="col-md-1">Date</th>
                  <th>Total</th>
                 <th>Paid</th>
@@ -110,6 +111,7 @@ $(document).ready(function() {
         "columns":[
              { "data": "InvoiceNo" },
             { "data": "PartyName" },
+            { "data": "WarehouseName" },
             { "data": "Date" },
              { "data": "GrandTotal", render: $.fn.dataTable.render.number(',', '.', 2, '') },
             { "data": "Paid" , render: $.fn.dataTable.render.number(',', '.', 2, '') },

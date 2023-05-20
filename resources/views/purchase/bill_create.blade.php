@@ -286,6 +286,22 @@
                                     </div>
                                 </div>
 
+                                <div class="mb-1 row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label" for="warehouse">Warehouse</label>
+                                    </div>
+
+                                    <div class="col-sm-9">
+                                        <select name="warehouse_id" id="warehouse_id" class="form-select" required>
+                                            <option value="">Select Warehouse</option>
+                                            @foreach ($lims_warehouse_list as $warehouse)
+                                                <option value="{{$warehouse->id}}" {{$lims_pos_setting_data->warehouse_id == $warehouse->id ? 'selected': ''}}>{{$warehouse->name}}</option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-md-6">
 
@@ -610,7 +626,7 @@
     $(".addmore").on('click', function() {
         html = '<tr class="bg-light borde-1 border-light ">';
         html += '<td class="p-1 text-center"><input class="case" type="checkbox"/></td>';
-        html += '<td><select name="ItemID0[]" id="ItemID0_' + i + '"  style="width: 300px !important;" class="form-select select2 changesNoo" onchange="km(this.value,' + i + ');" > <option value="">select</option>}@foreach ($items as $key => $value) <option value="{{$value->ItemID}}|{{$value->Percentage}}">{{$value->ItemCode}}-{{$value->ItemName}}-{{$value->Percentage}}</option>@endforeach</select><input type="hidden" name="ItemID[]" id="ItemID_' + i + '"></td>';
+        html += '<td><select name="ItemID0[]" id="ItemID0_' + i + '"  style="width: 300px !important;" class="form-select select2 changesNoo" onchange="km(this.value,' + i + ');" > <option value="">select</option>}@foreach ($items as $key => $value) <option value="{{$value->ItemID}}|{{$value->Percentage}}">{{$value->ItemName}}</option>@endforeach</select><input type="hidden" name="ItemID[]" id="ItemID_' + i + '"></td>';
 
 
 
@@ -693,12 +709,13 @@ var json = data.find(function(item, i) {
 });
 
 
-
+if (json["Percentage"] == null) { 
+  json["Percentage"] = 0;
+}
 $('#Qty_' + id[1]).val(1);
 $('#Price_' + id[1]).val(json["CostPrice"]);
 $('#TaxID_' + id[1]).val(json["Percentage"]);
 $('#TaxVal_' + id[1]).val(((parseFloat(json["Percentage"])) / 100) * (parseFloat(json["SellingPrice"])));
-
 
 $('#ItemTotal_' + id[1]).val(((parseFloat(json["SellingPrice"]) * parseFloat($('#Qty_' + id[1]).val())) + (((parseFloat(json["Percentage"])) / 100) * (parseFloat(json["SellingPrice"])))).toFixed(2));
 

@@ -62,58 +62,55 @@
     <thead class="bg-light">
     <tr>
       <td width="5%" bgcolor="#CCCCCC"><div align="center"><strong>S.NO</strong></div></td>
-      <td width="6%" bgcolor="#CCCCCC"><div align="center"><strong>INVOICE#</strong></div></td>
+      <td width="10%" bgcolor="#CCCCCC"><div align="center"><strong>INVOICE#</strong></div></td>
       <td width="50%" bgcolor="#CCCCCC"><div align="center"><strong>PARTY NAME</strong></div></td>
+      <td width="9%" bgcolor="#CCCCCC"><div align="right"><strong>TOTAL </strong></div></td>
       <td width="8%" bgcolor="#CCCCCC"><div align="center"><strong>DISCOUNT</strong></div></td>
       <td width="8%" bgcolor="#CCCCCC"><div align="right"><strong> TAX</strong></div></td>
-      <td width="9%" bgcolor="#CCCCCC"><div align="right"><strong>SHIPPING </strong></div></td>
       <td width="9%" bgcolor="#CCCCCC"><div align="right"><strong>GRAND TOTAL </strong></div></td>
       
     </tr>
   </thead>
-
-<?php 
+  <?php 
 
 $DiscountAmount=0;
 $Tax=0;
 $Shipping=0;
 $GrandTotal=0;
+$SubTotal=0;
 
  ?>
-
    @foreach ($party_wise as $key => $value)
-    
-   <?php 
+     <?php 
 
 $DiscountAmount  =  $DiscountAmount + $value->DiscountAmount;
 $Tax  = $Tax+ $value->Tax;
 $Shipping  = $Shipping +  $value->Shipping ;
 $GrandTotal  = $GrandTotal+ $value->GrandTotal;
+$SubTotal  = $SubTotal+ $value->SubTotal;
 
  ?> 
     
-    <tr>
+  <tr>
       <td><div align="center">{{$key+1}}.</div></td>
        <td><div align="center">{{$value->InvoiceNo}}</div></td>
        <td><div align="left">{{$value->PartyName}}</div></td>
-       <td><div align="center">{{number_format($value->DiscountAmount,2)}}</div></td>
+      <td><div align="right">{{number_format($value->SubTotal,2)}}</div></td>
+       <td><div align="right">{{number_format($value->DiscountAmount,2)}}</div></td>
       <td><div align="right">{{number_format($value->Tax,2)}}</div></td>
-      <td><div align="right">{{number_format($value->Shipping,2)}}</div></td>
       <td><div align="right">{{number_format($value->GrandTotal,2)}}</div></td>
-       
     </tr>
 @endforeach
  <tr>
-      <td> </td>
-       <td></td>
-       <td><div align="right"><STRONG>TOTAL</STRONG></div></td>
-       <td><div align="center"><strong>{{number_format($DiscountAmount,2)}}</strong></div></td>
+     
+       <td colspan="3"><div align="right"><STRONG>TOTAL</STRONG></div></td>
+      <td><div align="right"><strong>{{number_format($SubTotal,2)}}</strong></div></td>
+       <td><div align="right"><strong>{{number_format($DiscountAmount,2)}}</strong></div></td>
       <td><div align="right"><strong>{{number_format($Tax,2)}}</strong></div></td>
-      <td><div align="right"><strong>{{number_format($Shipping,2)}}</strong></div></td>
       <td><div align="right"><strong>{{number_format($GrandTotal,2)}}</strong></div></td>
        
     </tr>
-  </table>       
+  </table>        
       </div>
   </div>
   

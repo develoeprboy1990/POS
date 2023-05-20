@@ -71,6 +71,7 @@
                 <th>Invoice#</th>
                 <th class="col-md-1">Code</th>
                 <th class="col-md-3">Supplier</th>
+                <th class="col-md-3">WareHouse</th>
                 <th class="col-md-2">Date</th>
                 <th class="col-md-2">Payment Mode</th>
                 <th>Total</th>
@@ -100,6 +101,7 @@ $(document).ready(function() {
             { "data": "InvoiceMasterID" },
             { "data": "InvoiceNo" },
             { "data": "SupplierName" },
+            { "data": "WarehouseName" },
             { "data": "Date" },
             { "data": "PaymentMode" },
             { "data": "Total" },
