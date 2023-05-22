@@ -269,9 +269,15 @@
                         @endif
                         @if ($lims_sale_data->DiscountAmount)
                             <tr>
-                                <th colspan="6" style="text-align:left">{{ trans('file.Order Discount') }} {{$lims_sale_data->DiscountModel == 'percentage' ? '(%)' : ''}}</th>
+                                @if($lims_sale_data->DiscountModel == 'percentage')
+                                <th colspan="6" style="text-align:left">{{ trans('file.Order Discount') }} ({{$lims_sale_data->DiscountAmount}}%)</th>
+                                <th style="text-align:right">
+                                    {{ number_format((float) $lims_sale_data->DiscountPer, 2, '.', '') }}</th>
+                                @else
+                                <th colspan="6" style="text-align:left">{{ trans('file.Order Discount') }}</th>
                                 <th style="text-align:right">
                                     {{ number_format((float) $lims_sale_data->DiscountAmount, 2, '.', '') }}</th>
+                                @endif
                             </tr>
                         @endif
                         @if (@$lims_sale_data->coupon_discount)
