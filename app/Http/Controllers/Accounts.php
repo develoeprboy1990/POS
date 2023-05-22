@@ -1692,8 +1692,8 @@ class Accounts extends Controller
     // code to add newly created item in stockd
     $quantity = trim($request->stockQty);
     if ($quantity > 0) {
-      $invoice_no = DB::table('invoice_master')->where('InvoiceNo', 'like', 'BILL%')->count();
-      $invoice_no = 'BILL-0000' . ++$invoice_no;
+      $invoice_no = DB::table('invoice_master')->where('InvoiceNo', 'like', 'OS%')->count();
+      $invoice_no = 'OS-0000' . ++$invoice_no;
       $today_date = date('Y-m-d');
       $reference_no = date("his");
       $price = trim($request->SellingPrice); // whether to store cost or selling price
@@ -1707,16 +1707,16 @@ class Accounts extends Controller
         'WalkinCustomerName' => 'Walkin Customer',
         'ReferenceNo' => $reference_no,
         'PaymentMode' => 'Cash',
-        'SubTotal' => $subTotal,
+        'SubTotal' => 0,
         'DiscountPer' => 0,
         'DiscountAmount' => 0,
-        'Total' => $subTotal,
+        'Total' => 0,
         'TotalQty' => $quantity,
         'TaxPer' => 0,
         'Tax' => 0,
         'Shipping' => 0,
-        'GrandTotal' => $subTotal,
-        'Paid' => $subTotal,
+        'GrandTotal' => 0,
+        'Paid' => 0,
         'Balance' => 0,
         'UserID' => session::get('UserID'),
       );
@@ -1731,7 +1731,7 @@ class Accounts extends Controller
         'TaxPer' => 0,
         'Tax' => 0,
         'Rate' => $price,
-        'Total' => $subTotal
+        'Total' => 0
       );
       DB::table('invoice_detail')->insertGetId($invoice_det);
     }
