@@ -328,15 +328,16 @@ class TeqPosController extends Controller
 
     public function storeVoucher(Request $request)
     {
-        $data = $request->all();
+        $data    = $request->all();
+        $message = '';
         if (isset($request->reference_no)) {
             $this->validate($request, [
                 'ReferenceNo' => [
                     'max:191', 'required', 'unique:sales'
                 ],
             ]);
-        } 
-        $data['user_id'] = session::get('UserID'); 
+        }
+        $data['user_id'] = session::get('UserID');
         if ($data['pos']) {
             if (!isset($data['reference_no']))
                 $data['reference_no'] = date("his");
@@ -363,12 +364,8 @@ class TeqPosController extends Controller
         $document = $request->document;
         if ($document) {
             $v = Validator::make(
-                [
-                    'extension' => strtolower($request->document->getClientOriginalExtension()),
-                ],
-                [
-                    'extension' => 'in:jpg,jpeg,png,gif,pdf,csv,docx,xlsx,txt',
-                ]
+                ['extension' => strtolower($request->document->getClientOriginalExtension())],
+                ['extension' => 'in:jpg,jpeg,png,gif,pdf,csv,docx,xlsx,txt']
             );
             if ($v->fails())
                 return redirect()->back()->withErrors($v->errors());
@@ -431,7 +428,7 @@ class TeqPosController extends Controller
             "Total"              => $request->total,
 
         );
-        $lims_sale_data     = DB::table('invoice_master')->insertGetId($invoice_data); 
+        $lims_sale_data     = DB::table('invoice_master')->insertGetId($invoice_data);
         $product_quantities = $data['qty'];
         $product_prices     = $data['net_unit_price'];
         $product_taxes      = $data['tax']; // focus
@@ -514,7 +511,15 @@ class TeqPosController extends Controller
                     'currency' => 'usd',
                     'customer' => $customer->id
                 ]);
-                $data['customer_stripe_id'] = $customer->id;
+                // Handle successful payment
+                if ($charge->status === 'succeeded') {
+                    // Payment successful, process further actions
+                    $data['customer_stripe_id'] = $customer_id;
+                    $paymentStatus = 'success';
+                } else {
+                    $paymentStatus = 'fail';
+                    $message .= ' Payment failed. ';
+                }
             } else {
                 $customer_id =
                     $lims_payment_with_credit_card_data->customer_stripe_id;
@@ -524,16 +529,26 @@ class TeqPosController extends Controller
                     'currency' => 'usd',
                     'customer' => $customer_id, // Previously stored, then retrieved
                 ]);
-                $data['customer_stripe_id'] = $customer_id;
+                // Handle successful payment
+                if ($charge->status === 'succeeded') {
+                    // Payment successful, process further actions
+                    $data['customer_stripe_id'] = $customer_id;
+                    $paymentStatus = 'success';
+                } else {
+                    $paymentStatus = 'fail';
+                    $message .= ' Payment failed. ';
+                }
             }
-            $data['charge_id'] = $charge->id;
-            PaymentWithCreditCard::create($data);
-        }
+            if ($charge->status === 'succeeded') {
+                $data['charge_id'] = $charge->id;
+                PaymentWithCreditCard::create($data);
+            }
+        } //CREDIT PAYMENT ENDS HERER.
 
         if ($data['sale_status'] == 3)
-            $message = 'Sale successfully added to draft';
+            $message .= 'Sale successfully added to draft';
         else
-            $message = ' Sale created successfully';
+            $message .= ' Sale created successfully';
 
         if ($data['sale_status'] == '1' && $data['print_status'] == '1')
             return redirect(route('voucher.print', ['id' => $lims_sale_data]))->with('message', $message);
