@@ -99,7 +99,7 @@ class TeqPosController extends Controller
 
     public function storeInvoice(Request $request)
     {
-        $data = $request->all();
+        $data = $request->all(); 
         if (isset($request->reference_no)) {
             $this->validate($request, [
                 'ReferenceNo' => [
@@ -330,7 +330,7 @@ class TeqPosController extends Controller
 
     public function storeVoucher(Request $request)
     {
-        $data = $request->all();
+        $data = $request->all(); 
         if (isset($request->reference_no)) {
             $this->validate($request, [
                 'ReferenceNo' => [

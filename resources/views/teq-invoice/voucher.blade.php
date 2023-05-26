@@ -17,9 +17,7 @@
     <div class="side-navbar-wrapper">
         <!-- Sidebar Header-->
         <div class="navbar-brand-box">
-
             <a href="{{route('kashif')}}" class="logo logo-light">
-
                 <span class="logo-lg">
                     <img src="{{asset('assets/images/logo-light.png')}}" alt="" height="45">
                 </span>
@@ -29,15 +27,12 @@
         <div class="main-menu">
             <ul id="side-main-menu" class="side-menu list-unstyled">
                 <li><a href="{{route('kashif')}}"> <i class="dripicons-meter"></i><span>{{ __('file.dashboard') }}</span></a></li>
-
                 <li>
                     <a href="{{URL('/Employee')}}" class="waves-effect">
                         <i class="dripicons-user-group"></i>
                         <span key="t-calendar">Employee</span>
                     </a>
                 </li>
-
-
                 <li>
                     <a href="#deposit" aria-expanded="false" data-toggle="collapse">
                         <i class="dripicons-list"></i>
@@ -46,11 +41,8 @@
                     <ul id="deposit" class="collapse list-unstyled">
                         <li><a href="{{URL('/FCBAdd')}}" key="t-products">Add Deposit</a></li>
                         <li><a href="{{URL('/FCBListing')}}" key="t-products">View Deposit</a></li>
-
-
                     </ul>
                 </li>
-
                 <li>
                     <a href="#purchase" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-card"></i>
                         <span key="t-ecommerce">Live Account</span>
@@ -58,8 +50,6 @@
                     <ul id="purchase" class="collapse list-unstyled ">
                         <li id="purchase-list-menu"><a href="{{URL('/LiveAccountAdd')}}" key="t-products">Add Live Account</a></li>
                         <li id="purchase-create-menu"><a href="{{URL('/LiveAccountListing')}}" key="t-products">View Live Account</a></li>
-
-
                     </ul>
                 </li>
 
@@ -99,16 +89,11 @@
                         <li id="quotation-create-delete"><a href="{{URL('/TopLiveAccount')}}" key="t-products">Top Live Account</a></li>
                     </ul>
                 </li>
-
-
-
                 <li>
                     <a href="#transfer" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-export"></i>
                         <span key="t-calendar">Import Attendance</span>
                     </a>
                 </li>
-
-
                 <li>
                     <a href="#return" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-return"></i>
                         <span key="t-ecommerce">Salary Section</span>
@@ -121,24 +106,18 @@
 
                     </ul>
                 </li>
-
                 <li>
                     <a href="{{URL('/Document')}}" class="waves-effect">
                         <i class="mdi mdi-car"></i>
                         <span key="t-calendar">All Documents</span>
                     </a>
                 </li>
-
-
                 <li>
                     <a href="{{URL('/Fleet')}}" class="waves-effect">
                         <i class="mdi mdi-car"></i>
                         <span key="t-calendar">Fleet Management </span>
                     </a>
                 </li>
-
-
-
                 <li>
                     <a href="#pos-settings" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-return"></i>
                         <span key="t-ecommerce">POS Setting</span>
@@ -152,12 +131,8 @@
                         <li><a href="{{URL('/unit-list')}}" key="t-products">Unit</a></li>
                         <li><a href="{{URL('/tax-list')}}" key="t-products">Tax</a></li>
                         <li><a href="{{URL('/pos-setting')}}" key="t-products">POS Setting</a></li>
-
-
                     </ul>
                 </li>
-
-
                 <li>
                     <a href="#account" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-briefcase"></i>
                         <span key="t-ecommerce">Setting</span>
@@ -173,11 +148,8 @@
                         <li id="account-statement-menu2"><a href="{{URL('/Users')}}" key="t-products">Users</a></li>
                         <li id="account-statement-menu3"><a href="{{URL('/RolesList')}}" key="t-products">Roles List</a></li>
                         <!-- <li><a href="{{URL('/Role')}}" key="t-products">User Rights & Control</a></li>  -->
-
-
                     </ul>
                 </li>
-
                 <li>
                     <a href="#hrm" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-user-group"></i>
                         <span key="t-ecommerce">Monthlty Target</span>
@@ -187,18 +159,11 @@
                         <li id="employee-menu"><a href="{{URL('/TargetList')}}" key="t-products">View Target</a></li>
                     </ul>
                 </li>
-
-
-
                 <li>
                     <a href="#people" aria-expanded="false" data-toggle="collapse"> <i class="dripicons-power"></i>
                         <span key="t-calendar">Logout</span>
                     </a>
                 </li>
-
-
-
-
             </ul>
         </div>
     </div>
@@ -306,9 +271,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        
-
                                     </div>
                                     <div class="row">
                                         <div class="search-box form-group col-md-12">
@@ -743,9 +705,9 @@
                             @foreach($dishes as $dish)
                             <div class="col-md-3 dish-img text-center" data-dish="{{$dish->id}}">
                                 @if($dish->image_thumbnail)
-                                    <img  src="{{asset('thumbnail/'.$dish->image_thumbnail)}}" />
+                                <img src="{{asset('thumbnail/'.$dish->image_thumbnail)}}" />
                                 @else
-                                    <img  src="{{asset('assets/images/product/zummXD2dvAtI.png')}}" />
+                                <img src="{{asset('assets/images/product/zummXD2dvAtI.png')}}" />
                                 @endif
                                 <p class="text-center">{{ucwords($dish->name)}}</p>
                             </div>

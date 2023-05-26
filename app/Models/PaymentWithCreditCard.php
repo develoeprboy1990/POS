@@ -11,9 +11,7 @@ class PaymentWithCreditCard extends Model
 
     protected $table = 'payment_with_credit_cards';
 
-    protected $fillable =[
-
+    protected $fillable = [
         "payment_id", "customer_id", "customer_stripe_id", "charge_id"
     ];
-
 }
