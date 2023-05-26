@@ -514,16 +514,14 @@ class TeqPosController extends Controller
                 // Handle successful payment
                 if ($charge->status === 'succeeded') {
                     // Payment successful, process further actions
-                    $data['customer_stripe_id'] = $customer_id;
+                    $data['customer_stripe_id'] = $customer->id;
                     $paymentStatus = 'success';
                 } else {
                     $paymentStatus = 'fail';
                     $message .= ' Payment failed. ';
                 }
             } else {
-                $customer_id =
-                    $lims_payment_with_credit_card_data->customer_stripe_id;
-
+                $customer_id = $lims_payment_with_credit_card_data->customer_stripe_id;
                 $charge = \Stripe\Charge::create([
                     'amount' => $grand_total * 100,
                     'currency' => 'usd',
