@@ -9,7 +9,6 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Validation\Rule;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\PaymentWithCreditCard;
 use App\Models\Item;
 use App\Models\ProductVariant;
 use App\Models\ProductBatch;
@@ -482,6 +481,13 @@ class TeqPosController extends Controller
         $product_hsns = $request->hsn;
         $product_serials = $request->serial;
 
+        /* Payment Save */
+        $data['amount']          = $data['paid_amount'];
+        $data['InvoiceMasterID'] = $lims_sale_data;
+        $data['paying_method']   = $paying_method;
+        $this->payment($data);
+        /* Payment Save Ends here. */
+
         foreach ($product_pids as $key => $pid) {
             if($itemTypes[$key] == 'dish'){
                 $dish_type = DishType::findOrFail($pid);            
@@ -534,50 +540,6 @@ class TeqPosController extends Controller
                 $insert_detail = DB::table('invoice_detail')->insert($invoice_detail);
             }
 
-        }
-
-         /* Payment Save */
-        $data['amount']          = $data['paid_amount'];
-        $data['InvoiceMasterID'] = $lims_sale_data;
-        $data['paying_method']   = $paying_method;
-        $this->payment($data);
-        /* Payment Save Ends here. */
-
-        if($paying_method == 'Credit Card'){
-            $lims_pos_setting_data = PosSetting::latest()->first();
-            Stripe::setApiKey($lims_pos_setting_data->stripe_secret_key);
-            $token = $data['stripeToken'];
-            $grand_total = $data['grand_total'];
-
-            $lims_payment_with_credit_card_data = PaymentWithCreditCard::where('customer_id', $data['customer_id'])->first();
-
-            if(!$lims_payment_with_credit_card_data) {
-                // Create a Customer:
-                $customer = \Stripe\Customer::create([
-                    'source' => $token
-                ]);
-                
-                // Charge the Customer instead of the card:
-                $charge = \Stripe\Charge::create([
-                    'amount' => $grand_total * 100,
-                    'currency' => 'usd',
-                    'customer' => $customer->id
-                ]);
-                $data['customer_stripe_id'] = $customer->id;
-            }
-            else {
-                $customer_id = 
-                $lims_payment_with_credit_card_data->customer_stripe_id;
-
-                $charge = \Stripe\Charge::create([
-                    'amount' => $grand_total * 100,
-                    'currency' => 'usd',
-                    'customer' => $customer_id, // Previously stored, then retrieved
-                ]);
-                $data['customer_stripe_id'] = $customer_id;
-            }
-            $data['charge_id'] = $charge->id;
-            PaymentWithCreditCard::create($data);
         }
 
         if ($data['sale_status'] == 3)
