@@ -27,6 +27,8 @@ use App\Models\Payment;
 use App\Models\Dish;
 use App\Models\DishType;
 use App\Models\DishTable;
+use App\Models\PaymentWithCreditCard;
+use Stripe\Stripe;
 /* use Keygen\Keygen;
 use DNS1D;
 use DNS2D; */
