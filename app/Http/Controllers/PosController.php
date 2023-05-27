@@ -28,6 +28,7 @@ use App\Models\Item;
 use App\Models\Dish;
 use App\Models\DishType;
 use App\Models\DishTable;
+use App\Models\InvoiceDishDetail;
 
 class PosController extends Controller
 {
@@ -36,8 +37,9 @@ class PosController extends Controller
     {
         $invoice_master = DB::table('invoice_master')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
+        $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id', $InvoiceMasterID)->get();
         $party = DB::table('party')->where('PartyID', $invoice_master->PartyID)->first();
-        return view('invoice.show_invoice', compact('invoice_detail', 'invoice_master', 'party'));
+        return view('invoice.show_invoice', compact('invoice_detail', 'invoice_master', 'party','invoice_dish_detail'));
     }
 
 
