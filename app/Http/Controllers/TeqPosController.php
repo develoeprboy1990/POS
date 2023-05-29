@@ -498,7 +498,7 @@ class TeqPosController extends Controller
         $data['amount']          = $data['paid_amount'];
         $data['InvoiceMasterID'] = $lims_sale_data;
         $data['paying_method']   = $paying_method;
-        $this->payment($data);
+        $payment = $this->payment($data);
         /* Payment Save Ends here. */
 
         if ($paying_method == 'Credit Card') {
@@ -542,6 +542,7 @@ class TeqPosController extends Controller
             }
             if ($charge->status === 'succeeded') {
                 $data['charge_id'] = $charge->id;
+                $data['payment_id'] = $payment->id;
                 PaymentWithCreditCard::create($data);
             }
         } //CREDIT PAYMENT ENDS HERER.
