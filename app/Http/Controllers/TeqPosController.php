@@ -521,10 +521,8 @@ class TeqPosController extends Controller
                 // Handle successful payment
                 if ($charge->status === 'succeeded') {
                     // Payment successful, process further actions
-                    $data['customer_stripe_id'] = $customer->id;
-                    $paymentStatus = 'success';
-                } else {
-                    $paymentStatus = 'fail';
+                    $data['customer_stripe_id'] = $customer->id; 
+                } else { 
                     $message .= ' Payment failed. ';
                 }
             } else {
@@ -537,10 +535,8 @@ class TeqPosController extends Controller
                 // Handle successful payment
                 if ($charge->status === 'succeeded') {
                     // Payment successful, process further actions
-                    $data['customer_stripe_id'] = $customer_id;
-                    $paymentStatus = 'success';
-                } else {
-                    $paymentStatus = 'fail';
+                    $data['customer_stripe_id'] = $customer_id; 
+                } else { 
                     $message .= ' Payment failed. ';
                 }
             }

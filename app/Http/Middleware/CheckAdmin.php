@@ -4,35 +4,34 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Session;
- 
+
+use Illuminate\Support\Facades\Route;
+
 use URL;
 use DB;
+
 class CheckAdmin
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
-    {
-        
-             if(session::get('UserID')==null)
-         {
+   /**
+    * Handle an incoming request.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  \Closure  $next
+    * @return mixed
+    */
+   public function handle($request, Closure $next)
+   {
+
+      if (session::get('UserID') == null) {
+         $currenturl = request()->route()->uri;//url()->current(); 
+         Session::put('CustomRefferer', $currenturl); 
+     
          // session::flash('error', 'Invalid Rollno or Password. Try again');
-        return redirect('/')->with('error', 'Session expired')->with('class','danger');
-         }
-         else
-         {
-            return $next($request);
-         }
-
-
-
-       
-    }
+         return redirect('/')->with('error', 'Session expired')->with('class', 'danger');
+      } else {
+         return $next($request);
+      }
+   }
 }
 
 

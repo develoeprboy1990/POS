@@ -102,10 +102,13 @@ class Accounts extends Controller
       Session::put('Currency', $company[0]->Currency);
       Session::put('CompanyName', $company[0]->Name . ' ' . $company[0]->Name2);
 
-      if ($data[0]->UserType == 'Biller')
+      if ($data[0]->UserType == 'Biller') {
         return redirect('create-voucher');
-      else
-        return redirect('Dashboard')->with('error', 'Welcome to ' . session::get('CompanyName') . ' Software')->with('class', 'success');
+      } else { 
+        if(!empty(session::get('CustomRefferer'))){
+          return redirect(session::get('CustomRefferer'));
+        }else return redirect('Dashboard')->with('error', 'Welcome to ' . session::get('CompanyName') . ' Software')->with('class', 'success');
+      }
     } else {
       //session::flash('error', 'Invalid username or Password. Try again');
       return redirect('Login')->withinput($request->all())->with('error', 'Invalid username or Password. Try again')->with('class', 'danger');
