@@ -237,7 +237,7 @@
                                                 @else
                                                 <select required id="biller_id" name="biller_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select User...">
                                                     @foreach($lims_biller_list as $biller)
-                                                    <option value="{{$biller->UserID}}">{{$biller->FullName}}</option>
+                                                    <option value="{{$biller->UserID}}" @if($biller->UserID == Session::get('UserID')) selected @endif>{{$biller->FullName}}</option>
                                                     @endforeach
                                                 </select>
                                                 @endif
