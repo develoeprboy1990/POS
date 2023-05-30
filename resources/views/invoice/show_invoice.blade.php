@@ -139,7 +139,7 @@
 
 	        <div class="page-tools">
 	            <div class="action-buttons">
-	                <a class="btn btn-success mx-1px text-95" href="{{route('invoice.print',['id' => $invoice_master->InvoiceMasterID])}}" target="_blank" data-title="Print">
+	                <a class="btn btn-success mx-1px text-95" href="{{route('voucher.print',['id' => $invoice_master->InvoiceMasterID])}}" target="_blank" data-title="Print">
 	                    <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
 	                    Print
 	                </a>
@@ -157,7 +157,7 @@
 	                    <div class="col-12">
 	                        <div class="text-center text-150">
 	                            <i class="fa fa-book fa-2x text-success-m2 mr-1"></i>
-	                            <span class="text-default-d3">HRM Invoice</span>
+	                            <span class="text-default-d3">{{ Session::get('CompanyName') }}</span>
 	                        </div>
 	                    </div>
 	                </div>
@@ -186,15 +186,12 @@
 	                    <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
 	                        <hr class="d-sm-none" />
 	                        <div class="text-grey-m2">
-	                            <div class="mt-1 mb-2 text-secondary-m1 text-600 text-125">
-	                                Invoice
-	                            </div>
 
-	                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">No:</span> {{@$invoice_master->InvoiceNo}}</div>
+	                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Invoice No:</span> {{@$invoice_master->InvoiceNo}}</div>
 
-	                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Issue Date:</span> {{date('d-M-Y H:i:s')}}</div>
+	                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Issue Date:</span> {{ date("d/m/Y", strtotime($invoice_master->Date)) }}</div>
 
-	                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span> <span class="">Unpaid</span></div>
+	                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span> <span class="">{{$invoice_master->Balance == 0 ? 'Paid' : 'Unpaid' }}</span></div>
 	                        </div>
 	                    </div>
 	                    <!-- /.col -->
@@ -218,27 +215,28 @@
 			                    </thead>
 
 			                    <tbody class="text-95 text-secondary-d3">
-			                        <tr></tr>
-			                        @php 
-		                            $productCounter = 1; 
-		                            $class = '';
-		                            $subTotal = 0;
-		                            @endphp
-		                            @foreach($invoice_detail as $detail)
-		                            <tr>
-			                            <td>{{$productCounter}}</td>
-			                            <td>{{$detail->Description}}</td>
-			                            <td>{{$detail->Qty}}</td>
-			                            <td>{{$detail->Rate}}</td>
-			                            <td>{{$detail->Tax}}</td>
-			                            <td>{{$detail->Total}}</td>
-			                        </tr>
-			                        @php
-			                        $subTotal = $subTotal+($detail->Qty*$detail->Rate);
-		                            $productCounter ++;
-		                            $class = ' bgc-default-l4';
-		                            @endphp
-		                            @endforeach
+		                            @foreach ($invoice_detail as $key => $detail)
+			                            <tr>
+			                                <td>{{++$key}}</td>
+				                            <td>{{$detail->Description}}</td>
+				                            <td>{{$detail->Qty}}</td>
+				                            <td>{{$detail->Rate}}</td>
+				                            <td>{{$detail->Tax}}</td>
+				                            <td>{{$detail->Total}}</td>
+			                               
+			                            </tr>
+			                        @endforeach
+
+			                        @foreach ($invoice_dish_detail as $key => $detail)
+			                            <tr>
+			                                <td>{{++$key}}</td>
+				                            <td>{{ucfirst($detail->dish_type->type)}}</td>
+				                            <td>{{$detail->quantity}}</td>
+				                            <td>{{$detail->price}}</td>
+				                            <td>0.00</td>
+				                            <td>{{$detail->quantity * $detail->price}}</td>
+			                            </tr>
+			                        @endforeach
 			                    </tbody>
 			                </table>
 			            </div>
@@ -255,16 +253,16 @@
 	                                    SubTotal
 	                                </div>
 	                                <div class="col-5">
-	                                    <span class="text-120 text-secondary-d1">AED:&nbsp;{{$invoice_master->SubTotal}}/-</span>
+	                                    <span class="text-120 text-secondary-d1">{{$invoice_master->SubTotal}}/-</span>
 	                                </div>
 	                            </div>
 
 	                            <div class="row my-2">
 	                                <div class="col-7 text-right">
-	                                    Tax (%)
+	                                    Order Tax
 	                                </div>
 	                                <div class="col-5">
-	                                    <span class="text-110 text-secondary-d1">{{$invoice_master->Tax}}</span>
+	                                    <span class="text-110 text-secondary-d1">{{number_format((float) $invoice_master->Tax, 2, '.', '')}}</span>
 	                                </div>
 	                            </div>
 
@@ -273,7 +271,7 @@
 	                                    Total Amount
 	                                </div>
 	                                <div class="col-5">
-	                                    <span class="text-150 text-success-d3 opacity-2">AED:&nbsp;{{$invoice_master->GrandTotal}}/-</span>
+	                                    <span class="text-11s0 text-success-d3 opacity-2">{{$invoice_master->GrandTotal}}/-</span>
 	                                </div>
 	                            </div>
 	                        </div>

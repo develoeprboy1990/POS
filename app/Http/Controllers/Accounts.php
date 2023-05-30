@@ -7070,8 +7070,9 @@ class Accounts extends Controller
     session::put('VHNO', 'BILL-' . $vhno[0]->VHNO);
 
     $lims_warehouse_list = Warehouse::where('is_active', true)->get();
+    $lims_pos_setting_data = PosSetting::latest()->first();
     // $items=DB::table('product')->get();
-    return view('purchase.bill_create', compact('supplier',  'items', 'user', 'vhno', 'item', 'items', 'pagetitle', 'tax', 'lims_warehouse_list'));
+    return view('purchase.bill_create', compact('supplier',  'items', 'user', 'vhno', 'item', 'items', 'pagetitle', 'tax', 'lims_warehouse_list','lims_pos_setting_data'));
   }
 
   public function BillSave(Request $request)

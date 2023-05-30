@@ -152,7 +152,7 @@
                     </p>
                     <p>
                    RECEIPT :{{ $lims_sale_data->InvoiceNo }}<br>
-                   DATE :{{ trans('file.Date') }}: {{ date("d/m/Y", strtotime($lims_sale_data->Date)) }}<br>
+                   DATE :{{ date("d/m/Y", strtotime($lims_sale_data->Date)) }}<br>
                     {{ trans('file.customer') }} :{{ $lims_customer_data->PartyName }}<br>
                     <!-- {{ trans('Phone number') }}: {{ $lims_customer_data->Phone }}<br>
                     {{ trans('Address') }}: {{ $lims_customer_data->Address }} -->
