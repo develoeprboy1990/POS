@@ -84,6 +84,7 @@ class TeqPosController extends Controller
         $lims_brand_list = Brand::where('is_active', true)->get();
         $lims_category_list = DB::table('item_category')->where('type', '!=', 'RES')->orWhere('type', null)->get();
 
+        $resturantItems = DB::table('item')->where('ItemType', '=', 'Restaurant')->get();
 
         $recent_sale = DB::table('invoice_master')->where('InvoiceNo', 'like', 'INV%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
         $recent_draft = DB::table('invoice_master')->where('InvoiceNo', 'like', 'INV%')->orderBy('InvoiceMasterID', 'desc')->take(10)->get();
@@ -94,7 +95,7 @@ class TeqPosController extends Controller
         $invoice_no = 'POS-0000' . ++$invoice_no;
         $dishes = Dish::where('status', 1)->get();
         $dish_tables = DishTable::orderBy('id')->get();
-        return view('teq-invoice.voucher', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no', 'dishes', 'dish_tables'));
+        return view('teq-invoice.voucher', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no', 'dishes', 'dish_tables','resturantItems'));
     }
 
     public function storeInvoice(Request $request)

@@ -861,6 +861,40 @@
                     </div>
                 </div>
             </div>
+
+            <!-- product edit modal -->
+            <div id="toppingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
+                <div role="document" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="modal_header" class="modal-title">Add Extra Topping</h5>
+                            <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true"><i class="dripicons-cross"></i></span></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="row col-md-12">
+                                    <div class="form-group col-md-4">
+                                        <label>Item</label>
+                                        <select name="topping_item_id" class="form-control topping_item">
+                                            <option value="">Select Item</option>
+                                            @foreach($resturantItems as $item)
+                                                <option value="{{$item->ItemID}}">{{$item->ItemName}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Price</label>
+                                        <input type="text" name="topping_item_price" class="form-control numkey" step="any">
+                                    </div>
+                                </div>
+
+
+                                <button type="button" name="update_btn" class="btn btn-primary">Add Topping</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- add customer modal -->
             <div id="addCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade text-left">
                 <div role="document" class="modal-dialog">
@@ -1980,7 +2014,7 @@
             data = data.split(" ");
             pos = product_code.indexOf(data[0]);
 
-            if (pos < 0)
+            if (pos > 0)
                 alert('Product is not avaialable in the selected warehouse');
             else {
                 productSearch(data[0]);
@@ -2337,7 +2371,7 @@
         var cols = '';
         temp_unit_name = (data[6]).split(',');
         pos = product_code.indexOf(data[1]);
-        cols += '<td class="col-sm-2 product-title"><button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"><strong>' + data[0] + '</strong></button><br>' + data[1] + '<p>In Stock: <span class="in-stock"></span></p></td>';
+        cols += '<td class="col-sm-2 product-title"><button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"><strong>' + data[0] + '</strong></button><br>' + data[1] + '<a type="button" class="btn-topping btn btn-sm" data-toggle="modal" title="Extra-Topping" data-target="#toppingModal"><i class="fa fa-eye"></i></a><p>In Stock: <span class="in-stock"></span></p></td>';
         if (data[12]) {
             cols += '<td class="col-sm-2"><input type="text" class="form-control batch-no" value="' + batch_no[pos] + '" required/> <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="' + product_batch_id[pos] + '"/> </td>';
         } else {
