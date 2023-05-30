@@ -872,6 +872,7 @@
                         </div>
                         <div class="modal-body">
                             <form>
+                                <input type="hidden" value="" name="topping_item" id="topping_item">
                                 <div class="row col-md-12">
                                     <div class="form-group col-md-4">
                                         <label>Item</label>
@@ -889,7 +890,7 @@
                                 </div>
 
 
-                                <button type="button" name="update_btn" class="btn btn-primary">Add Topping</button>
+                                <button type="button" name="updatebtn" class="btn btn-primary">Add Topping</button>
                             </form>
                         </div>
                     </div>
@@ -1282,6 +1283,14 @@
 </section>
 
 <script type="text/javascript">
+    $(document).on('click', '.btn-topping', function() {
+        $('#topping_item').val($(this).data('id'));
+    });
+
+        $('button[name="updatebtn"]').on("click", function() {
+
+        });
+
     $("ul#sale").siblings('a').attr('aria-expanded', 'true');
     $("ul#sale").addClass("show");
     $("ul#sale #sale-pos-menu").addClass("active");
@@ -2371,7 +2380,7 @@
         var cols = '';
         temp_unit_name = (data[6]).split(',');
         pos = product_code.indexOf(data[1]);
-        cols += '<td class="col-sm-2 product-title"><button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"><strong>' + data[0] + '</strong></button><br>' + data[1] + '<a type="button" class="btn-topping btn btn-sm" data-toggle="modal" title="Extra-Topping" data-target="#toppingModal"><i class="fa fa-eye"></i></a><p>In Stock: <span class="in-stock"></span></p></td>';
+        cols += '<td class="col-sm-2 product-title"><button type="button" class="edit-product btn btn-link" data-toggle="modal" data-target="#editModal"><strong>' + data[0] + '</strong></button><br>' + data[1] + '<a type="button" data-id="'+data[9]+'" class="btn-topping btn btn-sm" data-toggle="modal" title="Extra-Topping" data-target="#toppingModal"><i class="fa fa-eye"></i></a><p>In Stock: <span class="in-stock"></span></p></td>';
         if (data[12]) {
             cols += '<td class="col-sm-2"><input type="text" class="form-control batch-no" value="' + batch_no[pos] + '" required/> <input type="hidden" class="product-batch-id" name="product_batch_id[]" value="' + product_batch_id[pos] + '"/> </td>';
         } else {
