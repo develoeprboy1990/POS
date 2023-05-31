@@ -67,6 +67,14 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label>Default Supplier *</label>
+                                    <select required name="supplier_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select supplier...">
+                                        @foreach($lims_supplier_list as $supplier)
+                                        <option value="{{$supplier->SupplierID}}" {{$lims_pos_setting_data->supplier_id == $supplier->SupplierID ? 'selected': ''}}>{{$supplier->SupplierName}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label>Stripe Publishable key</label>
                                     <input type="text" name="stripe_public_key" class="form-control" value="@if($lims_pos_setting_data){{$lims_pos_setting_data->stripe_public_key}}@endif" required />
                                 </div>
@@ -78,13 +86,7 @@
                                     <label>Paypal Pro API Signature</label>
                                     <input type="text" name="paypal_signature" class="form-control" value="{{env('PAYPAL_SANDBOX_API_SECRET')}}" />
                                 </div>
-                                <div class="form-group">
-                                    <label>Enable/Disable Dish</label>
-                                    <select class="form-control form-select" name="is_dish_enabled">
-                                        <option value="1" {{$lims_pos_setting_data->is_dish_enabled == 1 ? 'selected' : ''}}>Enable</option>
-                                        <option value="0" {{$lims_pos_setting_data->is_dish_enabled == 0 ? 'selected' : ''}}>Disable</option>
-                                    </select>
-                                </div>
+                                
                                 <div class="form-group mt-3">
                                     <input type="submit" value="{{trans('file.submit')}}" class="btn btn-primary">
                                 </div>
@@ -98,14 +100,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>Default Supplier *</label>
-                                    <select required name="supplier_id" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select supplier...">
-                                        @foreach($lims_supplier_list as $supplier)
-                                        <option value="{{$supplier->SupplierID}}" {{$lims_pos_setting_data->supplier_id == $supplier->SupplierID ? 'selected': ''}}>{{$supplier->SupplierName}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                
                                 <div class="form-group">
                                     <label>{{trans('file.Displayed Number of Product Row')}} *</label>
                                     <input type="number" name="product_number" class="form-control" value="@if($lims_pos_setting_data){{$lims_pos_setting_data->product_number}}@endif" required />
@@ -117,6 +112,13 @@
                                 <div class="form-group">
                                     <label>Paypal Pro API Password</label>
                                     <input type="password" name="paypal_password" class="form-control" value="{{env('PAYPAL_SANDBOX_API_PASSWORD')}}" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Enable/Disable Dish</label>
+                                    <select class="form-control form-select" name="is_dish_enabled">
+                                        <option value="1" {{$lims_pos_setting_data->is_dish_enabled == 1 ? 'selected' : ''}}>Enable</option>
+                                        <option value="0" {{$lims_pos_setting_data->is_dish_enabled == 0 ? 'selected' : ''}}>Disable</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     @if($lims_pos_setting_data && $lims_pos_setting_data->keybord_active)
