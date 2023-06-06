@@ -320,6 +320,8 @@
         <script src="{{URL('/')}}/assets/js/pages/datatables.init.js"></script>
 
 
+        <script src="{{asset('assets/libs/moment/min/moment.min.js')}}"></script>
+        <script src="{{asset('assets/libs/jquery-ui-dist/jquery-ui.min.js')}}"></script>
         <script src="{{asset('assets/libs/fullcalendar/core/main.min.js')}}"></script>
         <script src="{{asset('assets/libs/fullcalendar/bootstrap/main.min.js')}}"></script>
         <script src="{{asset('assets/libs/fullcalendar/daygrid/main.min.js')}}"></script>
