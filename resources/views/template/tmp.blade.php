@@ -15,6 +15,11 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{URL('/')}}/assets/images/favicon.ico">
 
+    <link href="{{asset('assets/libs/fullcalendar/core/main.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/fullcalendar/daygrid/main.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/fullcalendar/bootstrap/main.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/fullcalendar/timegrid/main.min.css')}}" rel="stylesheet" type="text/css" />
+
      <link href="{{asset('assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
@@ -47,8 +52,6 @@
     <!-- <link rel="stylesheet" href="{{URL('/')}}/assets/libs/%40chenfengyuan/datepicker/datepicker.min.css"> -->
 
     <link rel="stylesheet" type="text/css" href="{{URL('/')}}/assets/libs/toastr/build/toastr.min.css">
-
-
     <!-- Responsive datatable examples -->
 
 
@@ -63,7 +66,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
 
         function delete_confirm(url_plus_id) {
             var url;
@@ -91,46 +93,7 @@
             document.getElementById('delete_link').setAttribute('href', url);
 
         }
-
-        //       function cal1(id)
-
-        //   { 
-        //     // alert(id);
-
-        //      //alert($("#Grand79" ).val());
-
-        //     var Bonus = parseFloat($('#Bonus'+id).val());
-
-        //     var GrandOld = parseFloat($('#GrandOld'+id).val());
-        //     var Grand = parseFloat($('#Grand'+id).val());
-
-
-
-
-        // //             // if ($('#ExamTypeID :selected').val() == 1) {
-
-
-
-        //             if (Bonus!=0) {
-        //                     $('#Grand'+id).val(      parseInt(Bonus)  + parseInt(Grand)         );
-
-        //                }
-
-        //               if(Bonus=0)
-        //                {
-        //                 alert('Value must be greater then 0');
-        //                 $('#Grand'+id).val(    parseFloat(GrandOld)       );
-        //                }
-
-
-
-
-
-
-        //   }
-
         function cal(id) {
-
 
             // var result = parseFloat('2.3') + parseFloat('2.4');
             // alert(result);
@@ -164,9 +127,6 @@
         }
     </script>
 
-
-
-
     <!-- my own model -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -178,32 +138,21 @@
                 <div class="modal-body">
                     <p class="text-center">Are you sure to delete this information ?</p>
                     <p class="text-center">
-
-
-
                         <a href="#" class="btn btn-danger " id="delete_link">Delete</a>
                         <button type="button" class="btn btn-info" data-bs-dismiss="modal">Cancel</button>
-
                     </p>
                 </div>
-
             </div>
         </div>
     </div>
     <!-- end of my own model -->
-
-
-
 </head>
 
 <body data-sidebar="dark">
-
     <!-- <body data-layout="horizontal" data-topbar="dark"> -->
 
     <!-- Begin page -->
     <div id="layout-wrapper">
-
-
         <!-- start of header -->
         @include('template.header')
         <!-- end of header -->
@@ -211,8 +160,6 @@
         <!-- ========== Left Sidebar Start ========== -->
         @include('template.sidebar')
         <!-- Left Sidebar End -->
-
-
 
         <!-- ============================================================== -->
         <!-- Start right Content here -->
@@ -224,10 +171,6 @@
         <!-- start of footer -->
         @include('template.footer')
         <!-- end of footer -->
-
-
-
-
 
         <!-- JAVASCRIPT -->
         <script src="{{URL('/')}}/assets/libs/jquery/jquery.min.js"></script>
@@ -251,16 +194,10 @@
         <!-- App js -->
         <script src="{{URL('/')}}/assets/js/app.js"></script>
 
-
-
         <!-- form mask -->
         <script src="{{URL('/')}}/assets/libs/inputmask/min/jquery.inputmask.bundle.min.js"></script>
 
         <!-- form mask init -->
-
-
-       
-
 
         <!-- Required datatable js -->
         <script src="{{URL('/')}}/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -330,12 +267,7 @@
 
         <!-- Calendar init -->
         <script src="{{asset('assets/js/pages/calendars-full.init.js')}}"></script>
-
-
-
-
 </body>
-
 @stack('before-scripts')
 <script>
     $("#success-alert").fadeTo(4000, 500).slideUp(100, function() {
@@ -358,9 +290,5 @@
         $(this).datepicker('hide');
     });
 </script>
-
-
 @stack('after-scripts')
-<!-- Mirrored from themesbrand.com/skote-django/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 16 May 2021 18:22:06 GMT -->
-
 </html>
