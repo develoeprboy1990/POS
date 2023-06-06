@@ -15,6 +15,13 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{URL('/')}}/assets/images/favicon.ico">
 
+     <link href="{{asset('assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{{asset('assets/libs/chenfengyuan/datepicker/datepicker.min.css')}}">
+
     <!-- Bootstrap Css -->
     <link href="{{URL('/')}}/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
@@ -311,6 +318,16 @@
 
         <!-- Datatable init js -->
         <script src="{{URL('/')}}/assets/js/pages/datatables.init.js"></script>
+
+
+        <script src="{{asset('assets/libs/fullcalendar/core/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/bootstrap/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/daygrid/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/timegrid/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/interaction/main.min.js')}}"></script>
+
+        <!-- Calendar init -->
+        <script src="{{asset('assets/js/pages/calendars-full.init.js')}}"></script>
 
 
 
