@@ -25,21 +25,19 @@ use App\Http\Controllers\User;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Documents;
 use App\Http\Controllers\DishController;
+use App\Http\Controllers\AppointmentController;
 
 
-Route::get('/base1/', [KM::class, 'base1']);
-Route::post('/base2/', [KM::class, 'base2']);
+  Route::get('/base1/', [KM::class, 'base1']);
+  Route::post('/base2/', [KM::class, 'base2']);
 
-
-
-
-Route::get('/', [Accounts::class, 'Login']);
-Route::get('/Login', [Accounts::class, 'Login']);
-Route::post('/UserVerify', [Accounts::class, 'UserVerify']);
+  Route::get('/', [Accounts::class, 'Login']);
+  Route::get('/Login', [Accounts::class, 'Login']);
+  Route::post('/UserVerify', [Accounts::class, 'UserVerify']);
 
 
 
-Route::group(['middleware' => ['CheckAdmin']], function () {
+  Route::group(['middleware' => ['CheckAdmin']], function () {
 
   Route::get('/Dashboard', [Accounts::class, 'Dashboard'])->name('kashif');
 
@@ -655,7 +653,8 @@ Route::group(['middleware' => ['CheckAdmin']], function () {
   Route::get('/add-dish', [DishController::class, 'addDish']);
   Route::post('/saveSingleDish', [DishController::class, 'saveSingleDish']);
 
-
+  //Appointment 
+  Route::get('/create-appointment', [AppointmentController::class, 'create']);
 
   // Item Category
   Route::get('/item-category-list', [PosController::class, 'itemCategoryList']);

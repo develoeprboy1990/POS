@@ -20,6 +20,13 @@
     <link href="{{asset('assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{asset('assets/libs/chenfengyuan/datepicker/datepicker.min.css')}}">
+    
+
+
+    <link href="{{asset('assets/libs/fullcalendar/core/main.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/fullcalendar/daygrid/main.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/fullcalendar/bootstrap/main.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('assets/libs/fullcalendar/timegrid/main.min.css')}}" rel="stylesheet" type="text/css" />
 
     <!-- Bootstrap Css -->
     <link href="{{asset('assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
@@ -130,7 +137,16 @@
 
         <script src="{{asset('assets/js/app.js')}}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-        < <script>
+
+        <script src="{{asset('assets/libs/fullcalendar/core/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/bootstrap/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/daygrid/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/timegrid/main.min.js')}}"></script>
+        <script src="{{asset('assets/libs/fullcalendar/interaction/main.min.js')}}"></script>
+
+        <!-- Calendar init -->
+        <script src="{{asset('assets/js/pages/calendars-full.init.js')}}"></script>
+        <script>
 
             $(document).ready(function() {
 

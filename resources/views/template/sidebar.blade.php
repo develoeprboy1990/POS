@@ -122,6 +122,17 @@
                     </ul>
                 </li>
 
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-food"></i>
+                        <span key="t-ecommerce">Appointment</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{URL('/create-appointment')}}" key="t-products">Add Appointment</a></li>
+                    </ul>
+                </li>
+
+
 
 
                 <li>
