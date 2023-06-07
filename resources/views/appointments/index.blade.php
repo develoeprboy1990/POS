@@ -55,20 +55,13 @@
                         <div class="card-body">
                             <table class="table table-bordered table-striped table-hover ajaxTable datatable datatable-Appointment">
                                 <thead>
-                                    <tr> 
-                                        <th>Start time
-                                        </th>
-                                        <th> Finish Time
-                                        </th>
-                                        <th>
-                                            Price
-                                        </th>
-                                        <th>
-                                            Comments
-                                        </th>
-                                        <th>
-                                            Actions
-                                        </th>
+                                    <tr> <th>Client</th>
+                                    <th>Sales Person</th>
+                                        <th>Start time </th>
+                                        <th> Finish Time </th>
+                                        <th> Price </th>
+                                        <th> Comments </th>
+                                        <th> Actions </th>
 
                                     </tr>
                                 </thead>
@@ -95,7 +88,18 @@
             ajax: {
                 url: "{!! route('appointments.index') !!}",
             },
-            columns: [{
+            columns: [
+                {
+                    data:'client_name',
+                    name:'client_name'
+                }, 
+                {
+                    data:'employee_name',
+                    name:'employee_name'
+                },
+
+                
+                {
                     data: 'start_time',
                     name: 'start_time'
                 },

@@ -79,7 +79,7 @@
                                     <div class="col-sm-9">
                                         <select name="employee_id" id="employee" class="form-control select2">
                                             @foreach($employees as $id => $employee)
-                                            <option value="{{ $id }}" {{ (isset($appointment) && $appointment->employee ? $appointment->employee->id : old('employee_id')) == $id ? 'selected' : '' }}>{{ $employee }}</option>
+                                            <option value="{{ $id }}" >{{ $employee }}</option>
                                             @endforeach
                                         </select>
                                         @if($errors->has('employee_id'))

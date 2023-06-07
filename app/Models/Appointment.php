@@ -35,12 +35,12 @@ class Appointment extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'client_id');
+        return $this->belongsTo(Party::class, 'client_id');
     }
 
-    public function employee()
+    public function saleperson()
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(SalePerson::class, 'employee_id');
     }
 
     protected function serializeDate(\DateTimeInterface $date)

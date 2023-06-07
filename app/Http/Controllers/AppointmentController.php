@@ -11,7 +11,7 @@ use App\Models\Appointment;
 use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Client;
-use App\Models\Employee;
+use App\Models\SalePerson;
 
 class AppointmentController extends Controller
 {
@@ -24,8 +24,15 @@ class AppointmentController extends Controller
     {
         $pagetitle               = 'Appointments';
         if ($request->ajax()) {
-            $cases = Appointment::select(sprintf('%s.*', (new Appointment)->table));
+            $cases = Appointment::with(['client','saleperson', 'services'])->select(sprintf('%s.*', (new Appointment)->table));
             $table = Datatables::of($cases);
+            $table->addColumn('client_name', function ($cases) {
+                return $cases->client ? $cases->client->PartyName : '';
+            });
+            $table->addColumn('employee_name', function ($cases) {
+                return $cases->saleperson ? $cases->saleperson->FullName : '';
+            });
+
             $table->rawColumns(['active'])
                 ->addColumn('actions', function ($cases) {
                     $html = "<div class='d-inline-block text-nowrap'>
@@ -57,13 +64,15 @@ class AppointmentController extends Controller
         $pagetitle               = 'Book Appointments';
 
         //$clients = Client::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-        $employees = Employee::all()->pluck('name', 'id')->prepend(trans('Please Select'), '');
-        $services = Service::all()->pluck('name', 'id');
+        //$employees = Employee::all()->pluck('name', 'id')->prepend(trans('Please Select'), '');
+        $employees   = SalePerson::all()->pluck('FullName', 'UserID')->prepend(trans('Please Select'), '');//DB::table('user')->get()->pluck('FullName', 'UserID')->prepend(trans('Please Select'), '');
+         
+        $services  = Service::all()->pluck('name', 'id');
         return view('appointments.create', compact('clients', 'employees', 'services'));
     }
 
     public function store(Request $request)
-    { 
+    {
         $appointment = Appointment::create($request->all());
         $appointment->services()->sync($request->input('services', []));
         return redirect()->route('appointments.index');
