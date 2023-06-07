@@ -654,7 +654,12 @@ use App\Http\Controllers\AppointmentController;
   Route::post('/saveSingleDish', [DishController::class, 'saveSingleDish']);
 
   //Appointment 
-  Route::get('/create-appointment', [AppointmentController::class, 'create']);
+  //Route::get('/create-appointment', [AppointmentController::class, 'create']);
+  Route::group(['prefix' => 'appointments'], function () {
+  });
+   // Appointments
+   Route::delete('appointments/destroy', 'AppointmentController@massDestroy')->name('appointments.massDestroy');
+   Route::resource('appointments', AppointmentController::class);
 
   // Item Category
   Route::get('/item-category-list', [PosController::class, 'itemCategoryList']);
