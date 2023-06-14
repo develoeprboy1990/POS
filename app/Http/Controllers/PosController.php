@@ -39,7 +39,8 @@ class PosController extends Controller
         $invoice_detail = DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
         $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id', $InvoiceMasterID)->get();
         $party = DB::table('party')->where('PartyID', $invoice_master->PartyID)->first();
-        return view('invoice.show_invoice', compact('invoice_detail', 'invoice_master', 'party','invoice_dish_detail'));
+        $payments            = Payment::where('InvoiceMasterID', $InvoiceMasterID)->first();
+        return view('invoice.show_invoice', compact('invoice_detail', 'invoice_master', 'party','invoice_dish_detail', 'payments'));
     }
 
 
@@ -85,7 +86,7 @@ class PosController extends Controller
         $numberInWords = $numberTransformer->toWords($lims_sale_data->GrandTotal);
         return view('invoice.print_voucher', compact('lims_sale_data', 'lims_product_sale_data', 'lims_product_dish_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords', 'company'));
     }
-
+    
     public function invoiceListing(Request $request)
     {
         if ($request->ajax()) {

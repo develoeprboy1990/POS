@@ -572,9 +572,13 @@ use App\Http\Controllers\AppointmentController;
   Route::post('/update-ware-house', [PosController::class, 'updateWareHouse']);
   Route::get('/wareHouseDelete/{id}', [PosController::class, 'deleteWareHouse']);
 
+
+
   Route::get('/run-database-query', [PosController::class, 'runQuery'])->name('run-database-query');
 
   Route::group(['prefix' => 'warehouse'], function () {
+
+  Route::get('/run-my-script', [PosController::class, 'runMyScript']);
 
     Route::get('/stock-warehouses-out', [PosController::class, 'WareHouseOut'])->name('warehouse.stock-warehouses-out');
     Route::get('/stock-warehouses-in', [PosController::class, 'WareHouseIn'])->name('warehouse.stock-warehouses-in');

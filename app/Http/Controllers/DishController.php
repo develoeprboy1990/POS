@@ -226,6 +226,7 @@ class DishController extends Controller
     public function dishType(Dish $dish, $dish_type_id = null)
     {
         $dish_types = DishType::where('dish_id',$dish->id)->get();
+        
         $code = null;
         if($dish_type_id){
             $dish_type = $dish_types->firstWhere('id',$dish_type_id);
@@ -237,8 +238,7 @@ class DishController extends Controller
         else{
             $dish_type = $dish_type_id;
         }
-            
-
+             
         return view('dish.dish-type',compact('dish','dish_types','dish_type','code'));
     }
 
@@ -325,7 +325,7 @@ class DishController extends Controller
         if($dish_recipe_id){
             $dish_type_recipe = DishRecipe::findOrFail($dish_recipe_id);
             $item = Item::where('ItemID',$dish_type_recipe->item_id)->first();
-            $item_unit = $item->unit;
+            $item_unit = $item->unit; 
         }
         else{
             $dish_type_recipe = $dish_recipe_id;
@@ -338,7 +338,7 @@ class DishController extends Controller
         foreach($dish_types as $dish_type)
         {
             $dish_recipes[$dish_type->type] = $dish_type->dish_recipe;
-        }
+        } 
         return view('dish.dish-recipe',compact('dish','dish_types','kitchen_items','dish_recipes','dish_type_recipe','item_unit'));
     }
 
@@ -355,6 +355,8 @@ class DishController extends Controller
         );
 
         $input = $request->all();
+        /* $dish_type     = DishType::find($input['dish_type_id']);
+        $dish_recipies = DishRecipe::where('dish_type_id','=',$input['dish_type_id'])->get();  */
 
         if($input['dish_type_recipe_id']){
             DishRecipe::updateOrCreate(['id' => $input['dish_type_recipe_id']],$input);
@@ -371,10 +373,11 @@ class DishController extends Controller
     {
         $item = Item::where('ItemID',$item_id)->first();
         $unit = $item->unit;
-        if($unit)
+        if(!empty($unit)){
             return $unit;
-        else
-            return;
+        }
+            
+        return;
     }
 
     public function deleteDishType($id)

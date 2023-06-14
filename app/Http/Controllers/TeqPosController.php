@@ -66,7 +66,7 @@ class TeqPosController extends Controller
     }
 
     public function createVoucher()
-    { 
+    {
         $lims_customer_list      = DB::table('party')->where('Active', 'Yes')->get();
         $lims_customer_group_all = CustomerGroup::where('is_active', true)->get();
         $lims_warehouse_list     = Warehouse::where('is_active', true)->get();
@@ -95,7 +95,7 @@ class TeqPosController extends Controller
         $invoice_no = 'POS-0000' . ++$invoice_no;
         $dishes = Dish::where('status', 1)->get();
         $dish_tables = DishTable::orderBy('id')->get();
-        return view('teq-invoice.voucher', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no', 'dishes', 'dish_tables','resturantItems'));
+        return view('teq-invoice.voucher', compact('lims_customer_list', 'lims_customer_group_all', 'lims_warehouse_list', 'lims_product_list', 'product_number', 'lims_tax_list', 'lims_biller_list', 'lims_pos_setting_data', 'lims_brand_list', 'lims_category_list', 'recent_sale', 'recent_draft', 'lims_coupon_list', 'flag', 'invoice_no', 'dishes', 'dish_tables', 'resturantItems'));
     }
 
     public function storeInvoice(Request $request)
@@ -348,7 +348,6 @@ class TeqPosController extends Controller
             else
                 $data['payment_status'] = 4;
 
-
             if ($data['draft']) {
                 $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['sale_id'])->first();
                 $lims_product_sale_data = DB::table('invoice_detail')->where('InvoiceMasterID', $lims_sale_data->InvoiceMasterID)->get();
@@ -381,27 +380,34 @@ class TeqPosController extends Controller
             $lims_coupon_data->save();
         }
 
-        // dd($data);
         $today_date = date('Y-m-d');
         if (!empty($request->invoice_date))
             $today_date = $request->invoice_date;
-        // $lims_sale_data = Sale::create($data);
-        $invoice_no = DB::table('invoice_master')->where('InvoiceNo', 'like', 'POS%')->count();
-        $invoice_no = 'POS-0000' . ++$invoice_no;
+
+
+
+        //$invoice_no = DB::table('invoice_master')->where('InvoiceNo', 'like', 'POS%')->count();
+
+        $statement = DB::select("SHOW TABLE STATUS LIKE 'invoice_master'");
+        $invoice_no = $statement[0]->Auto_increment;
+
+        $invoice_no = 'POS-' . $invoice_no;
         $lims_customer_data = DB::table('party')->where('PartyID', $data['customer_id'])->first();
         $remaining_balance = $request->paying_amount -  $request->paid_amount;
         $paying_method = match ($data['paid_by_id']) {
             '1' => 'Cash',
             '2' => 'Gift Card',
             '3' => 'Credit Card',
-            '4' => 'Cheque',
+            '4' => 'Card',
             '5' => 'Paypal',
+            '6' => 'Cash And Card',
             default => 'Deposit'
         };
-        if ($request->biller_id)
-            $biller_id = $request->biller_id;
-        else
-            $biller_id = Session::get('UserID');
+
+        //if ($request->biller_id)
+        //    $biller_id = $request->biller_id;
+        // else
+        $biller_id    = Session::get('UserID');
         $invoice_data = array(
             "InvoiceNo"          => $invoice_no,
             "ReferenceNo"        => $data['reference_no'],
@@ -448,11 +454,11 @@ class TeqPosController extends Controller
         $data['amount']          = $data['paid_amount'];
         $data['InvoiceMasterID'] = $lims_sale_data;
         $data['paying_method']   = $paying_method;
-        $this->payment($data);
-        /* Payment Save Ends here. */
+
+        //$this->payment($data);
 
         foreach ($product_pids as $key => $pid) {
-            if ($itemTypes[$key] == 'dish') {
+            if (!empty($itemTypes[$key]) && $itemTypes[$key] == 'dish') {
                 $dish_type = DishType::findOrFail($pid);
                 $invoice_dish_detail = new InvoiceDishDetail();
                 $invoice_dish_detail->invoice_master_id = $lims_sale_data;
@@ -473,12 +479,22 @@ class TeqPosController extends Controller
                         'ItemID'          => $dish_item->item_id,
                         "Description"     => $item_name,
                         'Qty'             => $dish_item->base_unit_amount_cooked
-
                     );
                     $id = DB::table('invoice_detail')->insertGetId($invoice_det);
                 }
             } else {
-                $item_name = DB::table('item')->where('ItemID', $pid)->pluck('ItemName')->first();
+                $item_name      = DB::table('item')->where('ItemID', $pid)->pluck('ItemName')->first();
+                $combo_services = '';
+
+                if (!empty($data['packages'][$pid])) {
+                    foreach ($data['packages'][$pid] as $value) {
+                        $combo_item_name = DB::table('item')->where('ItemID', $value)->pluck('ItemName')->first();
+                        $combo_services .= $combo_item_name . ',';
+                    }
+
+                    $combo_services = '<br>( ' . rtrim($combo_services, ', ') . ' )';
+                }
+                $item_name = $item_name . $combo_services;
                 $invoice_detail = array(
                     "InvoiceMasterID" => $lims_sale_data,
                     "InvoiceNo"       => $invoice_no,
@@ -491,7 +507,7 @@ class TeqPosController extends Controller
                     "Tax"             => $product_taxes[$key],
                     "Total"           => floatval(preg_replace('/[^\d.]/', '', $product_subtotals[$key])),
                 );
-                $insert_detail = DB::table('invoice_detail')->insert($invoice_detail);
+                DB::table('invoice_detail')->insert($invoice_detail);
             }
         }
 
@@ -522,8 +538,8 @@ class TeqPosController extends Controller
                 // Handle successful payment
                 if ($charge->status === 'succeeded') {
                     // Payment successful, process further actions
-                    $data['customer_stripe_id'] = $customer->id; 
-                } else { 
+                    $data['customer_stripe_id'] = $customer->id;
+                } else {
                     $message .= ' Payment failed. ';
                 }
             } else {
@@ -536,8 +552,8 @@ class TeqPosController extends Controller
                 // Handle successful payment
                 if ($charge->status === 'succeeded') {
                     // Payment successful, process further actions
-                    $data['customer_stripe_id'] = $customer_id; 
-                } else { 
+                    $data['customer_stripe_id'] = $customer_id;
+                } else {
                     $message .= ' Payment failed. ';
                 }
             }
@@ -547,6 +563,94 @@ class TeqPosController extends Controller
                 PaymentWithCreditCard::create($data);
             }
         } //CREDIT PAYMENT ENDS HERER.
+        // Journal Entries 
+        // 1. A/R
+        // A/R -> Debit
+        $data_ar = array(
+            'VHNO'             => $request->input('invoice_no'),
+            'ChartOfAccountID' => '110400',   //A/R
+            'PartyID'          => $data['customer_id'],
+            'InvoiceMasterID'  => $data['InvoiceMasterID'], #7A7A7A
+            'Narration'        => $request->input('sale_note'),
+            'Date'             => $request->input('invoice_date'),
+            'Dr'               => $request->input('grand_total'),
+            'Trace'            => 123, // for debugging for reverse engineering
+
+        );
+
+        DB::table('journal')->insertGetId($data_ar);
+
+        // 2. Sale discount
+
+        // Sales-Discount -> Debit
+
+        if (!empty($request->input('total_discount')) && $request->input('total_discount') > 0) { // if dis is given  
+            $data_saledis        = array(
+                'VHNO'             => $request->input('invoice_no'),
+                'ChartOfAccountID' => '410155',   //Sales-Discount
+                'PartyID'          => $data['customer_id'],
+                'InvoiceMasterID'  => $data['InvoiceMasterID'], #7A7A7A
+                'Narration'        => $request->input('sale_note'),
+                'Date'             => $request->input('invoice_date'),
+                'Dr'               => $request->input('total_discount'),
+                'Trace'            => 1234, // for debugging for reverse engineering
+            );
+            DB::table('journal')->insertGetId($data_saledis);
+        }
+        // 3. sales
+
+        // Sales -> Credit
+        $data_sale = array(
+            'VHNO'             => $request->input('invoice_no'),
+            'ChartOfAccountID' => '410100',   //Sales
+            'PartyID'          => $data['customer_id'],
+            'InvoiceMasterID'  => $data['InvoiceMasterID'], #7A7A7A
+            'Narration'        => $request->input('sale_note'),
+            'Date'             => $request->input('invoice_date'),
+            'Cr'               => $request->input('paying_amount'),
+            'Trace'            => 12345, // for debugging for reverse engineering
+        );
+        DB::table('journal')->insertGetId($data_sale);
+
+        // 4. Tax -> VAT-OUTPUT TAX -> tax payable
+
+        // VAT-OUTPUT TAX -> Credit
+
+        if (!empty($request->input('order_tax')) && $request->input('order_tax')  > 0) { // if tax item is present in invoice
+            $data_vat_out = array(
+                'VHNO'             => $request->input('invoice_no'),
+                'ChartOfAccountID' => '210300',   //VAT-OUTPUT TAX ->tax payable
+                'PartyID'          => $data['customer_id'],
+                'InvoiceMasterID'  => $data['InvoiceMasterID'], #7A7A7A
+                'Narration'        => $request->input('sale_note'),
+                'Date'             => $request->input('invoice_date'),
+                'Cr'               => $request->input('order_tax'),
+                'Trace'            => 12346, // for debugging for reverse engineering 
+            );
+            DB::table('journal')->insertGetId($data_vat_out);
+        }
+
+
+
+        // 5. shipping charges
+
+        // SHIPPING -> Credit
+
+        if (!empty($request->input('shipping_cost')) && $request->input('shipping_cost') > 0) { // if tax item is present in invoice
+            $data_shipping = array(
+                'VHNO'             => $request->input('invoice_no'),
+                'ChartOfAccountID' => '500100',   //shipping
+                'PartyID'          => $data['customer_id'],
+                'InvoiceMasterID'  => $data['InvoiceMasterID'], #7A7A7A
+                'Narration'        => $request->input('sale_note'),
+                'Date'             => $request->input('invoice_date'),
+                'Cr'               => $request->input('shipping_cost'),
+                'Trace'            => 123467, // for debugging for reverse engineering
+            );
+
+            DB::table('journal')->insertGetId($data_shipping);
+        }
+        //****************************************************************************** */  
 
         if ($data['sale_status'] == 3)
             $message .= 'Sale successfully added to draft';
@@ -722,8 +826,9 @@ class TeqPosController extends Controller
                 '1' => 'Cash',
                 '2' => 'Gift Card',
                 '3' => 'Credit Card',
-                '4' => 'Cheque',
+                '4' => 'Card',
                 '5' => 'Paypal',
+                '6' => 'Cash And Card',
                 default => 'Deposit'
             };
             $data['paying_method'] = $paying_method;
@@ -742,20 +847,13 @@ class TeqPosController extends Controller
         $payment_note   = @$data['payment_note'];
         @$data['payment_reference'] = 'spr-' . date("Ymd") . '-' . date("his");
         if ($updateInvoice) {
-            // $lims_sale_data = DB::table('invoice_master')->where('InvoiceMasterID', $data['InvoiceMasterID'])->first();
-            // $paid           = $lims_sale_data->Paid + $amount;
-            // $grandTotal     = $lims_sale_data->GrandTotal;
-            // DB::table('invoice_master')->where('InvoiceMasterID', $data['InvoiceMasterID'])->update([
-            //     'Balance' => $grandTotal - $paid,
-            //     'Paid' => $paid
-            // ]);
             $paid_amount = $data['paid_amount'];
-            $payment = Payment::where('InvoiceMasterID', $data['InvoiceMasterID'])->orderBy('paymentID', 'DESC')->update([
+            $payment     = Payment::where('InvoiceMasterID', $data['InvoiceMasterID'])->orderBy('paymentID', 'DESC')->update([
                 'amount' => $paid_amount
             ]);
         } else {
             $UserID  = session::get('UserID');
-            $payment = Payment::create([
+            $payments = [
                 "PaymentReference" => $data['payment_reference'],
                 "InvoiceMasterID"  => $data['InvoiceMasterID'],
                 "PartyID"          => 1,
@@ -764,7 +862,16 @@ class TeqPosController extends Controller
                 "Change"           => $paying_amount - $amount,
                 "PayingMethod"     => $data['paying_method'],
                 "PaymentNote"      => $payment_note
-            ]);
+            ];
+            if (!empty($data['AmountPaidByCard'])) {
+                $payments['AmountPaidByCard'] = $data['AmountPaidByCard'];
+            }
+
+            if (!empty($data['cheque_no'])) {
+                $payments['cheque_no'] = $data['cheque_no'];
+            }
+
+            $payment = Payment::create($payments);
         }
 
         return $payment;

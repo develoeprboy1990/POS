@@ -13,6 +13,7 @@ use App\Models\Service;
 use App\Models\Client;
 use App\Models\SalePerson;
 
+use App\Models\Item;
 class AppointmentController extends Controller
 {
     /**
@@ -60,14 +61,14 @@ class AppointmentController extends Controller
      */
     public function create()
     {
-        $clients                 = DB::table('party')->where('Active', 'Yes')->get();
-        $pagetitle               = 'Book Appointments';
-
+        $clients        = DB::table('party')->where('Active', 'Yes')->get();
+        $pagetitle      = 'Book Appointments';
+        $services       = Item::all()->pluck('ItemName', 'ItemID');//->where('ItemType', '=', 'Service'); 
         //$clients = Client::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
         //$employees = Employee::all()->pluck('name', 'id')->prepend(trans('Please Select'), '');
         $employees   = SalePerson::all()->pluck('FullName', 'UserID')->prepend(trans('Please Select'), '');//DB::table('user')->get()->pluck('FullName', 'UserID')->prepend(trans('Please Select'), '');
          
-        $services  = Service::all()->pluck('name', 'id');
+      //  $services  = Service::all()->pluck('name', 'id');
         return view('appointments.create', compact('clients', 'employees', 'services'));
     }
 

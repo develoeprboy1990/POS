@@ -440,11 +440,8 @@
                                             <label>{{trans('file.Paid By')}}</label>
                                             <select name="paid_by_id_select" class="form-control selectpicker">
                                                 <option value="1">Cash</option>
-                                                <option value="2">Gift Card</option>
-                                                <option value="3">Credit Card</option>
-                                                <option value="4">Cheque</option>
-                                                <option value="5">Paypal</option>
-                                                <option value="6">Deposit</option>
+                                                <option value="4">Card</option> 
+                                                <option value="6">Cash And Card</option> 
                                             </select>
                                         </div>
                                         <div class="form-group col-md-12 mt-3">
@@ -457,10 +454,16 @@
                                             <input type="hidden" name="gift_card_id">
                                             <select id="gift_card_id_select" name="gift_card_id_select" class="selectpicker form-control" data-live-search="true" data-live-search-style="begins" title="Select Gift Card..."></select>
                                         </div>
-                                        <div class="form-group col-md-12 cheque">
-                                            <label>{{trans('file.Cheque Number')}} *</label>
+
+                                        <div class="form-group col-md-6 cheque">
+                                            <label>Reference Number *</label>
                                             <input type="text" name="cheque_no" class="form-control">
                                         </div>
+                                        <div class="form-group col-md-4 AmountPaidByCard">
+                                            <label>Amount Paid By Card *</label>
+                                            <input type="text" name="AmountPaidByCard" id="AmountPaidByCard" class="form-control">
+                                        </div>
+
                                         <div class="form-group col-md-12">
                                             <label>{{trans('file.Payment Note')}}</label>
                                             <textarea id="payment_note" rows="2" class="form-control" name="payment_note"></textarea>
@@ -2246,15 +2249,15 @@
     $('select[name="paid_by_id_select"]').on("change", function() {
         var id = $(this).val();
         $(".payment-form").off("submit");
-        if (id == 2) {
-            $('div.qc').hide();
-            giftCard();
-        } else if (id == 3) {
+        if (id == 3) {
             $('div.qc').hide();
             creditCard();
         } else if (id == 4) {
             $('div.qc').hide();
             cheque();
+        } else if (id == 6) {
+            $('div.qc').hide();
+            chequeAndCard();
         } else {
             hide();
             if (id == 1)
@@ -2851,6 +2854,7 @@
         $(".card-errors").hide();
         $(".cheque").hide();
         $(".gift-card").hide();
+        $(".AmountPaidByCard").hide();
         $('input[name="cheque_no"]').attr('required', false);
     }
 
@@ -2880,6 +2884,17 @@
     function cheque() {
         $(".cheque").show();
         $('input[name="cheque_no"]').attr('required', true);
+        $(".card-element").hide();
+        $(".card-errors").hide();
+        $(".gift-card").hide();
+    }
+
+
+    function chequeAndCard() {
+        $(".cheque").show();
+        $(".AmountPaidByCard").show();
+        $('input[name="cheque_no"]').attr('required', true);
+        $('input[name="AmountPaidByCard"]').attr('required', true);
         $(".card-element").hide();
         $(".card-errors").hide();
         $(".gift-card").hide();

@@ -274,7 +274,7 @@
                                           <div class="input-group mb-3">
                                               <input type="number" class="form-control" name="base_unit_amount_cooked" aria-label="Amount (to the nearest dollar)" value="{{@$dish_type_recipe->base_unit_amount_cooked}}" step="0.01" id="unit_input" required>
                                               <div class="input-group-append">
-                                                <span class="input-group-text" id="unit">.00</span>
+                                                <span class="input-group-text" id="unit">{{!empty($item_unit->base_unit)  ? $item_unit->base_unit : '.00'}}</span>
                                               </div>
                                             </div>
                                       </div>
@@ -285,7 +285,7 @@
                                           <div class="input-group mb-3">
                                               <input type="number" class="form-control" name="child_unit_amount_cooked" id="child_unit_input" step="0.01" aria-label="Amount (to the nearest dollar)" value="{{@$dish_type_recipe->child_unit_amount_cooked}}" required>
                                               <div class="input-group-append">
-                                                <span class="input-group-text" id="childUnit">.00</span>
+                                                <span class="input-group-text" id="childUnit">{{!(empty($item_unit->child_unit)) ? $item_unit->child_unit : '.00'}}</span>
                                               </div>
                                             </div>
                                       </div>
