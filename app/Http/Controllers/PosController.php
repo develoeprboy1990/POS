@@ -40,7 +40,7 @@ class PosController extends Controller
         $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id', $InvoiceMasterID)->get();
         $party = DB::table('party')->where('PartyID', $invoice_master->PartyID)->first();
         $payments            = Payment::where('InvoiceMasterID', $InvoiceMasterID)->first();
-        return view('invoice.show_invoice', compact('invoice_detail', 'invoice_master', 'party','invoice_dish_detail', 'payments'));
+        return view('invoice.show_invoice', compact('invoice_detail', 'invoice_master', 'party', 'invoice_dish_detail', 'payments'));
     }
 
 
@@ -86,7 +86,55 @@ class PosController extends Controller
         $numberInWords = $numberTransformer->toWords($lims_sale_data->GrandTotal);
         return view('invoice.print_voucher', compact('lims_sale_data', 'lims_product_sale_data', 'lims_product_dish_data', 'lims_biller_data', 'lims_warehouse_data', 'lims_customer_data', 'lims_payment_data', 'numberInWords', 'company'));
     }
-    
+
+
+
+    public function showInvoiceLiveKitchen(Request $request)
+    {
+
+        $invoice_master = DB::table('invoice_master')
+        ->join('invoice_dish_details', 'invoice_master.InvoiceMasterID', '=', 'invoice_dish_details.invoice_master_id')
+        ->whereNotNull('DishTableID')
+        ->where('status','=','Processing')->get();
+        
+
+        if ($request->ajax()) {
+            $html = '0';
+            if($invoice_master->count() !='0'){
+            $html = '<tr><th>Invoice Number</th><th>Table Number</th><th>Status</th></tr>';
+            foreach ($invoice_master as $invoice) {
+                $html .= '<tr><td><a href="' . route('invoice.live.ktchen-details', $invoice->InvoiceMasterID) . '">' . $invoice->InvoiceNo . '</a></td><td>' . $invoice->DishTableID . '</td><td>Processing</td></tr>';
+            }
+        }
+            return $html;
+        }
+        $pagetitle = 'Live Kitchen Screen'; 
+        return view('invoice.show-invoice-live-kitchen', compact('invoice_master','pagetitle'));
+    }
+
+    public function invoiceLiveKitchenDetails($InvoiceMasterID)
+    {
+        $pagetitle = 'Live Kitchen Screen';
+        $invoice_master = DB::table('invoice_master')->whereNotNull('DishTableID')->get();
+        $lims_sale_data = DB::table('invoice_master')->select('InvoiceNo')->where('InvoiceMasterID', $InvoiceMasterID)->first();
+        $invoice_detail = ''; //DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
+        $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id', $InvoiceMasterID)
+            ->select(DB::raw('invoice_dish_details.id,name,quantity,invoice_dish_details.price,type'))
+            ->join('dishes', 'dishes.id', '=', 'invoice_dish_details.dish_id')
+            ->join('dish_types', 'dish_types.id', '=', 'invoice_dish_details.dish_type_id')->get();
+        $party = ''; //DB::table('party')->where('PartyID', $invoice_master->PartyID)->first();
+        $payments            = ''; //Payment::where('InvoiceMasterID', $InvoiceMasterID)->first();
+        return view('invoice.show-invoice-live-kitchen', compact('invoice_detail', 'invoice_master', 'party', 'invoice_dish_detail', 'lims_sale_data', 'pagetitle'));
+    }
+
+    public function invoiceStatus($id, $status)
+    {
+        $invoice_dish_detail = InvoiceDishDetail::find($id);
+        $invoice_dish_detail->status = $status;
+        $invoice_dish_detail->save();
+        return $invoice_dish_detail;
+    }
+
     public function invoiceListing(Request $request)
     {
         if ($request->ajax()) {
@@ -129,7 +177,7 @@ class PosController extends Controller
                     return $stock_qty;
                 })
                 ->addColumn('status', function ($row) {
-                    if($row->is_active)
+                    if ($row->is_active)
                         $status = 'Active';
                     else
                         $status = 'In-Active';
@@ -140,7 +188,7 @@ class PosController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['no_of_prod', 'stock_qty','status','action'])
+                ->rawColumns(['no_of_prod', 'stock_qty', 'status', 'action'])
                 ->make(true);
         }
 
@@ -318,7 +366,7 @@ class PosController extends Controller
 
 
 
-    public function getProductDetais(Request $request,$warehouseid)
+    public function getProductDetais(Request $request, $warehouseid)
     {
         $ItemCode           = $request->get('data');
         $todayDate          = date('Y-m-d');
@@ -327,12 +375,12 @@ class PosController extends Controller
         $product_variant_id = null;
 
 
-        
+
 
         $lims_product_data  = DishType::where('code', $product_code[0])->first();
         if ($lims_product_data) {
             $qty   = DB::table('v_inventory')->select('Balance')->where('WarehouseID', $warehouseid)
-            ->where('ItemID', $lims_product_data->id)->pluck('Balance')->first();
+                ->where('ItemID', $lims_product_data->id)->pluck('Balance')->first();
 
             $product[] = $lims_product_data->type;
             $product[] = $lims_product_data->code;
@@ -361,7 +409,7 @@ class PosController extends Controller
             $lims_product_data = Item::where('ItemCode', $product_code[0])->first();
 
             $qty   = DB::table('v_inventory')->select('Balance')->where('WarehouseID', $warehouseid)
-            ->where('ItemID',$lims_product_data->ItemID)->pluck('Balance')->first();
+                ->where('ItemID', $lims_product_data->ItemID)->pluck('Balance')->first();
 
             $product[] = $lims_product_data->ItemName;
             $product[] = $lims_product_data->ItemCode;

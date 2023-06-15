@@ -563,8 +563,14 @@ use App\Http\Controllers\AppointmentController;
   Route::get('/show-invoice/{id}', [PosController::class, 'showInvoice'])->name('invoice.show');
   Route::get('/print-invoice/{id}', [PosController::class, 'printInvoice'])->name('invoice.print');
   Route::get('/print-voucher/{id}', [PosController::class, 'printVoucher'])->name('voucher.print');
-
   Route::get('/invoice-listing', [PosController::class, 'invoiceListing'])->name('invoice.listing');
+
+  Route::get('/invoice-live-kitchen/', [PosController::class, 'showInvoiceLiveKitchen'])->name('invoice.live.ktchen');
+
+  Route::get('/invoice-live-kitchen/{id}', [PosController::class, 'invoiceLiveKitchenDetails'])->name('invoice.live.ktchen-details');
+  
+  Route::get('/invoice-change-status/{id}/{status}', [PosController::class, 'invoiceStatus'])->name('invoice.invoice-change-status');
+
   // ware house
   Route::get('/ware-house-list', [PosController::class, 'wareHouseList']);
   Route::post('/store-ware-house', [PosController::class, 'storeWareHouse']);
