@@ -388,3 +388,7 @@ date: 24-5-2023
 php artisan migrate --path=database/migrations/2023_05_24_182831_create_payment_with_credit_cards_table.php
 
 ===============================
+Dish order modification
+date: 15-6-2023
+
+ALTER TABLE `invoice_dish_details` ADD `status` ENUM('Processing','Cancelled','Completed','Delivered') NOT NULL DEFAULT 'Processing' AFTER `price`;
