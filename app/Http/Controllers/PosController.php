@@ -92,18 +92,15 @@ class PosController extends Controller
     public function showInvoiceLiveKitchen(Request $request)
     {
 
-        $invoice_master = DB::table('invoice_master')
-        ->join('invoice_dish_details', 'invoice_master.InvoiceMasterID', '=', 'invoice_dish_details.invoice_master_id')
-        ->whereNotNull('DishTableID')
+        $invoice_master = DB::table('v_invoice_master')
+        ->join('invoice_dish_details', 'v_invoice_master.InvoiceMasterID', '=', 'invoice_dish_details.invoice_master_id') 
         ->where('status','=','Processing')->get();
-        
-
         if ($request->ajax()) {
             $html = '0';
             if($invoice_master->count() !='0'){
-            $html = '<tr><th>Invoice Number</th><th>Table Number</th><th>Status</th></tr>';
+            $html = '<tr><th>Invoice Number</th><th>Table Number</th><th>Customer</th><th>Status</th></tr>';
             foreach ($invoice_master as $invoice) {
-                $html .= '<tr><td><a href="' . route('invoice.live.ktchen-details', $invoice->InvoiceMasterID) . '">' . $invoice->InvoiceNo . '</a></td><td>' . $invoice->DishTableID . '</td><td>Processing</td></tr>';
+                $html .= '<tr><td><a href="' . route('invoice.live.ktchen-details', $invoice->InvoiceMasterID) . '">' . $invoice->InvoiceNo . '</a></td><td>' . $invoice->DishTableID . '</td><td>'.$invoice->PartyName.'</td><td>Processing</td></tr>';
             }
         }
             return $html;

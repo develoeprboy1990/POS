@@ -159,8 +159,8 @@
             beforeSend: function() {}
           }).done(function(response) {
             if (response == '0') {
-              $('#card-body').html('<h1>There are no pending orders</h1>');
-
+              $('#card-body').html('<h3>There are no pending orders</h3>');
+              $('#orders').html(' ');
             } else {
               $('#orders').html(response);
             }
