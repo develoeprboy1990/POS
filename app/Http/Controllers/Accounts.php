@@ -32,6 +32,7 @@ use File;
 use PDF;
 use Keygen;
 
+use Illuminate\Support\Arr;
 class Accounts extends Controller
 {
 
@@ -2659,18 +2660,18 @@ class Accounts extends Controller
     $where = array();
 
     if ($request->VoucherTypeID > 0) {
-      $where = array_add($where, 'JournalType', $vouchertype[0]->VoucherCode);
+      $where = Arr::add($where, 'JournalType', $vouchertype[0]->VoucherCode);
     }
 
 
     if ($request->PartyID > 0) {
-      $where = array_add($where, 'PartyID', $request->PartyID);
+      $where = Arr::add($where, 'PartyID', $request->PartyID);
     }
 
 
 
     if ($request->ChartOfAccountID > 0) {
-      $where = array_add($where, 'ChartOfAccountID', $request->ChartOfAccountID);
+      $where = Arr::add($where, 'ChartOfAccountID', $request->ChartOfAccountID);
     }
 
 
@@ -2723,18 +2724,18 @@ class Accounts extends Controller
     $where = array();
 
     if ($request->VoucherTypeID > 0) {
-      $where = array_add($where, 'JournalType', $vouchertype[0]->VoucherCode);
+      $where = Arr::add($where, 'JournalType', $vouchertype[0]->VoucherCode);
     }
 
 
     if ($request->PartyID > 0) {
-      $where = array_add($where, 'PartyID', $request->PartyID);
+      $where = Arr::add($where, 'PartyID', $request->PartyID);
     }
 
 
 
     if ($request->ChartOfAccountID > 0) {
-      $where = array_add($where, 'ChartOfAccountID', $request->ChartOfAccountID);
+      $where = Arr::add($where, 'ChartOfAccountID', $request->ChartOfAccountID);
     }
 
 
@@ -4783,13 +4784,13 @@ class Accounts extends Controller
       $where = array('InvoiceTypeID' => $request->InvoiceTypeID);
     }
     if ($request->SupplierID > 0) {
-      $where = array_add($where, 'SupplierID', $request->SupplierID);
+      $where = Arr::add($where, 'SupplierID', $request->SupplierID);
     }
     if ($request->ItemID > 0) {
-      $where = array_add($where, 'ItemID', $request->ItemID);
+      $where = Arr::add($where, 'ItemID', $request->ItemID);
     }
     if ($request->UserID > 0) {
-      $where = array_add($where, 'UserID', $request->UserID);
+      $where = Arr::add($where, 'UserID', $request->UserID);
     }
 
 
@@ -4830,13 +4831,13 @@ class Accounts extends Controller
       $where = array('InvoiceTypeID' => $request->InvoiceTypeID);
     }
     if ($request->SupplierID > 0) {
-      $where = array_add($where, 'SupplierID', $request->SupplierID);
+      $where = Arr::add($where, 'SupplierID', $request->SupplierID);
     }
     if ($request->ItemID > 0) {
-      $where = array_add($where, 'ItemID', $request->ItemID);
+      $where = Arr::add($where, 'ItemID', $request->ItemID);
     }
     if ($request->UserID > 0) {
-      $where = array_add($where, 'UserID', $request->UserID);
+      $where = Arr::add($where, 'UserID', $request->UserID);
     }
 
 
@@ -4931,7 +4932,7 @@ class Accounts extends Controller
       $where = array('InvoiceType' => $request->InvoiceTypeID);
     }
     if ($request->UserID > 0) {
-      $where = array_add($where, 'UserID', $request->UserID);
+      $where = Arr::add($where, 'UserID', $request->UserID);
     }
 
 
@@ -4969,7 +4970,7 @@ class Accounts extends Controller
       $where = array('InvoiceTypeID' => $request->InvoiceTypeID);
     }
     if ($request->UserID > 0) {
-      $where = array_add($where, 'UserID', $request->UserID);
+      $where = Arr::add($where, 'UserID', $request->UserID);
     }
 
 

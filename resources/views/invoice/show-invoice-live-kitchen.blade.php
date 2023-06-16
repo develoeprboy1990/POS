@@ -72,6 +72,7 @@
                               <th>Quantity</th>
                               <th>Price</th>
                               <th>Status</th>
+                              <th>Action</th>
                             </tr>
                             @foreach($invoice_dish_detail as $invoice_dish)
                             <tr>
@@ -88,7 +89,9 @@
                                     <option value='Delivered' data-value="{{$invoice_dish->id}}">Delivered</option>
                                   </select>
                                 </div>
+
                               </td>
+                              <td> <a href="#" class="text-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Order"><i class="mdi mdi-delete font-size-18" style="color: #f1734f;"></i></a></td>
                             </tr>
                             @endforeach
                           </table>
@@ -111,6 +114,12 @@
     <!-- END: Content-->
     <script type="text/javascript">
       $(document).ready(function() {
+        $('.text-secondary').click(function(e) {
+          e.preventDefault();
+          $(this).closest("tr").remove();
+        });
+
+
         $('#dish_type_id').change(function() {
           var status = $(this).val();
           var id = $(this).find(':selected').data('value');
@@ -151,7 +160,7 @@
           }).done(function(response) {
             if (response == '0') {
               $('#card-body').html('<h1>There are no pending orders</h1>');
-              
+
             } else {
               $('#orders').html(response);
             }

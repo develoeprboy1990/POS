@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class CompanyController extends Controller
 {
@@ -118,7 +119,7 @@ $pagetitle = 'Company';
 
             $logo = $request->file('Logo');
             $fileName = time().'.'.$logo->extension();
-            $data = array_add($data, 'Logo',  $fileName);
+            $data = Arr::add($data, 'Logo',  $fileName);
             $logo->move($destinationPath,  $fileName);
         }
 
@@ -126,13 +127,13 @@ $pagetitle = 'Company';
 
             $BackgroundLogo = $request->file('BackgroundLogo');
             $fileName = time().'.'.$BackgroundLogo->extension();
-            $data = array_add($data, 'BackgroundLogo',  $fileName);
+            $data = Arr::add($data, 'BackgroundLogo',  $fileName);
             $BackgroundLogo->move($destinationPath,  $fileName);
         }
         if ($request->hasFile('Signature')) {
             $signature = $request->file('Signature');
             $fileName2 = time().'.'.$signature->extension();
-            $data = array_add($data, 'Signature', $fileName2);
+            $data = Arr::add($data, 'Signature', $fileName2);
 
             $signature->move($destinationPath, $fileName2);
         }

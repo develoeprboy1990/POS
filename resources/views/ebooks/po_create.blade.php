@@ -848,7 +848,7 @@
 
     //datepicker
     $(function() {
-        $.fn.datepicker.defaults.format = "dd-mm-yyyy";
+      //  $.fn.datepicker.defaults.format = "dd-mm-yyyy";
         $('#invoiceDate').datepicker({
             startDate: '-3d',
             autoclose: true,
@@ -914,9 +914,8 @@
 
         // alert($("#csrf").val());
 
-        $('#result').prepend('')
-        $('#result').prepend('<img id="theImg" src="{{asset('
-            assets / images / ajax.gif ')}}" />')
+        $('#result').prepend('');
+        $('#result').prepend('<img id="theImg" src="{{asset("assets/images/ajax.gif")}}" />');
 
         var SupplierID = SupplierID;
 
