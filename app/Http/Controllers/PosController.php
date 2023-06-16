@@ -92,9 +92,10 @@ class PosController extends Controller
     public function showInvoiceLiveKitchen(Request $request)
     {
 
-        $invoice_master = DB::table('v_invoice_master')
+        $invoice_master = DB::table('v_invoice_master') ->select('v_invoice_master.InvoiceMasterID', 'v_invoice_master.InvoiceNo', 'v_invoice_master.DishTableID', 'v_invoice_master.PartyName')->distinct()
         ->join('invoice_dish_details', 'v_invoice_master.InvoiceMasterID', '=', 'invoice_dish_details.invoice_master_id') 
         ->where('status','=','Processing')->get();
+
         if ($request->ajax()) {
             $html = '0';
             if($invoice_master->count() !='0'){
@@ -116,7 +117,7 @@ class PosController extends Controller
         $lims_sale_data = DB::table('invoice_master')->select('InvoiceNo')->where('InvoiceMasterID', $InvoiceMasterID)->first();
         $invoice_detail = ''; //DB::table('invoice_detail')->where('InvoiceMasterID', $InvoiceMasterID)->get();
         $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id', $InvoiceMasterID)
-            ->select(DB::raw('invoice_dish_details.id,name,quantity,invoice_dish_details.price,type'))
+            ->select(DB::raw('invoice_dish_details.id,name,quantity,invoice_dish_details.price,type,invoice_dish_details.status'))
             ->join('dishes', 'dishes.id', '=', 'invoice_dish_details.dish_id')
             ->join('dish_types', 'dish_types.id', '=', 'invoice_dish_details.dish_type_id')->get();
         $party = ''; //DB::table('party')->where('PartyID', $invoice_master->PartyID)->first();

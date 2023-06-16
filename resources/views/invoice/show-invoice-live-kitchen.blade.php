@@ -79,14 +79,14 @@
                               <td><a href="">{{$invoice_dish->name}}</a></td>
                               <td>{{$invoice_dish->type}}</td>
                               <td>{{$invoice_dish->quantity}}</td>
-                              <td>{{$invoice_dish->price}}</td>
+                              <td>{{$invoice_dish->price}} </td>
                               <td>
                                 <div class="col-md-4 form-group">
-                                  <select class="form-select form-control-sm select2" name="dish_type_id" id="dish_type_id">
-                                    <option value='Processing' data-value="{{$invoice_dish->id}}">Processing</option>
-                                    <option value='Cancelled' data-value="{{$invoice_dish->id}}">Cancelled</option>
-                                    <option value='Completed' data-value="{{$invoice_dish->id}}">Completed</option>
-                                    <option value='Delivered' data-value="{{$invoice_dish->id}}">Delivered</option>
+                                  <select class="form-select form-control-sm select2 dish_type_id" name="dish_type_id" id="dish_type_id">
+                                    <option value='Processing' @if($invoice_dish->status == 'Processing')  selected="selected" @endif data-value="{{$invoice_dish->id}}">Processing</option>
+                                    <option value='Cancelled'  @if($invoice_dish->status == 'Cancelled')   selected="selected" @endif data-value="{{$invoice_dish->id}}">Cancelled</option>
+                                    <option value='Completed'  @if($invoice_dish->status == 'Completed')   selected="selected" @endif data-value="{{$invoice_dish->id}}">Completed</option>
+                                    <option value='Delivered'  @if($invoice_dish->status == 'Delivered')   selected="selected" @endif data-value="{{$invoice_dish->id}}">Delivered</option>
                                   </select>
                                 </div>
 
@@ -120,7 +120,7 @@
         });
 
 
-        $('#dish_type_id').change(function() {
+        $('.dish_type_id').change(function() {
           var status = $(this).val();
           var id = $(this).find(':selected').data('value');
           let url = "{{route('invoice.invoice-change-status',[':id',':status'])}}";

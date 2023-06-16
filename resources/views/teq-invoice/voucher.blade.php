@@ -2024,9 +2024,9 @@
         else {
             var data = $(this).data('product');
             data = data.split(" ");
-            pos = product_code.indexOf(data[0]);
-
-            if (pos > 0)
+       
+            pos = product_code.indexOf(data[0]); 
+            if (pos <= 0)
                 alert('Product is not avaialable in the selected warehouse');
             else {
                 productSearch(data[0]);

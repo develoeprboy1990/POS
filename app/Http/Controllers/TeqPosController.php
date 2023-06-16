@@ -391,7 +391,7 @@ class TeqPosController extends Controller
         $statement = DB::select("SHOW TABLE STATUS LIKE 'invoice_master'");
         $invoice_no = $statement[0]->Auto_increment;
 
-        $invoice_no = 'POS-' . $invoice_no;
+        $invoice_no = $data['invoice_no'];//'POS-' . $invoice_no;
         $lims_customer_data = DB::table('party')->where('PartyID', $data['customer_id'])->first();
         $remaining_balance = $request->paying_amount -  $request->paid_amount;
         $paying_method = match ($data['paid_by_id']) {
@@ -985,12 +985,13 @@ class TeqPosController extends Controller
             $batch_no[]         = null;
             $product_batch_id[] = null;
         }
-
+        
         foreach ($dish_type_codes as $code => $name) {
             $product_code[]    =  $code;
             $product_name[]    =  $name;
         }
         $product_data = [$product_code, $product_name, $product_qty, $product_type, $product_id, $product_list, $qty_list, $product_price, $batch_no, $product_batch_id];
+        
         return $product_data;
     }
 
