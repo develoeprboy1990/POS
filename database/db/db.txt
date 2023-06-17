@@ -392,3 +392,6 @@ Dish order modification
 date: 15-6-2023
 
 ALTER TABLE `invoice_dish_details` ADD `status` ENUM('Processing','Cancelled','Completed','Delivered') NOT NULL DEFAULT 'Processing' AFTER `price`;
+
+
+Add DishTableID from invoice_master to v_invoice_master .
