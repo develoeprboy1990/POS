@@ -89,25 +89,79 @@ class PosController extends Controller
 
 
 
+    public function liveKitchen(Request $request)
+    {
+        $pagetitle = 'Live Kitchen Screen';
+        $invoice_dish_detail = InvoiceDishDetail::select(DB::raw('invoice_dish_details.id,name,image_thumbnail,quantity,invoice_dish_details.price,type,invoice_dish_details.status'))
+            ->join('dishes', 'dishes.id', '=', 'invoice_dish_details.dish_id')
+            ->join('dish_types', 'dish_types.id', '=', 'invoice_dish_details.dish_type_id')->get();
+        if ($request->ajax()) {
+            if (!empty($invoice_dish_detail)) {
+                $html = '';
+                foreach ($invoice_dish_detail as $invoice_dish) {
+                    $html .= '<div class="col-sm-3">
+                  <div class="card text-dark mb-3" style="width: 18rem;">
+                    <div class="card-header card-title">' . $invoice_dish->name . '</div>';
+                    if (!empty($invoice_dish->image_thumbnail) && !file_exists(public_path() . 'thumbnail/' . $invoice_dish->image_thumbnail)) {
+                        $html .= '<img src="' . asset('thumbnail/' . $invoice_dish->image_thumbnail) . '" style="width: 18rem;">';
+                    } else {
+                        $html .= '<img src="' . asset('assets/images/product/noimage.jpg') . '" style="width: 18rem;">';
+                    }
+
+                    $html .= '<div class="card-body">
+                      <p>' . $invoice_dish->type . '</p>
+                      <p>Quantity : ' . $invoice_dish->quantity . '</p>
+                      <p> <select class="form-select form-control-sm select2 dish_type_id" name="dish_type_id" id="dish_type_id">
+                          <option value="Processing"';
+                    if ($invoice_dish->status == 'Processing') {
+                        $html .= 'selected="selected"';
+                    }
+                    $html .= 'data-value="' . $invoice_dish->id . '">Processing</option>
+                          <option value="Cancelled" ';
+                    if ($invoice_dish->status == 'Cancelled') {
+                        $html .= 'selected="selected"';
+                    }
+                    $html .= 'data-value="' . $invoice_dish->id . '">Cancelled</option>
+                          <option value="Completed"';
+                    if ($invoice_dish->status == 'Completed') {
+                        $html .= 'selected="selected"';
+                    }
+                    $html .= 'data-value="' . $invoice_dish->id . '">Completed</option>
+                          <option value="Delivered"';
+                    if ($invoice_dish->status == 'Delivered') {
+                        $html .= 'selected="selected"';
+                    }
+                    $html .= 'data-value="' . $invoice_dish->id . '">Delivered</option>
+                        </select></p></div></div></div>';
+                }
+            } else $html = '0';
+            return $html;
+        }
+
+        return view('invoice.live-kitchen', compact('invoice_dish_detail', 'pagetitle'));
+    }
+
+
+
     public function showInvoiceLiveKitchen(Request $request)
     {
 
-        $invoice_master = DB::table('v_invoice_master') ->select('v_invoice_master.InvoiceMasterID', 'v_invoice_master.InvoiceNo', 'v_invoice_master.DishTableID', 'v_invoice_master.PartyName')->distinct()
-        ->join('invoice_dish_details', 'v_invoice_master.InvoiceMasterID', '=', 'invoice_dish_details.invoice_master_id') 
-        ->where('status','=','Processing')->get();
+        $invoice_master = DB::table('v_invoice_master')->select('v_invoice_master.InvoiceMasterID', 'v_invoice_master.InvoiceNo', 'v_invoice_master.DishTableID', 'v_invoice_master.PartyName')->distinct()
+            ->join('invoice_dish_details', 'v_invoice_master.InvoiceMasterID', '=', 'invoice_dish_details.invoice_master_id')
+            ->where('status', '=', 'Processing')->get();
 
         if ($request->ajax()) {
             $html = '0';
-            if($invoice_master->count() !='0'){
-            $html = '<tr><th>Invoice Number</th><th>Table Number</th><th>Customer</th><th>Status</th></tr>';
-            foreach ($invoice_master as $invoice) {
-                $html .= '<tr><td><a href="' . route('invoice.live.ktchen-details', $invoice->InvoiceMasterID) . '">' . $invoice->InvoiceNo . '</a></td><td>' . $invoice->DishTableID . '</td><td>'.$invoice->PartyName.'</td><td>Processing</td></tr>';
+            if ($invoice_master->count() != '0') {
+                $html = '<tr><th>Invoice Number</th><th>Table Number</th><th>Customer</th><th>Status</th></tr>';
+                foreach ($invoice_master as $invoice) {
+                    $html .= '<tr><td><a href="' . route('invoice.live.ktchen-details', $invoice->InvoiceMasterID) . '">' . $invoice->InvoiceNo . '</a></td><td>' . $invoice->DishTableID . '</td><td>' . $invoice->PartyName . '</td><td>Processing</td></tr>';
+                }
             }
-        }
             return $html;
         }
-        $pagetitle = 'Live Kitchen Screen'; 
-        return view('invoice.show-invoice-live-kitchen', compact('invoice_master','pagetitle'));
+        $pagetitle = 'Live Kitchen Screen';
+        return view('invoice.show-invoice-live-kitchen', compact('invoice_master', 'pagetitle'));
     }
 
     public function invoiceLiveKitchenDetails($InvoiceMasterID)
@@ -123,6 +177,15 @@ class PosController extends Controller
         $party = ''; //DB::table('party')->where('PartyID', $invoice_master->PartyID)->first();
         $payments            = ''; //Payment::where('InvoiceMasterID', $InvoiceMasterID)->first();
         return view('invoice.show-invoice-live-kitchen', compact('invoice_detail', 'invoice_master', 'party', 'invoice_dish_detail', 'lims_sale_data', 'pagetitle'));
+    }
+
+    public function invoiceCheckStatus($InvoiceMasterID)
+    {
+        $invoice_dish_detail = InvoiceDishDetail::where('invoice_master_id', $InvoiceMasterID)->where('status', 'Processing')->count();
+        if (!empty($invoice_dish_detail) && $invoice_dish_detail > 0) {
+            return true;
+        }
+        return $invoice_dish_detail;
     }
 
     public function invoiceStatus($id, $status)

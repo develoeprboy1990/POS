@@ -48,7 +48,7 @@
                   <div class="col-md-4">
 
                     <div class="card-body">
-                      <h5 class="mb-3">Recent Orders</h5>
+                      <h5 class="mb-3">Recent Orders </h5>
                       <div class="col-md-12 col-sm-12">
                         <div class="mb-3 row">
                           <table id="orders">
@@ -83,10 +83,10 @@
                               <td>
                                 <div class="col-md-4 form-group">
                                   <select class="form-select form-control-sm select2 dish_type_id" name="dish_type_id" id="dish_type_id">
-                                    <option value='Processing' @if($invoice_dish->status == 'Processing')  selected="selected" @endif data-value="{{$invoice_dish->id}}">Processing</option>
-                                    <option value='Cancelled'  @if($invoice_dish->status == 'Cancelled')   selected="selected" @endif data-value="{{$invoice_dish->id}}">Cancelled</option>
-                                    <option value='Completed'  @if($invoice_dish->status == 'Completed')   selected="selected" @endif data-value="{{$invoice_dish->id}}">Completed</option>
-                                    <option value='Delivered'  @if($invoice_dish->status == 'Delivered')   selected="selected" @endif data-value="{{$invoice_dish->id}}">Delivered</option>
+                                    <option value='Processing' @if($invoice_dish->status == 'Processing') selected="selected" @endif data-value="{{$invoice_dish->id}}">Processing</option>
+                                    <option value='Cancelled' @if($invoice_dish->status == 'Cancelled') selected="selected" @endif data-value="{{$invoice_dish->id}}">Cancelled</option>
+                                    <option value='Completed' @if($invoice_dish->status == 'Completed') selected="selected" @endif data-value="{{$invoice_dish->id}}">Completed</option>
+                                    <option value='Delivered' @if($invoice_dish->status == 'Delivered') selected="selected" @endif data-value="{{$invoice_dish->id}}">Delivered</option>
                                   </select>
                                 </div>
 
@@ -111,6 +111,14 @@
         </div>
       </div>
     </div>
+    @php
+    $id = '';
+    if(!empty(request()->route('id'))){
+    $id = request()->route('id');
+    $id = route('invoice.invoice-check-status',['id'=>$id]);
+    }
+
+    @endphp
     <!-- END: Content-->
     <script type="text/javascript">
       $(document).ready(function() {
@@ -147,7 +155,18 @@
 
         setInterval(function() {
           refReshOrders(link);
+          var id = "{{$id}}";
+          if (id != '') {
+            invoiceCheckStatus(id);
+          }
+
         }, 5000);
+
+
+        setInterval(function() {
+          refReshOrders(link); 
+
+        }, 3000);
 
         function refReshOrders(route) {
           $.ajax({
@@ -166,6 +185,25 @@
             }
           }); // DONE ENDS HERE
         }
+
+        function invoiceCheckStatus(url) {
+          $.ajax({
+            url: url,
+            type: "GET",
+            dataType: 'HTML',
+            processData: false,
+            contentType: false,
+            beforeSend: function() {}
+          }).done(function(response) {
+            if(response == '0'){
+              location.href="{{route('invoice.live.ktchen')}}";
+            }
+            
+          
+          }); // DONE ENDS HERE
+        }
+
+
 
       });
     </script>

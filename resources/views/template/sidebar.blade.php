@@ -80,7 +80,8 @@
                         <li id="exp-cat-menu"><a href="{{route('voucher.create')}}" key="t-products">Create Invoice</a></li>
                         <li id="exp-list-menu"><a href="{{route('invoice.listing')}}" key="t-products">Invoice Listing</a></li>
 
-                        <li id="exp-list-menu"><a href="{{route('invoice.live.ktchen')}}" key="t-products">Live Kitchen Orders</a></li>
+                        <li id="exp-list-menu"><a href="{{route('invoice.live-ktchen')}}" key="t-products">Live Kitchen Orders</a></li>
+                        <li id="exp-list-menu"><a href="{{route('invoice.live.ktchen')}}" key="t-products">Manager Live Screen</a></li>
 
 
                     </ul>
